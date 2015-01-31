@@ -1,7 +1,7 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
 // Last modified: 01/30/2015
-// Description: The connection_data implementation which is an abstraction class for postgresql connection strings.
+// Description: The Connection_String implementation which is an abstraction class for postgresql connection strings.
 // ====================================================================================================================
 
 // ====================================================================================================================
@@ -17,7 +17,7 @@
 // ====================================================================================================================
 
 
-#include "connection_data.hpp"
+#include "connection_string.hpp"
 #include "db_exception.hpp"
 
 #include <algorithm>
@@ -46,17 +46,17 @@ namespace {
 namespace lgeorgieff {
 	namespace translate {
 		namespace server {
-			const string Connection_Data::DEFAULT_USER{"postgres"};
-			const string Connection_Data::DEFAULT_HOST_ADDR{"127.0.0.1"};
-			const string Connection_Data::DEFAULT_HOST{"localhost"};
-			const string Connection_Data::DEFAULT_PASSWORD{""};
-			const string Connection_Data::DEFAULT_DB_NAME{"translate"};
-			const unsigned short Connection_Data::DEFAULT_PORT{5432};
-			const Connection_Data::SSL_Mode Connection_Data::DEFAULT_SSLMODE{Connection_Data::SSL_Mode::PREFER};
-			const bool Connection_Data::DEFAULT_REQUIRE_SSL{false};
-			const bool Connection_Data::DEFAULT_KEEP_ALIVES{true};
+			const string Connection_String::DEFAULT_USER{"postgres"};
+			const string Connection_String::DEFAULT_HOST_ADDR{"127.0.0.1"};
+			const string Connection_String::DEFAULT_HOST{"localhost"};
+			const string Connection_String::DEFAULT_PASSWORD{""};
+			const string Connection_String::DEFAULT_DB_NAME{"translate"};
+			const unsigned short Connection_String::DEFAULT_PORT{5432};
+			const Connection_String::SSL_Mode Connection_String::DEFAULT_SSLMODE{Connection_String::SSL_Mode::PREFER};
+			const bool Connection_String::DEFAULT_REQUIRE_SSL{false};
+			const bool Connection_String::DEFAULT_KEEP_ALIVES{true};
 
-			Connection_Data::Connection_Data() noexcept
+			Connection_String::Connection_String() noexcept
 			:user_{DEFAULT_USER}, host_{""}, host_addr_{DEFAULT_HOST_ADDR}, password_{DEFAULT_PASSWORD},
 				db_name_{DEFAULT_DB_NAME}, options_{""}, client_encoding_{""}, application_name_{""},
 				fallback_application_name_{""}, ssl_cert_{""}, ssl_key_{""}, ssl_root_cert_{""}, ssl_crl_{""},
@@ -64,7 +64,7 @@ namespace lgeorgieff {
 				keep_alives_idle_{-1}, keep_alives_interval_{-1}, keep_alives_count_{-1}, ssl_mode_{DEFAULT_SSLMODE},
 				port_{DEFAULT_PORT}, keep_alives_{DEFAULT_KEEP_ALIVES}, require_ssl_{DEFAULT_REQUIRE_SSL} { }
 
-			string Connection_Data::to_string() const noexcept {
+			string Connection_String::to_string() const noexcept {
 				string result{};
 				if(this->has_user()) result += "user=" + this->user_;
 				if(this->has_host()) result += (result.empty() ? "" : " ") + string{"host="} + this->host_;
@@ -94,365 +94,365 @@ namespace lgeorgieff {
  				return result;
 			}
 
-			string Connection_Data::user() const noexcept {
+			string Connection_String::user() const noexcept {
 				return this->user_;
 			}
 			
-			void Connection_Data::user(const string &user) noexcept {
+			void Connection_String::user(const string &user) noexcept {
 				this->user_ = user;
 				trim(this->user_);
 			}
 			
-			bool Connection_Data::has_user() const noexcept {
+			bool Connection_String::has_user() const noexcept {
 				return !this->user_.empty();
 			}
 
-			string Connection_Data::host() const noexcept {
+			string Connection_String::host() const noexcept {
 				return this->host_;
 			}
 
-			void Connection_Data::host(const string &host) {
+			void Connection_String::host(const string &host) {
 				if(this->has_hostaddr())
-					throw DB_Exception("Connection_Data: cannot set host when host_addr is set!");
+					throw DB_Exception("Connection_String: cannot set host when host_addr is set!");
 				this->host_ = host;
 				trim(this->host_);
 			}
 
-			bool Connection_Data::has_host()const noexcept {
+			bool Connection_String::has_host()const noexcept {
 				return !this->host_.empty();
 			}
 
-			string Connection_Data::hostaddr() const noexcept {
+			string Connection_String::hostaddr() const noexcept {
 				return this->host_addr_;
 			}
 
-			void Connection_Data::hostaddr(const string &host_addr) {
-				if(this->has_host()) throw DB_Exception("Connection_Data: cannot set host_addr when host is set!");
+			void Connection_String::hostaddr(const string &host_addr) {
+				if(this->has_host()) throw DB_Exception("Connection_String: cannot set host_addr when host is set!");
 				this->host_addr_ = host_addr;
 				trim(this->host_);
 			}
 
-			bool Connection_Data::has_hostaddr() const noexcept {
+			bool Connection_String::has_hostaddr() const noexcept {
 				return !this->host_addr_.empty();
 			}
 
-			string Connection_Data::password() const noexcept {
+			string Connection_String::password() const noexcept {
 				return this->password_;
 			}
 
-			void Connection_Data::password(const string &password) noexcept {
+			void Connection_String::password(const string &password) noexcept {
 				this->password_ = password;
 				trim(this->password_);
 			}
 
-			bool Connection_Data::has_password() const noexcept {
+			bool Connection_String::has_password() const noexcept {
 				return !this->password_.empty();
 			}
 
-			string Connection_Data::dbname() const noexcept {
+			string Connection_String::dbname() const noexcept {
 				return this->db_name_;
 			}
 
-			void Connection_Data::dbname(const string &dbname) noexcept {
+			void Connection_String::dbname(const string &dbname) noexcept {
 				this->db_name_ = dbname;
 				trim(this->db_name_);
 			}
 
-			bool Connection_Data::has_dbname() const noexcept {
+			bool Connection_String::has_dbname() const noexcept {
 				return !this->db_name_.empty();
 			}
 
-			string Connection_Data::options() const noexcept {
+			string Connection_String::options() const noexcept {
 				return this->options_;
 			}
 
-			void Connection_Data::options(const string &options) noexcept {
+			void Connection_String::options(const string &options) noexcept {
 				this->options_ = options;
 				trim(this->options_);
 			}
 
-			bool Connection_Data::has_options() const noexcept {
+			bool Connection_String::has_options() const noexcept {
 				return !this->options_.empty();
 			}
 
-			string Connection_Data::client_encoding() const noexcept {
+			string Connection_String::client_encoding() const noexcept {
 				return this->client_encoding_;
 			}
 
-			void Connection_Data::client_encoding(const string &client_encoding) noexcept {
+			void Connection_String::client_encoding(const string &client_encoding) noexcept {
 				this->client_encoding_ = client_encoding;
 				trim(this->client_encoding_);
 			}
 
-			bool Connection_Data::has_client_encoding() const noexcept {
+			bool Connection_String::has_client_encoding() const noexcept {
 				return !this->client_encoding_.empty();
 			}
 
-			string Connection_Data::application_name() const noexcept {
+			string Connection_String::application_name() const noexcept {
 				return this->application_name_;
 			}
 
-			void Connection_Data::application_name(const string &application_name) noexcept {
+			void Connection_String::application_name(const string &application_name) noexcept {
 				this->application_name_ = application_name;
 				trim(this->application_name_);
 			}
 
-			bool Connection_Data::has_application_name() const noexcept {
+			bool Connection_String::has_application_name() const noexcept {
 				return !this->application_name_.empty();
 			}
 
-			string Connection_Data::fallback_application_name() const noexcept {
+			string Connection_String::fallback_application_name() const noexcept {
 				return this->fallback_application_name_;
 			}
 
-			void Connection_Data::fallback_application_name(const string &fallback_application_name) noexcept {
+			void Connection_String::fallback_application_name(const string &fallback_application_name) noexcept {
 				this->fallback_application_name_ = fallback_application_name;
 				trim(this->fallback_application_name_);
 			}
 
-			bool Connection_Data::has_fallback_application_name() const noexcept {
+			bool Connection_String::has_fallback_application_name() const noexcept {
 				return !this->fallback_application_name_.empty();
 			}
 
-			string Connection_Data::sslcert() const noexcept {
+			string Connection_String::sslcert() const noexcept {
 				return this->ssl_cert_;
 			}
 
-			void Connection_Data::sslcert(const string &sslcert) noexcept {
+			void Connection_String::sslcert(const string &sslcert) noexcept {
 				this->ssl_cert_ = sslcert;
 				trim(this->ssl_cert_);
 			}
 
-			bool Connection_Data::has_sslcert() const noexcept {
+			bool Connection_String::has_sslcert() const noexcept {
 				return !this->ssl_cert_.empty();
 			}
 
-			string Connection_Data::sslkey() const noexcept {
+			string Connection_String::sslkey() const noexcept {
 				return this->ssl_key_;
 			}
 
-			void Connection_Data::sslkey(const string &sslkey) noexcept {
+			void Connection_String::sslkey(const string &sslkey) noexcept {
 				this->ssl_key_ = sslkey;
 				trim(this->ssl_key_);
 			}
 
-			bool Connection_Data::has_sslkey() const noexcept {
+			bool Connection_String::has_sslkey() const noexcept {
 				return !this->ssl_key_.empty();
 			}
 
-			string Connection_Data::sslrootcert() const noexcept {
+			string Connection_String::sslrootcert() const noexcept {
 				return this->ssl_root_cert_;
 			}
 
-			void Connection_Data::sslrootcert(const string &sslrootcert) noexcept {
+			void Connection_String::sslrootcert(const string &sslrootcert) noexcept {
 				this->ssl_root_cert_ = sslrootcert;
 				trim(this->ssl_root_cert_);
 			}
 
-			bool Connection_Data::has_sslrootcert() const noexcept {
+			bool Connection_String::has_sslrootcert() const noexcept {
 				return !this->ssl_root_cert_.empty();
 			}
 
-			string Connection_Data::sslcrl() const noexcept {
+			string Connection_String::sslcrl() const noexcept {
 				return this->ssl_crl_;
 			}
 
-			void Connection_Data::sslcrl(const string &sslcrl) noexcept {
+			void Connection_String::sslcrl(const string &sslcrl) noexcept {
 				this->ssl_crl_ = sslcrl;
 				trim(this->ssl_crl_);
 			}
 
-			bool Connection_Data::has_sslcrl() const noexcept {
+			bool Connection_String::has_sslcrl() const noexcept {
 				return !this->ssl_crl_.empty();
 			}
 
-			string Connection_Data::requirepeer() const noexcept {
+			string Connection_String::requirepeer() const noexcept {
 				return this->require_peer_;
 			}
 
-			void Connection_Data::requirepeer(const string &requirepeer) noexcept {
+			void Connection_String::requirepeer(const string &requirepeer) noexcept {
 				this->require_peer_ = requirepeer;
 				trim(this->require_peer_);
 			}
 
-			bool Connection_Data::has_requirepeer() const noexcept {
+			bool Connection_String::has_requirepeer() const noexcept {
 				return !this->require_peer_.empty();
 			}
 
-			string Connection_Data::krbsrvname() const noexcept {
+			string Connection_String::krbsrvname() const noexcept {
 				return this->krb_srv_name_;
 			}
 
-			void Connection_Data::krbsrvname(const string &krbsrvname) noexcept {
+			void Connection_String::krbsrvname(const string &krbsrvname) noexcept {
 				this->krb_srv_name_ = krbsrvname;
 				trim(this->krb_srv_name_);
 			}
 
-			bool Connection_Data::has_krbsrvname() const noexcept {
+			bool Connection_String::has_krbsrvname() const noexcept {
 				return !this->krb_srv_name_.empty();
 			}
 
-			string Connection_Data::gsslib() const noexcept {
+			string Connection_String::gsslib() const noexcept {
 				return this->gss_lib_;
 			}
 
-			void Connection_Data::gsslib(const string &gsslib) noexcept {
+			void Connection_String::gsslib(const string &gsslib) noexcept {
 				this->gss_lib_ = gsslib;
 				trim(this->gss_lib_);
 			}
 
-			bool Connection_Data::has_gsslib() const noexcept {
+			bool Connection_String::has_gsslib() const noexcept {
 				return !this->gss_lib_.empty();
 			}
 
-			string Connection_Data::service() const noexcept {
+			string Connection_String::service() const noexcept {
 				return this->service_;
 			}
 
-			void Connection_Data::service(const string &service) noexcept {
+			void Connection_String::service(const string &service) noexcept {
 				this->service_ = service;
 				trim(this->service_);
 			}
 
-			bool Connection_Data::has_service() const noexcept {
+			bool Connection_String::has_service() const noexcept {
 				return !this->service_.empty();
 			}
 
-			Connection_Data::SSL_Mode Connection_Data::sslmode() const noexcept {
+			Connection_String::SSL_Mode Connection_String::sslmode() const noexcept {
 				return this->ssl_mode_;
 			}
 
-			void Connection_Data::sslmode(const Connection_Data::SSL_Mode &sslmode) noexcept {
+			void Connection_String::sslmode(const Connection_String::SSL_Mode &sslmode) noexcept {
 				this->ssl_mode_ = sslmode;
 				ssl_mode_set_ = true;
 			}
 
-			bool Connection_Data::has_sslmode() const noexcept {
+			bool Connection_String::has_sslmode() const noexcept {
 				return this->ssl_mode_set_;
 			}
 
-			ssize_t Connection_Data::connect_timeout() const noexcept {
+			ssize_t Connection_String::connect_timeout() const noexcept {
 				return this->connect_timeout_;
 			}
 
-			void Connection_Data::connect_timeout(const ssize_t &connect_timeout) noexcept {
+			void Connection_String::connect_timeout(const ssize_t &connect_timeout) noexcept {
 				this->connect_timeout_ = connect_timeout;
 			}
 
-			bool Connection_Data::has_connect_timeout() const noexcept {
+			bool Connection_String::has_connect_timeout() const noexcept {
 				return this->connect_timeout_ >= 0;
 			}
 
-			unsigned short Connection_Data::port() const noexcept {
+			unsigned short Connection_String::port() const noexcept {
 				return this->port_;
 			}
 
-			void Connection_Data::port(const unsigned short &port) noexcept {
+			void Connection_String::port(const unsigned short &port) noexcept {
 				this->port_ = port;
 			}
 
-			bool Connection_Data::has_port() const noexcept {
+			bool Connection_String::has_port() const noexcept {
 				return this->port_ > 0;
 			}
 
-			ssize_t Connection_Data::keepalives_idle() const noexcept {
+			ssize_t Connection_String::keepalives_idle() const noexcept {
 				return this->keep_alives_idle_;
 			}
 
-			void Connection_Data::keepalives_idle(const ssize_t &keepalives_idle) noexcept {
+			void Connection_String::keepalives_idle(const ssize_t &keepalives_idle) noexcept {
 				this->keep_alives_idle_ = keepalives_idle;
 			}
 
-			bool Connection_Data::has_keepalives_idle() const noexcept {
+			bool Connection_String::has_keepalives_idle() const noexcept {
 				return this->keep_alives_idle_ >= 0;
 			}
 
-			ssize_t Connection_Data::keepalives_interval() const noexcept {
+			ssize_t Connection_String::keepalives_interval() const noexcept {
 				return this->keep_alives_interval_;
 			}
 
-			void Connection_Data::keepalives_interval(const ssize_t &keepalives_interval) noexcept {
+			void Connection_String::keepalives_interval(const ssize_t &keepalives_interval) noexcept {
 				this->keep_alives_interval_ = keepalives_interval;
 			}
 
-			bool Connection_Data::has_keepalives_interval() const noexcept {
+			bool Connection_String::has_keepalives_interval() const noexcept {
 				return this->keep_alives_interval_ >= 0;
 			}
 
-			ssize_t Connection_Data::keepalives_count() const noexcept {
+			ssize_t Connection_String::keepalives_count() const noexcept {
 				return this->keep_alives_count_;
 			}
 
-			void Connection_Data::keepalives_count(const ssize_t &keepalives_count) noexcept {
+			void Connection_String::keepalives_count(const ssize_t &keepalives_count) noexcept {
 				this->keep_alives_count_ = keepalives_count;
 			}
 
-			bool Connection_Data::has_keepalives_count() const noexcept {
+			bool Connection_String::has_keepalives_count() const noexcept {
 				return this->keep_alives_count_ >= 0;
 			}
 
-			bool Connection_Data::keepalives() const noexcept {
+			bool Connection_String::keepalives() const noexcept {
 				return this->keep_alives_;
 			}
 
-			void Connection_Data::keepalives(const bool &keepalives) noexcept {
+			void Connection_String::keepalives(const bool &keepalives) noexcept {
 				this->keep_alives_ = keepalives;
 				this->keep_alives_set_ = true;
 			}
 
-			bool Connection_Data::has_keepalives() const noexcept {
+			bool Connection_String::has_keepalives() const noexcept {
 				return this->keep_alives_set_ >= 0;
 			}
 
-			bool Connection_Data::requiressl() const noexcept {
+			bool Connection_String::requiressl() const noexcept {
 				return this->require_ssl_;
 			}
 
-			void Connection_Data::requiressl(const bool &requiressl) noexcept {
+			void Connection_String::requiressl(const bool &requiressl) noexcept {
 				this->require_ssl_ = requiressl;
 				this->require_ssl_set_ = true;
 			}
 
-			bool Connection_Data::has_requiressl() const noexcept {
+			bool Connection_String::has_requiressl() const noexcept {
 				return this->require_ssl_set_;
 			}
 
-			ostream& operator<<(ostream &os, const Connection_Data &connection_data) {
-				os << connection_data.to_string();
+			ostream& operator<<(ostream &os, const Connection_String &connection_string) {
+				os << connection_string.to_string();
 				return os;
 			}
 
 
-			string to_string(const Connection_Data::SSL_Mode &sslmode) {
+			string to_string(const Connection_String::SSL_Mode &sslmode) {
 				switch(sslmode) {
-				case Connection_Data::SSL_Mode::DISABLE:
+				case Connection_String::SSL_Mode::DISABLE:
 					return "disable";
-				case Connection_Data::SSL_Mode::ALLOW:
+				case Connection_String::SSL_Mode::ALLOW:
 					return "allow";
-				case Connection_Data::SSL_Mode::PREFER:
+				case Connection_String::SSL_Mode::PREFER:
 					return "prefer";
-				case Connection_Data::SSL_Mode::REQUIRE:
+				case Connection_String::SSL_Mode::REQUIRE:
 					return "require";
-				case Connection_Data::SSL_Mode::VERIFY_CA:
+				case Connection_String::SSL_Mode::VERIFY_CA:
 					return "verify-ca";
-				case Connection_Data::SSL_Mode::VERIFY_FULL:
+				case Connection_String::SSL_Mode::VERIFY_FULL:
 					return "verify-full";
 				default:
 					throw DB_Exception("sslmode \"" + std::to_string(static_cast<char>(sslmode)) + "\" is invalid!");
 				}
 			}
 
-			Connection_Data::SSL_Mode from_string(const string &sslmode) {
-				if(sslmode == "disable") return Connection_Data::SSL_Mode::DISABLE;
-				if(sslmode == "allow") return Connection_Data::SSL_Mode::ALLOW;
-				if(sslmode == "prefer") return Connection_Data::SSL_Mode::PREFER;
-				if(sslmode == "require") return Connection_Data::SSL_Mode::REQUIRE;
-				if(sslmode == "verify-ca") return Connection_Data::SSL_Mode::VERIFY_CA;
-				if(sslmode == "verify_full") return Connection_Data::SSL_Mode::VERIFY_FULL;
+			Connection_String::SSL_Mode from_string(const string &sslmode) {
+				if(sslmode == "disable") return Connection_String::SSL_Mode::DISABLE;
+				if(sslmode == "allow") return Connection_String::SSL_Mode::ALLOW;
+				if(sslmode == "prefer") return Connection_String::SSL_Mode::PREFER;
+				if(sslmode == "require") return Connection_String::SSL_Mode::REQUIRE;
+				if(sslmode == "verify-ca") return Connection_String::SSL_Mode::VERIFY_CA;
+				if(sslmode == "verify_full") return Connection_String::SSL_Mode::VERIFY_FULL;
 				throw DB_Exception("sslmode \"" + sslmode + "\" is invalid!");
 			}
 
-			ostream& operator<<(ostream &os, const Connection_Data::SSL_Mode &sslmode) {
+			ostream& operator<<(ostream &os, const Connection_String::SSL_Mode &sslmode) {
 				os << to_string(sslmode);
 				return os;
 			}
