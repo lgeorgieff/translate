@@ -17,7 +17,7 @@
 // Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 // ====================================================================================================================
 
-#include "connection_data.hpp"
+#include "connection_string.hpp"
 
 #include <pqxx/pqxx>
 #include <iostream>
@@ -27,7 +27,7 @@
 #include <cctype>
 #include <algorithm>
 
-using lgeorgieff::translate::server::Connection_Data;
+using lgeorgieff::translate::server::Connection_String;
 
 using std::cout;
 using std::cin;
@@ -51,14 +51,14 @@ std::string read_sql_file() {
 
 int main(const int argc, const char **argv) {
 	try {
-		Connection_Data connection_data{};
-		connection_data.user(argv[1]);
-		connection_data.password(argv[2]);
-		connection_data.dbname("translate");
-		connection_data.hostaddr("127.0.0.1");		
-		cout << connection_data << endl;
+		Connection_String connection_string{};
+		connection_string.user(argv[1]);
+		connection_string.password(argv[2]);
+		connection_string.dbname("translate");
+		connection_string.hostaddr("127.0.0.1");		
+		cout << connection_string << endl;
 		
-		pqxx::connection c(connection_data.to_string());
+		pqxx::connection c(connection_string.to_string());
 		pqxx::work w(c);
 		pqxx::result r = w.exec(read_sql_file());
 		w.commit();
