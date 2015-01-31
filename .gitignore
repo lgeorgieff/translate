@@ -27,6 +27,5 @@
 *.out
 *.app
 
-/client/bin/
-/server/bin/
+/bin
 /resources/dict.cc
