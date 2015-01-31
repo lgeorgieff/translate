@@ -1,7 +1,7 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
 // Last modified: 01/30/2015
-// Description: The connection_data declaration which is an abstraction class for postgresql connection strings.
+// Description: The Connection_String declaration which is an abstraction class for postgresql connection strings.
 //              More information to postgresql connetion string available at:
 //              http://www.postgresql.org/docs/9.1/static/libpq-connect.html
 // ====================================================================================================================
@@ -19,8 +19,8 @@
 // ====================================================================================================================
 
 
-#ifndef CONNECTION_DATA_HPP_
-#define CONNECTION_DATA_HPP_
+#ifndef CONNECTION_STRING_HPP_
+#define CONNECTION_STRING_HPP_
 
 #include <cstddef>
 #include <string>
@@ -32,7 +32,7 @@ using std::ostream;
 namespace lgeorgieff {
 	namespace translate {
 		namespace server {
-			class Connection_Data {
+			class Connection_String {
 			public:
 				enum class SSL_Mode : char {
 					DISABLE = 1,
@@ -45,14 +45,14 @@ namespace lgeorgieff {
 
 			public:
 				/// A constructor that takes all supported connection string attributes
-				Connection_Data() noexcept;
-				Connection_Data(const Connection_Data&) noexcept = default;
-				Connection_Data(Connection_Data&&) noexcept = default;
+				Connection_String() noexcept;
+				Connection_String(const Connection_String&) noexcept = default;
+				Connection_String(Connection_String&&) noexcept = default;
 
-				Connection_Data& operator=(const Connection_Data&) noexcept = default;
-				Connection_Data& operator=(Connection_Data&&) noexcept = default;
+				Connection_String& operator=(const Connection_String&) noexcept = default;
+				Connection_String& operator=(Connection_String&&) noexcept = default;
 
-				~Connection_Data() = default;
+				~Connection_String() = default;
 
 				// The default value for user if no one is provided
 				static const string DEFAULT_USER;
@@ -182,15 +182,15 @@ namespace lgeorgieff {
 				bool require_ssl_;
 				bool require_ssl_set_;
 				bool ssl_mode_set_;
-			}; // Connection_Data
+			}; // Connection_String
 
-			ostream& operator<<(ostream&, const Connection_Data&);
+			ostream& operator<<(ostream&, const Connection_String&);
 			
-			string to_string(const Connection_Data::SSL_Mode&);
-			Connection_Data::SSL_Mode from_string(const string&);
-			ostream& operator<<(ostream&, const Connection_Data::SSL_Mode&);
+			string to_string(const Connection_String::SSL_Mode&);
+			Connection_String::SSL_Mode from_string(const string&);
+			ostream& operator<<(ostream&, const Connection_String::SSL_Mode&);
 		} // server
 	} // translate
 } // lgeorgieff
 
-#endif // CONNECTION_DATA_HPP_
+#endif // CONNECTION_STRING_HPP_
