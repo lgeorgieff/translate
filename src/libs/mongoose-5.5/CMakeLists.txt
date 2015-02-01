@@ -1,6 +1,6 @@
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 01/31/2015
+# Last modified: 02/01/2015
 # Description: Build the mongoose web-server as static library, so it can be finally used by the server code of
 #              translate.
 #######################################################################################################################
@@ -17,9 +17,15 @@
 # Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #######################################################################################################################
 
+### project setup
+project(translate_mongoose)
+set (translate_mongoose_VERSION_MAJOR 5)
+set (translate_mongoose_VERSION_MINOR 5)
 
 ### register all source files
 set(MONGOOSE_SOURCE_FILES mongoose.c)
 
 ### create a sttic library
 add_library(mongoose STATIC ${MONGOOSE_SOURCE_FILES})
+set_target_properties(mongoose PROPERTIES VERSION
+			       "${translate_mongoose_VERSION_MAJOR}.${translate_mongoose_VERSION_MINOR}")
