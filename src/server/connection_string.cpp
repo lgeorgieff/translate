@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 01/30/2015
+// Last modified: 02/01/2015
 // Description: The Connection_String implementation which is an abstraction class for postgresql connection strings.
 // ====================================================================================================================
 
@@ -56,7 +56,7 @@ namespace lgeorgieff {
 			const bool Connection_String::DEFAULT_REQUIRE_SSL{false};
 			const bool Connection_String::DEFAULT_KEEP_ALIVES{true};
 
-			Connection_String::Connection_String() noexcept
+			Connection_String::Connection_String()
 			:user_{DEFAULT_USER}, host_{""}, host_addr_{DEFAULT_HOST_ADDR}, password_{DEFAULT_PASSWORD},
 				db_name_{DEFAULT_DB_NAME}, options_{""}, client_encoding_{""}, application_name_{""},
 				fallback_application_name_{""}, ssl_cert_{""}, ssl_key_{""}, ssl_root_cert_{""}, ssl_crl_{""},
@@ -401,7 +401,7 @@ namespace lgeorgieff {
 			}
 
 			bool Connection_String::has_keepalives() const noexcept {
-				return this->keep_alives_set_ >= 0;
+				return this->keep_alives_set_;
 			}
 
 			bool Connection_String::requiressl() const noexcept {

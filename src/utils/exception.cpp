@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 01/27/2015
+// Last modified: 02/01/2015
 // Description: Provides the implementation for a self-defined base exception class.
 // ====================================================================================================================
 
@@ -27,7 +27,7 @@ using std::string;
 namespace lgeorgieff {
 	namespace translate {
 		namespace utils {
-			Exception::Exception(const string &what) noexcept
+			Exception::Exception(const string &what)
 			:what_{what} { }
 
 			const char* Exception::what() const noexcept {

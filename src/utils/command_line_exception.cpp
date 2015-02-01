@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 01/27/2015
+// Last modified: 02/01/2015
 // Description: Provides the implementation for the exception CommandLineException which is thrown if any error occurs
 //              on the command line during the execution of this program.
 // ====================================================================================================================
@@ -28,7 +28,7 @@ using std::string;
 namespace lgeorgieff {
 	namespace translate {
 		namespace utils {
-			CommandLineException::CommandLineException(const string &what) noexcept
+			CommandLineException::CommandLineException(const string &what)
 			:Exception{what} { }
 		} // utils
 	} // translate
