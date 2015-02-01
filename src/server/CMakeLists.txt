@@ -1,6 +1,6 @@
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 01/31/2015
+# Last modified: 02/01/2015
 # Description: Build configuration for the server part of translate.
 #######################################################################################################################
 
@@ -30,3 +30,4 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lpqxx -lpq")
 
 ### create the server executable
 add_executable(server ${SERVER_SOURCE_FILES})
+set_target_properties(server PROPERTIES VERSION "${translate_VERSION_MAJOR}.${translate_VERSION_MINOR}")
