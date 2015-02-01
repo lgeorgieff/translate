@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 01/2/2015
+// Last modified: 02/01/2015
 // Description: Declares the exception DB_Exception which is thrown if any error occurs during a data base operation.
 // ====================================================================================================================
 
@@ -29,12 +29,12 @@ namespace lgeorgieff {
 		namespace server {
 			class DB_Exception : public lgeorgieff::translate::utils::Exception {
 			public:
-				DB_Exception(const std::string&) noexcept;
-				DB_Exception(const DB_Exception&) noexcept = default;
-				DB_Exception(DB_Exception&&) noexcept = default;
+				DB_Exception(const std::string&);
+				DB_Exception(const DB_Exception&) = default;
+				DB_Exception(DB_Exception&&) = default;
 				
-				DB_Exception& operator=(const DB_Exception&) noexcept = default;
-				DB_Exception& operator=(DB_Exception&&) noexcept = default;
+				DB_Exception& operator=(const DB_Exception&) = default;
+				DB_Exception& operator=(DB_Exception&&) = default;
 				
 				virtual ~DB_Exception() = default;
 			}; // DB_Exception

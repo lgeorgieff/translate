@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 01/30/2015
+// Last modified: 02/01/2015
 // Description: The Connection_String declaration which is an abstraction class for postgresql connection strings.
 //              More information to postgresql connetion string available at:
 //              http://www.postgresql.org/docs/9.1/static/libpq-connect.html
@@ -45,12 +45,12 @@ namespace lgeorgieff {
 
 			public:
 				/// A constructor that takes all supported connection string attributes
-				Connection_String() noexcept;
-				Connection_String(const Connection_String&) noexcept = default;
-				Connection_String(Connection_String&&) noexcept = default;
+				Connection_String();
+				Connection_String(const Connection_String&) = default;
+				Connection_String(Connection_String&&) = default;
 
-				Connection_String& operator=(const Connection_String&) noexcept = default;
-				Connection_String& operator=(Connection_String&&) noexcept = default;
+				Connection_String& operator=(const Connection_String&) = default;
+				Connection_String& operator=(Connection_String&&) = default;
 
 				~Connection_String() = default;
 
