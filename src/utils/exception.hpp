@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 01/27/2015
+// Last modified: 02/01/2015
 // Description: Provides the declaration for a self-defined base exception class.
 // ====================================================================================================================
 
@@ -27,12 +27,12 @@ namespace lgeorgieff {
 		namespace utils {
 			class Exception : public std::exception {
 			public:
-				Exception(const std::string&) noexcept;
-				Exception(const Exception&) noexcept = default;
-				Exception(Exception&&) noexcept = default;
+				Exception(const std::string&);
+				Exception(const Exception&) = default;
+				Exception(Exception&&) = default;
 
-				Exception& operator=(const Exception&) noexcept = default;
-				Exception& operator=(Exception&&) noexcept = default;
+				Exception& operator=(const Exception&) = default;
+				Exception& operator=(Exception&&) = default;
 
 				const char* what() const noexcept;
 
