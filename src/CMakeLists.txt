@@ -3,6 +3,12 @@
 # Last modified: 01/31/2015
 # Description: Main CMakeLists.txt file for building this project. The actual modules are built by calling
 #              CMakeLists.txt of the corresponding sub-directories.
+#              Common options:
+#                *-DCMAKE_BUILD_TYPE=Release
+#                *-DCMAKE_BUILD_TYPE=Debug
+#                *-DCMAKE_CXX_COMPILER=$(which clang++)
+#                *-CMAKE_CXX_FLAGS_DISTRIBUTION="-Wall -Wextra"
+#              A more complete list of variables can be found here: http://www.cmake.org/Wiki/CMake_Useful_Variables
 #######################################################################################################################
 
 
