@@ -17,7 +17,6 @@
 // MA 02110-1301, USA.
 // ====================================================================================================================
 
-
 #include "command_line_parser.hpp"
 #include "../utils/command_line_exception.hpp"
 
@@ -28,61 +27,50 @@
 using lgeorgieff::translate::utils::CommandLineException;
 using std::string;
 
-
 namespace lgeorgieff {
-	namespace translate {
+namespace translate {
 
-		string CommandLineParser::IN_NAME{"--in"};
-		string CommandLineParser::OUT_NAME{"--out"};
-		string CommandLineParser::DEFAULT_IN_VALUE{"de"};
-		string CommandLineParser::DEFAULT_OUT_VALUE{"en"};
+string CommandLineParser::IN_NAME{"--in"};
+string CommandLineParser::OUT_NAME{"--out"};
+string CommandLineParser::DEFAULT_IN_VALUE{"de"};
+string CommandLineParser::DEFAULT_OUT_VALUE{"en"};
 
-		CommandLineParser::CommandLineParser(const int argc, const char **argv) noexcept
-		:CommandLineParser{argc, argv, DEFAULT_IN_VALUE, DEFAULT_OUT_VALUE} { }
+CommandLineParser::CommandLineParser(const int argc, const char **argv) noexcept
+    : CommandLineParser{argc, argv, DEFAULT_IN_VALUE, DEFAULT_OUT_VALUE} {}
 
-		CommandLineParser::CommandLineParser
-		(const int argc, const char **argv, const string &default_in, const string &default_out) noexcept
-		:in_{""}, out_{""}, phrase_{""} {
-			bool in_found{false};
-			bool out_found{false};
-			for(int i{1}; argc > i; ++i){
-				if(IN_NAME == argv[i] && argc - 1 != i){
-					this->in_ = string(argv[++i]);
-					in_found = true;
-				}
-				else if(IN_NAME == argv[i]){
-					throw CommandLineException("The value for \"" + IN_NAME + "\" is missing!");
-				}
-				else if(OUT_NAME == argv[i] && argc - 1 != i){
-					this->out_ = string(argv[++i]);
-					out_found = true;
-				}
-				else if(OUT_NAME == argv[i]){
-					throw CommandLineException("The value for \"" + OUT_NAME + "\" is missing!");
-				}
-				else if(argc - 1 == i){
-					phrase_ = string(argv[i]);
-				}
-				else {
-					throw CommandLineException("The argument \"" + string(argv[i]) + "\" is not known!");
-				}
-			}
+CommandLineParser::CommandLineParser(const int argc, const char **argv, const string &default_in,
+                                     const string &default_out) noexcept : in_{""},
+                                                                           out_{""},
+                                                                           phrase_{""} {
+  bool in_found{false};
+  bool out_found{false};
+  for (int i{1}; argc > i; ++i) {
+    if (IN_NAME == argv[i] && argc - 1 != i) {
+      this->in_ = string(argv[++i]);
+      in_found = true;
+    } else if (IN_NAME == argv[i]) {
+      throw CommandLineException("The value for \"" + IN_NAME + "\" is missing!");
+    } else if (OUT_NAME == argv[i] && argc - 1 != i) {
+      this->out_ = string(argv[++i]);
+      out_found = true;
+    } else if (OUT_NAME == argv[i]) {
+      throw CommandLineException("The value for \"" + OUT_NAME + "\" is missing!");
+    } else if (argc - 1 == i) {
+      phrase_ = string(argv[i]);
+    } else {
+      throw CommandLineException("The argument \"" + string(argv[i]) + "\" is not known!");
+    }
+  }
 
-			if(!in_found) this->in_ = default_in;
-			if(!out_found) this->out_ = default_out;
-		}
+  if (!in_found) this->in_ = default_in;
+  if (!out_found) this->out_ = default_out;
+}
 
-		string CommandLineParser::in() const noexcept {
-			return this->in_;
-		}
+string CommandLineParser::in() const noexcept { return this->in_; }
 
-		string CommandLineParser::out() const noexcept {
-			return this->out_;
-		}
+string CommandLineParser::out() const noexcept { return this->out_; }
 
-		string CommandLineParser::phrase() const noexcept {
-			return this->phrase_;
-		}
+string CommandLineParser::phrase() const noexcept { return this->phrase_; }
 
-	} // translate
-} // lgeorgieff
+}  // translate
+}  // lgeorgieff

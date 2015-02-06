@@ -16,20 +16,17 @@
 // Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 // ====================================================================================================================
 
-
 #include "command_line_parser.hpp"
 
 #include <iostream>
-
 
 using lgeorgieff::translate::CommandLineParser;
 
 using std::cout;
 using std::endl;
 
-
 int main(const int argc, const char** argv) {
-	CommandLineParser cmdParser{argc, argv};
-	
-	return 0;
+  CommandLineParser cmdParser{argc, argv};
+
+  return 0;
 }

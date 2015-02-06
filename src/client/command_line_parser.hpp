@@ -17,53 +17,52 @@
 // Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 // ====================================================================================================================
 
-
 #ifndef COMMAND_LINE_PARSER_HPP_
 #define COMMAND_LINE_PARSER_HPP_
 
 #include <string>
 
-
 namespace lgeorgieff {
-	namespace translate {
-		class CommandLineParser {
-		public:
-			// The name of the option representing the language of the incomming text (origin)
-			static std::string IN_NAME;
-			// The name of the option representing the language of the outcomming text (result)
-			static std::string OUT_NAME;
-			// The default value language of the incomming text (origin)
-			static std::string DEFAULT_IN_VALUE;
-			// The default value language of the outcomming text (result)
-			static std::string DEFAULT_OUT_VALUE;
+namespace translate {
+class CommandLineParser {
+ public:
+  // The name of the option representing the language of the incomming text (origin)
+  static std::string IN_NAME;
+  // The name of the option representing the language of the outcomming text (result)
+  static std::string OUT_NAME;
+  // The default value language of the incomming text (origin)
+  static std::string DEFAULT_IN_VALUE;
+  // The default value language of the outcomming text (result)
+  static std::string DEFAULT_OUT_VALUE;
 
-			// The constructor that takes the command line arguments from the main function and finally initializes all
-			// internal values
-			CommandLineParser(const int, const char **) noexcept;
-			// The constructor that takes the command line arguments from the main function and particular default
-			// values for DEFAULT_IN_VALUE and DEFAULT_OUT_VALUE and finally initializes all internal values
-			CommandLineParser(const int, const char**, const std::string&, const std::string&) noexcept;
-			CommandLineParser(const CommandLineParser&) noexcept = default;
-			CommandLineParser(CommandLineParser&&) noexcept = default;
-		
-			CommandLineParser& operator=(const CommandLineParser&) noexcept = default;
-			CommandLineParser& operator=(CommandLineParser&&) noexcept = default;
+  // The constructor that takes the command line arguments from the main function and finally initializes all
+  // internal values
+  CommandLineParser(const int, const char**) noexcept;
+  // The constructor that takes the command line arguments from the main function and particular default
+  // values for DEFAULT_IN_VALUE and DEFAULT_OUT_VALUE and finally initializes all internal values
+  CommandLineParser(const int, const char**, const std::string&, const std::string&) noexcept;
+  CommandLineParser(const CommandLineParser&) noexcept = default;
+  CommandLineParser(CommandLineParser&&) noexcept = default;
 
-			// A getter for the laguage of the incoming text (origin)
-			std::string in() const noexcept;
-			// A getter for the laguage of the outcoming text (result)
-			std::string out() const noexcept;
-			// A getter for the text to be translated
-			std::string phrase() const noexcept;
+  CommandLineParser& operator=(const CommandLineParser&) noexcept = default;
+  CommandLineParser& operator=(CommandLineParser&&) noexcept = default;
 
-			// The destructor
-			~CommandLineParser() noexcept = default;
-		private:
-			std::string in_;
-			std::string out_;
-			std::string phrase_;
-		}; // CommandLineParser
-	} // translate
-} // lgeorgieff
+  // A getter for the laguage of the incoming text (origin)
+  std::string in() const noexcept;
+  // A getter for the laguage of the outcoming text (result)
+  std::string out() const noexcept;
+  // A getter for the text to be translated
+  std::string phrase() const noexcept;
 
-#endif // COMMAND_LINE_PARSER_HPP_
+  // The destructor
+  ~CommandLineParser() noexcept = default;
+
+ private:
+  std::string in_;
+  std::string out_;
+  std::string phrase_;
+};  // CommandLineParser
+}  // translate
+}  // lgeorgieff
+
+#endif  // COMMAND_LINE_PARSER_HPP_
