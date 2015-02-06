@@ -23,24 +23,25 @@
 #include <string>
 
 namespace lgeorgieff {
-	namespace translate {
-		namespace utils {
-			class Exception : public std::exception {
-			public:
-				Exception(const std::string&);
-				Exception(const Exception&) = default;
-				Exception(Exception&&) = default;
+namespace translate {
+namespace utils {
+class Exception : public std::exception {
+ public:
+  Exception(const std::string&);
+  Exception(const Exception&) = default;
+  Exception(Exception&&) = default;
 
-				Exception& operator=(const Exception&) = default;
-				Exception& operator=(Exception&&) = default;
+  Exception& operator=(const Exception&) = default;
+  Exception& operator=(Exception&&) = default;
 
-				const char* what() const noexcept;
+  const char* what() const noexcept;
 
-				virtual ~Exception() = default;
-			protected:
-				std::string what_;
-			}; // exception
-		} // utils
-	} // translate
-} // lgeorgieff
-#endif // EXCEPTION_HPP_
+  virtual ~Exception() = default;
+
+ protected:
+  std::string what_;
+};  // exception
+}  // utils
+}  // translate
+}  // lgeorgieff
+#endif  // EXCEPTION_HPP_
