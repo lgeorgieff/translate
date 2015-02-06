@@ -17,7 +17,6 @@
 // Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 // ====================================================================================================================
 
-
 #include "db_exception.hpp"
 
 #include <string>
@@ -26,10 +25,9 @@
 using std::string;
 
 namespace lgeorgieff {
-	namespace translate {
-		namespace server {
-			DB_Exception::DB_Exception(const string &what)
-			:Exception{what} { }
-		} // server
-	} // translate
-} // lgeorgieff
+namespace translate {
+namespace server {
+DB_Exception::DB_Exception(const string &what) : Exception{what} {}
+}  // server
+}  // translate
+}  // lgeorgieff
