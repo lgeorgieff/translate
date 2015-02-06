@@ -1,6 +1,6 @@
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 02/01/2015
+# Last modified: 02/07/2015
 # Description: Build configuration for the server part of translate.
 #######################################################################################################################
 
@@ -19,8 +19,6 @@
 
 ### project setup
 project(translate_server)
-set (translate_VERSION_MAJOR 0)
-set (translate_VERSION_MINOR 1)
 
 ### register all source files for the server part
 set(SERVER_SOURCE_FILES ../utils/exception.cpp db_exception.cpp connection_string.cpp main.cpp)
