@@ -37,15 +37,15 @@ class CommandLineParser {
 
   // The constructor that takes the command line arguments from the main function and finally initializes all
   // internal values
-  CommandLineParser(const int, const char**) noexcept;
+  CommandLineParser(const int, const char**);
   // The constructor that takes the command line arguments from the main function and particular default
   // values for DEFAULT_IN_VALUE and DEFAULT_OUT_VALUE and finally initializes all internal values
-  CommandLineParser(const int, const char**, const std::string&, const std::string&) noexcept;
-  CommandLineParser(const CommandLineParser&) noexcept = default;
-  CommandLineParser(CommandLineParser&&) noexcept = default;
+  CommandLineParser(const int, const char**, const std::string&, const std::string&);
+  CommandLineParser(const CommandLineParser&) = default;
+  CommandLineParser(CommandLineParser&&) = default;
 
-  CommandLineParser& operator=(const CommandLineParser&) noexcept = default;
-  CommandLineParser& operator=(CommandLineParser&&) noexcept = default;
+  CommandLineParser& operator=(const CommandLineParser&) = default;
+  CommandLineParser& operator=(CommandLineParser&&) = default;
 
   // A getter for the laguage of the incoming text (origin)
   std::string in() const noexcept;
@@ -55,7 +55,7 @@ class CommandLineParser {
   std::string phrase() const noexcept;
 
   // The destructor
-  ~CommandLineParser() noexcept = default;
+  ~CommandLineParser() = default;
 
  private:
   std::string in_;

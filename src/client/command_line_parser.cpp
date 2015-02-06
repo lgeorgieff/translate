@@ -35,13 +35,12 @@ string CommandLineParser::OUT_NAME{"--out"};
 string CommandLineParser::DEFAULT_IN_VALUE{"de"};
 string CommandLineParser::DEFAULT_OUT_VALUE{"en"};
 
-CommandLineParser::CommandLineParser(const int argc, const char **argv) noexcept
+CommandLineParser::CommandLineParser(const int argc, const char **argv)
     : CommandLineParser{argc, argv, DEFAULT_IN_VALUE, DEFAULT_OUT_VALUE} {}
 
 CommandLineParser::CommandLineParser(const int argc, const char **argv, const string &default_in,
-                                     const string &default_out) noexcept : in_{""},
-                                                                           out_{""},
-                                                                           phrase_{""} {
+                                     const string &default_out)
+    : in_{""}, out_{""}, phrase_{""} {
   bool in_found{false};
   bool out_found{false};
   for (int i{1}; argc > i; ++i) {
