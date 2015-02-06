@@ -1,7 +1,7 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
 // Last modified: 02/01/2015
-// Description: Provides the declaration for a self-defined base exception class.
+// Description: Declares the exception DB_Exception which is thrown if any error occurs during a data base operation.
 // ====================================================================================================================
 
 // ====================================================================================================================
@@ -16,32 +16,29 @@
 // Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 // ====================================================================================================================
 
-#ifndef EXCEPTION_HPP_
-#define EXCEPTION_HPP_
+#ifndef DB_EXCEPTION_HPP_
+#define DB_EXCEPTION_HPP_
 
-#include <exception>
+#include "../utils/exception.hpp"
+
 #include <string>
 
 namespace lgeorgieff {
 namespace translate {
-namespace utils {
-class Exception : public std::exception {
+namespace server {
+class DB_Exception : public lgeorgieff::translate::utils::Exception {
  public:
-  Exception(const std::string&);
-  Exception(const Exception&) = default;
-  Exception(Exception&&) = default;
+  DB_Exception(const std::string&);
+  DB_Exception(const DB_Exception&) = default;
+  DB_Exception(DB_Exception&&) = default;
 
-  Exception& operator=(const Exception&) = default;
-  Exception& operator=(Exception&&) = default;
+  DB_Exception& operator=(const DB_Exception&) = default;
+  DB_Exception& operator=(DB_Exception&&) = default;
 
-  const char* what() const noexcept;
-
-  virtual ~Exception() = default;
-
- protected:
-  std::string what_;
-};  // exception
-}  // utils
+  virtual ~DB_Exception() = default;
+};  // DB_Exception
+}  // server
 }  // translate
 }  // lgeorgieff
-#endif  // EXCEPTION_HPP_
+
+#endif  // DB_EXCEPTION_HPP_

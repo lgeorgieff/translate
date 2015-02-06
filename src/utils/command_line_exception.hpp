@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 01/27/2015
+// Last modified: 02/01/2015
 // Description: Declares the exception CommandLineException which is thrown if any error occurs on the command line
 //              during the execution of this program.
 // ====================================================================================================================
@@ -17,7 +17,6 @@
 // Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 // ====================================================================================================================
 
-
 #ifndef COMMAND_LINE_EXCEPTION_HPP_
 #define COMMAND_LINE_EXCEPTION_HPP_
 
@@ -25,23 +24,22 @@
 
 #include <string>
 
-
 namespace lgeorgieff {
-	namespace translate {
-		namespace utils {
-			class CommandLineException : public Exception {
-			public:
-				CommandLineException(const std::string&) noexcept;
-				CommandLineException(const CommandLineException&) noexcept = default;
-				CommandLineException(CommandLineException&&) noexcept = default;
-				
-				CommandLineException& operator=(const CommandLineException&) noexcept = default;
-				CommandLineException& operator=(CommandLineException&&) noexcept = default;
-				
-				virtual ~CommandLineException() = default;
-			}; // CommandLineException
-		} // utils
-	} // translate
-} // lgeorgieff
+namespace translate {
+namespace utils {
+class CommandLineException : public Exception {
+ public:
+  CommandLineException(const std::string&);
+  CommandLineException(const CommandLineException&) = default;
+  CommandLineException(CommandLineException&&) = default;
 
-#endif // COMMAND_LINE_EXCEPTION_HPP_
+  CommandLineException& operator=(const CommandLineException&) = default;
+  CommandLineException& operator=(CommandLineException&&) = default;
+
+  virtual ~CommandLineException() = default;
+};  // CommandLineException
+}  // utils
+}  // translate
+}  // lgeorgieff
+
+#endif  // COMMAND_LINE_EXCEPTION_HPP_
