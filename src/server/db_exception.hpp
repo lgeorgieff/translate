@@ -16,7 +16,6 @@
 // Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 // ====================================================================================================================
 
-
 #ifndef DB_EXCEPTION_HPP_
 #define DB_EXCEPTION_HPP_
 
@@ -25,21 +24,21 @@
 #include <string>
 
 namespace lgeorgieff {
-	namespace translate {
-		namespace server {
-			class DB_Exception : public lgeorgieff::translate::utils::Exception {
-			public:
-				DB_Exception(const std::string&);
-				DB_Exception(const DB_Exception&) = default;
-				DB_Exception(DB_Exception&&) = default;
-				
-				DB_Exception& operator=(const DB_Exception&) = default;
-				DB_Exception& operator=(DB_Exception&&) = default;
-				
-				virtual ~DB_Exception() = default;
-			}; // DB_Exception
-		} // server
-	} // translate
-} // lgeorgieff
+namespace translate {
+namespace server {
+class DB_Exception : public lgeorgieff::translate::utils::Exception {
+ public:
+  DB_Exception(const std::string&);
+  DB_Exception(const DB_Exception&) = default;
+  DB_Exception(DB_Exception&&) = default;
 
-#endif // DB_EXCEPTION_HPP_
+  DB_Exception& operator=(const DB_Exception&) = default;
+  DB_Exception& operator=(DB_Exception&&) = default;
+
+  virtual ~DB_Exception() = default;
+};  // DB_Exception
+}  // server
+}  // translate
+}  // lgeorgieff
+
+#endif  // DB_EXCEPTION_HPP_
