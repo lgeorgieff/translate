@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 02/01/2015
+// Last modified: 02/09/2015
 // Description: The Connection_String declaration which is an abstraction class for postgresql connection strings.
 //              More information to postgresql connetion string available at:
 //              http://www.postgresql.org/docs/9.1/static/libpq-connect.html
@@ -43,27 +43,29 @@ class Connection_String {
 
   Connection_String& operator=(const Connection_String&) = default;
   Connection_String& operator=(Connection_String&&) = default;
+  bool operator==(const Connection_String&);
+  bool operator!=(const Connection_String&);
 
   ~Connection_String() = default;
 
   // The default value for user if no one is provided
   static const string DEFAULT_USER;
   // The default value for hostaddr if no one is provided
-  static const string DEFAULT_HOST_ADDR;
+  static const string DEFAULT_HOSTADDR;
   // The default host name, if no one is provided
   static const string DEFAULT_HOST;
   // The default value for password if no one is provided
   static const string DEFAULT_PASSWORD;
   // The default value for dbname if no one is provided
-  static const string DEFAULT_DB_NAME;
+  static const string DEFAULT_DBNAME;
   // The default value for port if no one is provided
-  static const unsigned short DEFAULT_PORT;
+  static const ssize_t DEFAULT_PORT;
   // The default sslmode if enabled and no one is provided
   static const SSL_Mode DEFAULT_SSLMODE;
   // The default requiressl if no one is provided
-  static const bool DEFAULT_REQUIRE_SSL;
+  static const bool DEFAULT_REQUIRESSL;
   // The default keepalives if no one is provided
-  static const bool DEFAULT_KEEP_ALIVES;
+  static const bool DEFAULT_KEEPALIVES;
 
   // Returns the connection string constructed of all given members of this class
   string to_string() const noexcept;
@@ -126,8 +128,8 @@ class Connection_String {
   ssize_t connect_timeout() const noexcept;
   void connect_timeout(const ssize_t&) noexcept;
   bool has_connect_timeout() const noexcept;
-  unsigned short port() const noexcept;
-  void port(const unsigned short&) noexcept;
+  ssize_t port() const noexcept;
+  void port(const ssize_t&) noexcept;
   bool has_port() const noexcept;
   ssize_t keepalives_idle() const noexcept;
   void keepalives_idle(const ssize_t&) noexcept;
@@ -167,8 +169,8 @@ class Connection_String {
   ssize_t keep_alives_idle_;
   ssize_t keep_alives_interval_;
   ssize_t keep_alives_count_;
+  ssize_t port_;
   SSL_Mode ssl_mode_;
-  unsigned short port_;
   bool keep_alives_;
   bool keep_alives_set_;
   bool require_ssl_;
