@@ -1,7 +1,7 @@
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 02/07/2015
-# Description: Build configuration for the server part of translate.
+# Last modified: 02/12/2015
+# Description: Build unit tests for the server part.
 #######################################################################################################################
 
 
@@ -16,16 +16,15 @@
 # Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #######################################################################################################################
 
-
 ### project setup
-project(translate_server)
+project(translate_test_server)
 
-### register all source files for the server part
-set(SERVER_SOURCE_FILES ../utils/exception.cpp db_exception.cpp connection_string.cpp main.cpp)
+### register all source files
+set(TEST_SERVER_SOURCE_FILES ../../utils/exception.cpp ../../server/db_exception.cpp ../../server/connection_string.cpp
+			     connection_string_unit_test.cpp test_main.cpp)
 
 ### set all C++ flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lpqxx -lpq")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lgtest -lgtest_main")
 
-### create the server executable
-add_executable(server ${SERVER_SOURCE_FILES})
-set_target_properties(server PROPERTIES VERSION "${translate_VERSION_MAJOR}.${translate_VERSION_MINOR}")
+### create a sttic library
+add_executable(server_test ${TEST_SERVER_SOURCE_FILES})

@@ -1,7 +1,7 @@
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 02/07/2015
-# Description: Build configuration for the server part of translate.
+# Last modified: 02/12/2015
+# Description: A dummy CMakeLists.txt for calling the corresponding sub-CMakeLists.txt of all tests.
 #######################################################################################################################
 
 
@@ -17,15 +17,8 @@
 #######################################################################################################################
 
 
-### project setup
-project(translate_server)
+### set output folders for all tests
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/../bin/test)
 
-### register all source files for the server part
-set(SERVER_SOURCE_FILES ../utils/exception.cpp db_exception.cpp connection_string.cpp main.cpp)
-
-### set all C++ flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lpqxx -lpq")
-
-### create the server executable
-add_executable(server ${SERVER_SOURCE_FILES})
-set_target_properties(server PROPERTIES VERSION "${translate_VERSION_MAJOR}.${translate_VERSION_MINOR}")
+### register all sub-modules
+add_subdirectory(server)
