@@ -30,9 +30,12 @@ using std::string;
 namespace lgeorgieff {
 namespace translate {
 
-string CommandLineParser::IN_NAME{"--in"};
-string CommandLineParser::OUT_NAME{"--out"};
-string CommandLineParser::HELP_NAME{"--help"};
+string CommandLineParser::IN_NAME_LONG{"--in"};
+string CommandLineParser::IN_NAME_SHORT{"-i"};
+string CommandLineParser::OUT_NAME_LONG{"--out"};
+string CommandLineParser::OUT_NAME_SHORT{"-o"};
+string CommandLineParser::HELP_NAME_LONG{"--help"};
+string CommandLineParser::HELP_NAME_SHORT{"-h"};
 string CommandLineParser::DEFAULT_IN_VALUE{"de"};
 string CommandLineParser::DEFAULT_OUT_VALUE{"en"};
 
@@ -45,18 +48,18 @@ CommandLineParser::CommandLineParser(const int argc, const char **argv, const st
   bool in_found{false};
   bool out_found{false};
   for (int i{1}; argc > i; ++i) {
-    if(HELP_NAME == argv[i]) {
+    if(HELP_NAME_LONG == argv[i] || HELP_NAME_SHORT == argv[i]) {
       this->help_ = true;
-    } else if (IN_NAME == argv[i] && argc - 1 != i) {
+    } else if ((IN_NAME_LONG == argv[i] || IN_NAME_SHORT == argv[i]) && argc - 1 != i) {
       this->in_ = string(argv[++i]);
       in_found = true;
-    } else if (IN_NAME == argv[i]) {
-      throw CommandLineException("The value for \"" + IN_NAME + "\" is missing!");
-    } else if (OUT_NAME == argv[i] && argc - 1 != i) {
+    } else if (IN_NAME_LONG == argv[i] || IN_NAME_SHORT == argv[i]) {
+      throw CommandLineException("The value for \"" + string(argv[i]) + "\" is missing!");
+    } else if ((OUT_NAME_LONG == argv[i] || OUT_NAME_SHORT == argv[i]) && argc - 1 != i) {
       this->out_ = string(argv[++i]);
       out_found = true;
-    } else if (OUT_NAME == argv[i]) {
-      throw CommandLineException("The value for \"" + OUT_NAME + "\" is missing!");
+    } else if (OUT_NAME_LONG == argv[i] || OUT_NAME_SHORT == argv[i]) {
+      throw CommandLineException("The value for \"" + string(argv[i]) + "\" is missing!");
     } else if (argc - 1 == i) {
       phrase_ = string(argv[i]);
     } else {

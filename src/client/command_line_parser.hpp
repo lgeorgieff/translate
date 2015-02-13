@@ -27,11 +27,14 @@ namespace translate {
 class CommandLineParser {
  public:
   // The name of the option representing the language of the incomming text (origin)
-  static std::string IN_NAME;
+  static std::string IN_NAME_LONG;
+  static std::string IN_NAME_SHORT;
   // The name of the option representing the language of the outcomming text (result)
-  static std::string OUT_NAME;
+  static std::string OUT_NAME_LONG;
+  static std::string OUT_NAME_SHORT;
   // The name of the option representing the help switch
-  static std::string HELP_NAME;
+  static std::string HELP_NAME_LONG;
+  static std::string HELP_NAME_SHORT;
   // The default value language of the incomming text (origin)
   static std::string DEFAULT_IN_VALUE;
   // The default value language of the outcomming text (result)
