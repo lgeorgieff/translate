@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 01/17/2015
+// Last modified: 02/13/2015
 // Description: Declares the interface of the command line parser which is adapted to the supported options of this
 //              program.
 // ====================================================================================================================
@@ -30,6 +30,8 @@ class CommandLineParser {
   static std::string IN_NAME;
   // The name of the option representing the language of the outcomming text (result)
   static std::string OUT_NAME;
+  // The name of the option representing the help switch
+  static std::string HELP_NAME;
   // The default value language of the incomming text (origin)
   static std::string DEFAULT_IN_VALUE;
   // The default value language of the outcomming text (result)
@@ -53,6 +55,8 @@ class CommandLineParser {
   std::string out() const noexcept;
   // A getter for the text to be translated
   std::string phrase() const noexcept;
+  // A getter that indicates whether the help switch is given or not
+  bool help() const noexcept;
 
   // The destructor
   ~CommandLineParser() = default;
@@ -61,6 +65,7 @@ class CommandLineParser {
   std::string in_;
   std::string out_;
   std::string phrase_;
+  bool help_;
 };  // CommandLineParser
 }  // translate
 }  // lgeorgieff

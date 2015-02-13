@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 01/27/2015
+// Last modified: 02/13/2015
 // Description: Implements the command line parser interface which is adapted to the supported options of this program.
 // ====================================================================================================================
 
@@ -32,6 +32,7 @@ namespace translate {
 
 string CommandLineParser::IN_NAME{"--in"};
 string CommandLineParser::OUT_NAME{"--out"};
+string CommandLineParser::HELP_NAME{"--help"};
 string CommandLineParser::DEFAULT_IN_VALUE{"de"};
 string CommandLineParser::DEFAULT_OUT_VALUE{"en"};
 
@@ -40,11 +41,13 @@ CommandLineParser::CommandLineParser(const int argc, const char **argv)
 
 CommandLineParser::CommandLineParser(const int argc, const char **argv, const string &default_in,
                                      const string &default_out)
-    : in_{""}, out_{""}, phrase_{""} {
+    : in_{""}, out_{""}, phrase_{""}, help_{false} {
   bool in_found{false};
   bool out_found{false};
   for (int i{1}; argc > i; ++i) {
-    if (IN_NAME == argv[i] && argc - 1 != i) {
+    if(HELP_NAME == argv[i]) {
+      this->help_ = true;
+    } else if (IN_NAME == argv[i] && argc - 1 != i) {
       this->in_ = string(argv[++i]);
       in_found = true;
     } else if (IN_NAME == argv[i]) {
@@ -70,6 +73,8 @@ string CommandLineParser::in() const noexcept { return this->in_; }
 string CommandLineParser::out() const noexcept { return this->out_; }
 
 string CommandLineParser::phrase() const noexcept { return this->phrase_; }
+
+bool CommandLineParser::help() const noexcept { return this->help_; }
 
 }  // translate
 }  // lgeorgieff
