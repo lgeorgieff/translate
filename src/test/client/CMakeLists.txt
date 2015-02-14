@@ -1,7 +1,7 @@
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
 # Last modified: 02/13/2015
-# Description: A dummy CMakeLists.txt for calling the corresponding sub-CMakeLists.txt of all tests.
+# Description: Build unit tests for the client part.
 #######################################################################################################################
 
 
@@ -16,10 +16,15 @@
 # Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #######################################################################################################################
 
+### project setup
+project(translate_test_client)
 
-### set output folders for all tests
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/../bin/test)
+### register all source files
+set(TEST_CLIENT_SOURCE_FILES ../../utils/exception.cpp ../../utils/command_line_exception.cpp
+			     ../../client/command_line_parser.cpp command_line_parser_unit_test.cpp test_main.cpp)
 
-### register all sub-modules
-add_subdirectory(server)
-add_subdirectory(client)
+### set all C++ flags
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lgtest -lgtest_main -lpq -lpqxx")
+
+### create a sttic library
+add_executable(client_test ${TEST_CLIENT_SOURCE_FILES})
