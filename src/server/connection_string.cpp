@@ -18,30 +18,13 @@
 
 #include "connection_string.hpp"
 #include "db_exception.hpp"
+#include "../utils/helper.hpp"
 
 #include <algorithm>
 #include <cctype>
 #include <functional>
 
 namespace {
-void trim_left(string &str) {
-  if (str.empty() || !isspace(str[0])) return;
-  string::iterator stop_position{std::find_if_not(str.begin(), str.end(), std::ptr_fun<int, int>(std::isspace))};
-  str.erase(str.begin(), stop_position);
-}
-
-void trim_right(string &str) {
-  if (str.empty() || !isspace(str[str.size() - 1])) return;
-  string::reverse_iterator start_position{
-      std::find_if_not(str.rbegin(), str.rend(), std::ptr_fun<int, int>(std::isspace))};
-  if (start_position != str.rend()) str.erase(start_position.base(), str.end());
-}
-
-void trim(string &str) {
-  trim_left(str);
-  trim_right(str);
-}
-
 void quote_if_necessary(string &str) {
   if (!str.empty() && ('\'' != str[0] || '\'' != str[str.size() - 1]) &&
       str.end() != std::find_if(str.begin(), str.end(), std::ptr_fun<int, int>(std::isspace))) {
@@ -51,7 +34,7 @@ void quote_if_necessary(string &str) {
 }
 
 void normalize_value(string &str) {
-  trim(str);
+  lgeorgieff::translate::utils::trim(str);
   quote_if_necessary(str);
 }
 
