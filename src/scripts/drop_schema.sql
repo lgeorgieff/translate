@@ -1,7 +1,7 @@
 /*
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 02/20/2015
+# Last modified: 06/03/2015
 # Description: Drops the (postgresql) SQL data base schema for the server side of translate.
 #              Usage: psql --username translate --dbname translate --file drop_schema.sql
 #######################################################################################################################
@@ -27,4 +27,6 @@ DROP TABLE language CASCADE;
 DROP TABLE word_class CASCADE;
 DROP TABLE comment CASCADE;
 DROP TABLE phrase_comment CASCADE;
+DROP TABLE abbreviation CASCADE;
+DROP TABLE phrase_abbreviation CASCADE;
 DROP TABLE gender CASCADE;

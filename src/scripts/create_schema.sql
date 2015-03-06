@@ -1,7 +1,7 @@
 /*
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 02/20/2015
+# Last modified: 06/03/2015
 # Description: Creates the (postgresql) SQL data base schema for the server side of translate.
 #              Usage: psql --username translate --dbname translate --file create_schema.sql
 #######################################################################################################################
@@ -41,6 +41,13 @@ comment varchar(256) NOT NULL,
 CHECK (char_length(trim(comment)) > 0)
 );
 
+CREATE TABLE abbreviation
+(
+id serial NOT NULL PRIMARY KEY,	
+abbreviation varchar(16) NOT NULL,
+CHECK (char_length(trim(abbreviation)) > 0)
+);
+
 CREATE TABLE word_class
 (
 id varchar(8) NOT NULL PRIMARY KEY,
@@ -72,6 +79,13 @@ CREATE TABLE phrase_comment
 phrase_id integer REFERENCES phrase(id) NOT NULL,
 comment_id integer REFERENCES comment(id) NOT NULL,
 unique(phrase_id, comment_id)
+);
+
+CREATE TABLE phrase_abbreviation
+(
+phrase_id integer REFERENCES phrase(id) NOT NULL,
+abbreviation_id integer REFERENCES comment(id) NOT NULL,
+unique(phrase_id, abbreviation_id)
 );
 
 
