@@ -37,14 +37,14 @@ CHECK (char_length(trim(name)) > 0)
 CREATE TABLE comment
 (
 id serial NOT NULL PRIMARY KEY,
-comment varchar(256) NOT NULL,
+comment varchar(256) NOT NULL UNIQUE,
 CHECK (char_length(trim(comment)) > 0)
 );
 
 CREATE TABLE abbreviation
 (
 id serial NOT NULL PRIMARY KEY,	
-abbreviation varchar(16) NOT NULL,
+abbreviation varchar(16) NOT NULL UNIQUE,
 CHECK (char_length(trim(abbreviation)) > 0)
 );
 
@@ -66,12 +66,13 @@ CREATE TYPE numerus AS ENUM ('pl.', 'sg.');
 
 CREATE TABLE phrase(
 id serial NOT NULL PRIMARY KEY,
-phrase varchar(64) NOT NULL,
+phrase varchar(128) NOT NULL,
 language char(2) REFERENCES language(id) NOT NULL,
-word_class varchar(64) REFERENCES word_class(id) NOT NULL,
-gender char(1) REFERENCES gender(id) NOT NULL,
-numerus numerus NOT NULL,
-CHECK (char_length(trim(phrase)) > 0)
+word_class varchar(64) REFERENCES word_class(id),
+gender char(1) REFERENCES gender(id),
+numerus numerus,
+CHECK (char_length(trim(phrase)) > 0),
+unique(phrase, language, word_class, gender, numerus)
 );
 
 CREATE TABLE phrase_comment
