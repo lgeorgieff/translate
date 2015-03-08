@@ -21,12 +21,13 @@
 #######################################################################################################################
 */
 
+DROP TABLE phrase_translation CASCADE;
+DROP TABLE phrase_comment CASCADE;
 DROP TABLE phrase CASCADE;
 DROP TYPE numerus CASCADE;
 DROP TABLE language CASCADE;
 DROP TABLE word_class CASCADE;
 DROP TABLE comment CASCADE;
-DROP TABLE phrase_comment CASCADE;
 DROP TABLE abbreviation CASCADE;
 DROP TABLE phrase_abbreviation CASCADE;
 DROP TABLE gender CASCADE;

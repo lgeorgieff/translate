@@ -88,6 +88,12 @@ abbreviation_id integer REFERENCES comment(id) NOT NULL,
 unique(phrase_id, abbreviation_id)
 );
 
+CREATE TABLE phrase_translation
+(
+phrase_id_in integer REFERENCES phrase(id) NOT NULL,
+phrase_id_out integer REFERENCES phrase(id) NOT NULL,
+unique(phrase_id_in, phrase_id_out)
+);
 
 /*
 #######################################################################################################################
