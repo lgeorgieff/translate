@@ -1,7 +1,7 @@
 /*
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 06/03/2015
+# Last modified: 09/03/2015
 # Description: Creates the (postgresql) SQL data base schema for the server side of translate.
 #              Usage: psql --username translate --dbname translate --file create_schema.sql
 #######################################################################################################################
@@ -44,7 +44,7 @@ CHECK (char_length(trim(comment)) > 0)
 CREATE TABLE abbreviation
 (
 id serial NOT NULL PRIMARY KEY,	
-abbreviation varchar(16) NOT NULL UNIQUE,
+abbreviation varchar(64) NOT NULL UNIQUE,
 CHECK (char_length(trim(abbreviation)) > 0)
 );
 
@@ -68,11 +68,10 @@ CREATE TABLE phrase(
 id serial NOT NULL PRIMARY KEY,
 phrase varchar(128) NOT NULL,
 language char(2) REFERENCES language(id) NOT NULL,
-word_class varchar(64) REFERENCES word_class(id),
 gender char(1) REFERENCES gender(id),
 numerus numerus,
 CHECK (char_length(trim(phrase)) > 0),
-unique(phrase, language, word_class, gender, numerus)
+unique(phrase, language, gender, numerus)
 );
 
 CREATE TABLE phrase_comment
@@ -95,6 +94,14 @@ phrase_id_in integer REFERENCES phrase(id) NOT NULL,
 phrase_id_out integer REFERENCES phrase(id) NOT NULL,
 unique(phrase_id_in, phrase_id_out)
 );
+
+CREATE TABLE phrase_word_class
+(
+phrase_id integer REFERENCES phrase(id) NOT NULL,
+word_class_id varchar(8) REFERENCES word_class(id) NOT NULL,
+unique(phrase_id, word_class_id)
+);
+
 
 /*
 #######################################################################################################################
