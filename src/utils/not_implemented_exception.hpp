@@ -1,7 +1,8 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 02/01/2015
-// Description: Provides the declaration for a self-defined base exception class.
+// Last modified: 03/03/2015
+// Description: Declares the exception NotImplementedException which is thrown if any invoked functionality is not
+//              implemented.
 // ====================================================================================================================
 
 // ====================================================================================================================
@@ -16,32 +17,29 @@
 // Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 // ====================================================================================================================
 
-#ifndef EXCEPTION_HPP_
-#define EXCEPTION_HPP_
+#ifndef NOT_IMPLEMENTED_EXCEPTION_HPP_
+#define NOT_IMPLEMENTED_EXCEPTION_HPP_
 
-#include <exception>
+#include "exception.hpp"
+
 #include <string>
 
 namespace lgeorgieff {
 namespace translate {
 namespace utils {
-class Exception : public std::exception {
+class NotImplementedException : public Exception {
  public:
-  Exception(const std::string&);
-  Exception(const Exception&) = default;
-  Exception(Exception&&) = default;
+  NotImplementedException(const std::string&);
+  NotImplementedException(const NotImplementedException&) = default;
+  NotImplementedException(NotImplementedException&&) = default;
 
-  Exception& operator=(const Exception&) = default;
-  Exception& operator=(Exception&&) = default;
+  NotImplementedException& operator=(const NotImplementedException&) = default;
+  NotImplementedException& operator=(NotImplementedException&&) = default;
 
-  const char* what() const noexcept;
-
-  virtual ~Exception() = default;
-
- protected:
-  std::string what_;
-};  // exception
+  virtual ~NotImplementedException() = default;
+};  // NotImplementedException
 }  // utils
 }  // translate
 }  // lgeorgieff
-#endif  // EXCEPTION_HPP_
+
+#endif  // Not_Implemented_EXCEPTION_HPP_

@@ -16,7 +16,6 @@
 // Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 // ====================================================================================================================
 
-
 #include "command_line_exception.hpp"
 
 #include <string>
@@ -25,14 +24,11 @@
 using std::string;
 
 namespace lgeorgieff {
-	namespace translate {
-		namespace utils {
-			Exception::Exception(const string &what)
-			:what_{what} { }
+namespace translate {
+namespace utils {
+Exception::Exception(const string& what) : what_{what} {}
 
-			const char* Exception::what() const noexcept {
-				return this->what_.c_str();
-			}
-		} // utils
-	} // translate
-} // lgeorgieff
+const char* Exception::what() const noexcept { return this->what_.c_str(); }
+}  // utils
+}  // translate
+}  // lgeorgieff
