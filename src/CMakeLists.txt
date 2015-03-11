@@ -1,6 +1,6 @@
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 02/12/2015
+# Last modified: 03/12/2015
 # Description: Main CMakeLists.txt file for building this project. The actual modules are built by calling
 #              CMakeLists.txt of the corresponding sub-directories.
 #              Common options:
@@ -65,6 +65,7 @@ message(STATUS "C++ flags: ${CMAKE_CXX_FLAGS}")
 ### register sub-modules
 add_subdirectory(server)
 add_subdirectory(libs)
+add_subdirectory(scripts)
 
 if(${WITH_TESTS})
 	add_subdirectory(test)
