@@ -393,7 +393,7 @@ int main(const int argc, const char **argv) {
   size_t line_counter{0};
   while (std::getline(std::cin, line)) process_line(++line_counter, line, lang_id_1, lang_id_2);
 
-  if(std::cin.fail() || !std::cin.eof() || std::cin.bad()) {
+  if(!std::cin.eof() || std::cin.bad()) {
     cerr << "Failed to read from stdin!" << endl;
     return 1;
   } 
