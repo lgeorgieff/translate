@@ -70,13 +70,19 @@ fi
 function print_usage {
     echo "This script populates your data base with values from dict.cc resources."
     echo "WARNING: Be carefull when runnig this script, since your data base will be"
-    echo "set to an initial (= empty) state."
+    echo "set to an initial state, i.e. empty state."
     echo ""
     echo "Usage: ${0} [OPTION...]"
     echo ""
     echo "-h | --help                        Shows this help"
+    echo "-l | --resource-pattern <pattern>  The file name pattern of the language"
+    echo "                                   resources in the specified resource"
+    echo "                                   directory that will be processed by this"
+    echo "                                   script. The deault value is"
+    echo "                                   \"${LANGUAGE_RESOURCE_PATTERN}\""
     echo "-d | --resource-directrory <dir>   The directory that is searched for the"
-    echo "                                   language resource files"
+    echo "                                   language resource files. The default"
+    echo "                                   value is \"${LANGUAGE_RESOURCE_DIRECTORY}\""
     echo "-p | --pgsql-options <options>     Options for the data base in which the"
     echo "                                   language resources are written to. The"
     echo "                                   default value is"
@@ -97,6 +103,10 @@ function process_arguments {
 	    "--resource-directory"|"-d")
 		shift
 		LANGUAGE_RESOURCE_DIRECTORY="$1"
+		;;
+	    "--resource-pattern"|"-d")
+		shift
+		LANGUAGE_RESOURCE_PATTERN="$1"
 		;;
 	    "--pgsql-options"|"-p")
 		shift
@@ -200,7 +210,7 @@ function write_to_db {
     then
 	error_exit "Could not initialize data base" 1
     fi
-    for file in $(get_files "${TMP_PATH}" "*.txt.sql")
+    for file in $(get_files "${TMP_PATH}" "*.sql")
     do
 	echo "Populating data base $(basename ${file})..."
 	error_message="$(psql $PGSQL_OPTIONS --file ${file} -q 2>&1)"
