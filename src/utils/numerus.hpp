@@ -20,8 +20,8 @@
 #ifndef NUMERUS_HPP_
 #define NUMERUS_HPP_
 
+#include "exception.hpp"
 #include <string>
-#include <stdexcept>
 
 namespace lgeorgieff {
 namespace translate {
@@ -63,8 +63,8 @@ Numerus from_string(const std::string &numerus) {
   else if ("pl." == numerus)
     return Numerus::pl;
   else
-    throw std::runtime_error(std::string("The value \"") + numerus +
-                             std::string("\" is not a valid lgeorgieff::translate::utils::Numerus values"));
+    throw Exception(std::string("The value \"") + numerus +
+                    std::string("\" is not a valid lgeorgieff::translate::utils::Numerus values"));
 }
 
 template <typename T>
@@ -79,8 +79,8 @@ Numerus from_db_string(const std::string &numerus) {
   else if ("'pl.'" == numerus)
     return Numerus::pl;
   else
-    throw std::runtime_error(std::string("The value \"") + numerus +
-                             std::string("\" is not a valid lgeorgieff::translate::utils::Numerus values"));
+    throw Exception(std::string("The value \"") + numerus +
+                    std::string("\" is not a valid lgeorgieff::translate::utils::Numerus values"));
 }
 
 }  // utils

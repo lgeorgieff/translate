@@ -18,15 +18,16 @@
 
 #include "../utils/gender.hpp"
 #include "../utils/numerus.hpp"
+#include "../utils/word_class.hpp"
 #include "../utils/helper.hpp"
 #include "../utils/exception.hpp"
 #include "../utils/command_line_exception.hpp"
 
+#include <cctype>
 #include <cstring>
 #include <cstddef>
 #include <iostream>
 #include <string>
-#include <stdexcept>
 #include <regex>
 #include <list>
 #include <stack>
@@ -44,6 +45,8 @@ using std::strcmp;
 
 using lgeorgieff::translate::utils::Gender;
 using lgeorgieff::translate::utils::Numerus;
+using lgeorgieff::translate::utils::WordClass;
+using lgeorgieff::translate::utils::is_word_class;
 using lgeorgieff::translate::utils::trim;
 using lgeorgieff::translate::utils::normalize_whitespace;
 using lgeorgieff::translate::utils::Exception;
@@ -125,8 +128,8 @@ bool compare_match_items(const std::pair<size_t, string> &lft, const std::pair<s
 // Search for a closed substring in between a start and an end tag. The substring is found by the passed regular
 // expression. If one substring is found, the corresponding string value is returned and the matched substring is
 // removed from the original string.
-strings process_closed_substring(string &entry, size_t line_number, const regex &main_rex, char opening_tag,
-                                 char closing_tag) {
+strings process_closed_substring(string &entry, const regex &main_rex, char opening_tag, char closing_tag,
+                                 size_t line_number) {
   strings result;
   smatch rex_match;
   if (!regex_search(entry, rex_match, main_rex)) return result;
@@ -138,8 +141,8 @@ strings process_closed_substring(string &entry, size_t line_number, const regex 
       if (closing_tag == comment[pos] && collector.empty()) {
         // handle bad entry, one enclosing tag too much, e.g. ']'
         if (STRICT_MODE)
-          throw Exception(string{"Bad comment syntax, found a \"" + string{closing_tag} + "\" too much in line " +
-                                 std::to_string(line_number) + "!"});
+          throw Exception{string{"Bad comment syntax, found a \"" + string{closing_tag} + "\" too much in line " +
+                                 std::to_string(line_number) + "!"}};
         continue;
       } else if (closing_tag == comment[pos]) {
         normalize_whitespace(collector.top().second);
@@ -153,8 +156,8 @@ strings process_closed_substring(string &entry, size_t line_number, const regex 
     }
     // handle bad entries, too less enclosing tags, e.g. "]"
     if (!collector.empty() && STRICT_MODE)
-      throw Exception(string{"Bad comment syntax, found a \"" + string{closing_tag} + "\" too few in line " +
-                             std::to_string(line_number) + "!"});
+      throw Exception{string{"Bad comment syntax, found a \"" + string{closing_tag} + "\" too few in line " +
+                             std::to_string(line_number) + "!"}};
     while (!collector.empty()) {
       normalize_whitespace(collector.top().second);
       if (!collector.top().second.empty()) current_match_results.push_back(collector.top());
@@ -169,13 +172,13 @@ strings process_closed_substring(string &entry, size_t line_number, const regex 
 // Search for an abbreviation part in a language entry. If one is found, the corresponding string value is returned and
 // the matched abbreviation string is removed from the original string.
 strings process_abbreviations(string &entry, size_t line_number) {
-  return process_closed_substring(entry, line_number, REGEX_ABBREVIATION, '<', '>');
+  return process_closed_substring(entry, REGEX_ABBREVIATION, '<', '>', line_number);
 }
 
 // Search for an comment part in a language entry. If one is found, the corresponding string value is returned and
 // the matched comment string is removed from the original string.
 strings process_comments(string &entry, size_t line_number) {
-  return process_closed_substring(entry, line_number, REGEX_COMMENT, '[', ']');
+  return process_closed_substring(entry, REGEX_COMMENT, '[', ']', line_number);
 }
 
 // Process a phrase entry, i.e. normalize whitespace.
@@ -210,16 +213,20 @@ LangItem process_lang(string &entry, const strings &word_classes, const string &
 // Return a string representing gender that can be directly passed into an SQL query string.
 string gender_to_sql_string(const Gender &gender, bool is_where = false) {
   string gender_str{to_db_string(gender)};
-  if (is_where && Gender::none == gender) gender_str.insert(0, "is ");
-  else if (is_where) gender_str.insert(0, "=");
+  if (is_where && Gender::none == gender)
+    gender_str.insert(0, "is ");
+  else if (is_where)
+    gender_str.insert(0, "=");
   return gender_str;
 }
 
 // Return a string representing numerus that can be directly passed into an SQL query string.
 string numerus_to_sql_string(const Numerus &numerus, bool is_where = false) {
   string numerus_str{to_db_string(numerus)};
-  if (is_where && Numerus::none == numerus) numerus_str.insert(0, "is ");
-  else if (is_where) numerus_str.insert(0, "=");
+  if (is_where && Numerus::none == numerus)
+    numerus_str.insert(0, "is ");
+  else if (is_where)
+    numerus_str.insert(0, "=");
   return numerus_str;
 }
 
@@ -294,7 +301,7 @@ void line_to_sql_statement(const LangItem &l_1, const LangItem &l_2) {
 }
 
 // Process all word classes from the passed string and return a list with an item for each word class
-strings get_word_classes(string word_classes_string) {
+strings get_word_classes(string word_classes_string, size_t line_number) {
   strings result;
   string current_word_class;
   for (const char &c : word_classes_string) {
@@ -303,34 +310,44 @@ strings get_word_classes(string word_classes_string) {
       result.push_back(current_word_class);
       current_word_class.clear();
     } else {
-      current_word_class.insert(current_word_class.end(), c);
+      current_word_class.insert(current_word_class.end(), std::tolower(c));
     }
   }
   trim(current_word_class);
-  if (!current_word_class.empty()) result.push_back(current_word_class);
+
+  if (!current_word_class.empty() && !is_word_class(current_word_class) && STRICT_MODE) {
+    throw Exception{string{"Found a bad word class identifier \"" + current_word_class + "\" in line " +
+                           std::to_string(line_number) + "!"}};
+  } else if (!current_word_class.empty() && !is_word_class(current_word_class)) {
+    cerr << "Warning: The word class \"" << current_word_class << "\" in line " << std::to_string(line_number)
+         << "is unknown !" << endl;
+  } else if (!current_word_class.empty()) {
+    result.push_back(current_word_class);
+  }
   return result;
 }
 
 // Process a line from a language resorource, i.e. parse both languages in the passed line and create for each language
 // an SQL statement.
-void process_line(size_t line_number, const string &line, const string &lang_id_1, const string &lang_id_2) {
+void process_line(const string &line, const string &lang_id_1, const string &lang_id_2, size_t line_number) {
   size_t delimiter_lang{line.find('\t')};
   if ((string::npos == delimiter_lang || delimiter_lang + 1 == line.size()) && STRICT_MODE) {
-    throw std::out_of_range("Line " + std::to_string(line_number) +
-                            " in language resource does not contain a tab representing a delimiter between two" +
-                            " languages!");
+    throw Exception{"Line " + std::to_string(line_number) +
+                    " in language resource does not contain a tab representing a delimiter between two" +
+                    " languages!"};
   }
   size_t delimiter_class{line.find('\t', delimiter_lang + 1)};
   string lang_entry_1{line.substr(0, delimiter_lang)};
   string lang_entry_2{line.substr(delimiter_lang + 1, delimiter_class - delimiter_lang - 1)};
   strings word_classes;
-  if (string::npos != delimiter_class) word_classes = get_word_classes(line.substr(delimiter_class + 1, string::npos));
+  if (string::npos != delimiter_class)
+    word_classes = get_word_classes(line.substr(delimiter_class + 1, string::npos), line_number);
 
   LangItem lang_item_1 = process_lang(lang_entry_1, word_classes, lang_id_1, line_number);
   LangItem lang_item_2 = process_lang(lang_entry_2, word_classes, lang_id_2, line_number);
 
   if ((lang_item_1.phrase.empty() || lang_item_2.phrase.empty()) && STRICT_MODE)
-    throw Exception(string{"No translation found in line " + std::to_string(line_number) + "!"});
+    throw Exception{string{"No translation found in line " + std::to_string(line_number) + "!"}};
   else if (!lang_item_1.phrase.empty() && !lang_item_2.phrase.empty())
     line_to_sql_statement(lang_item_1, lang_item_2);
 }
@@ -354,39 +371,44 @@ int main(const int argc, const char **argv) {
   string lang_id_1;
   string lang_id_2;
   string error_message;
-  for(int pos{1}; argc > pos; ++pos) {
-    if((!strcmp("--in", argv[pos]) || !strcmp("-i", argv[pos]))){
-      if (argc - 1 != pos) lang_id_1 = argv[++pos];
-    } else if ((!strcmp("--out", argv[pos]) || !strcmp("-o", argv[pos]))) {
-      if (argc - 1 != pos) lang_id_2 = argv[++pos];
-    } else if (!strcmp("--strict-mode", argv[pos]) || !strcmp("-s", argv[pos])) {
-      STRICT_MODE = true;
-    } else if (!strcmp("--help", argv[pos]) || !strcmp("-h", argv[pos])) {
-      print_usage(argv[0], cout);
-      return 0;
-    } else {
-      if(error_message.empty())
-	cerr << "The option \"" << argv[pos] << "\" is unknown!" << endl;
-      else
-	cerr << error_message << endl;
-      cerr << "Formore help run \"" << argv[0] << " -h\"" << endl;
-      return 2;
+  try {
+    for (int pos{1}; argc > pos; ++pos) {
+      if ((!strcmp("--in", argv[pos]) || !strcmp("-i", argv[pos]))) {
+        if (argc - 1 != pos) lang_id_1 = argv[++pos];
+      } else if ((!strcmp("--out", argv[pos]) || !strcmp("-o", argv[pos]))) {
+        if (argc - 1 != pos) lang_id_2 = argv[++pos];
+      } else if (!strcmp("--strict-mode", argv[pos]) || !strcmp("-s", argv[pos])) {
+        STRICT_MODE = true;
+      } else if (!strcmp("--help", argv[pos]) || !strcmp("-h", argv[pos])) {
+        print_usage(argv[0], cout);
+        return 0;
+      } else {
+        if (error_message.empty())
+          cerr << "The option \"" << argv[pos] << "\" is unknown!" << endl;
+        else
+          cerr << error_message << endl;
+        cerr << "Formore help run \"" << argv[0] << " -h\"" << endl;
+        return 2;
+      }
     }
-  }
-  if(lang_id_1.empty() || lang_id_2.empty()) {
-    cerr << "The value for \"--in\" | \"-i\" and \"--out\" | \"-o\" must not be empty!" << endl;
-    cerr << "Formore help run \"" << argv[0] << " -h\"" << endl;
+    if (lang_id_1.empty() || lang_id_2.empty()) {
+      cerr << "The value for \"--in\" | \"-i\" and \"--out\" | \"-o\" must not be empty!" << endl;
+      cerr << "Formore help run \"" << argv[0] << " -h\"" << endl;
+      return 1;
+    }
+
+    string line;
+    size_t line_counter{0};
+    while (std::getline(std::cin, line)) process_line(line, lang_id_1, lang_id_2, ++line_counter);
+
+    if (!std::cin.eof() || std::cin.bad()) {
+      cerr << "Failed to read from stdin!" << endl;
+      return 1;
+    }
+  } catch (const Exception &err) {
+    cerr << "Encountered an exception \"" << err.what() << endl;
     return 1;
   }
-
-  string line;
-  size_t line_counter{0};
-  while (std::getline(std::cin, line)) process_line(++line_counter, line, lang_id_1, lang_id_2);
-
-  if(!std::cin.eof() || std::cin.bad()) {
-    cerr << "Failed to read from stdin!" << endl;
-    return 1;
-  } 
 
   return 0;
 }
