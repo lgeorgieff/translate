@@ -20,8 +20,8 @@
 #ifndef GENDER_HPP_
 #define GENDER_HPP_
 
+#include "exception.hpp"
 #include <string>
-#include <stdexcept>
 
 namespace lgeorgieff {
 namespace translate {
@@ -69,8 +69,8 @@ Gender from_string(const std::string &gender) {
   else if ("n" == gender)
     return Gender::n;
   else
-    throw std::runtime_error(std::string("The value \"") + gender +
-                             std::string("\" is not a valid lgeorgieff::translate::utils::Gender values"));
+    throw Exception(std::string("The value \"") + gender +
+                    std::string("\" is not a valid lgeorgieff::translate::utils::Gender values"));
 }
 
 template <typename T>
@@ -87,8 +87,8 @@ Gender from_db_string(const std::string &gender) {
   else if ("'n'" == gender)
     return Gender::n;
   else
-    throw std::runtime_error(std::string("The value \"") + gender +
-                             std::string("\" is not a valid lgeorgieff::translate::utils::Gender values"));
+    throw Exception(std::string("The value \"") + gender +
+                    std::string("\" is not a valid lgeorgieff::translate::utils::Gender values"));
 }
 
 }  // utils

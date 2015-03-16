@@ -20,8 +20,8 @@
 #ifndef WORDCLASS_HPP_
 #define WORDCLASS_HPP_
 
+#include "exception.hpp"
 #include <string>
-#include <stdexcept>
 
 namespace lgeorgieff {
 namespace translate {
@@ -130,8 +130,14 @@ WordClass from_string(const std::string &word_class) {
   else if ("" == word_class)
     return WordClass::none;
   else
-    throw std::runtime_error(std::string("The value \"") + word_class +
-                             std::string("\" is not a valid lgeorgieff::translate::utils::WordClass values"));
+    throw Exception(std::string("The value \"") + word_class +
+                    std::string("\" is not a valid lgeorgieff::translate::utils::WordClass values"));
+}
+
+bool is_word_class(const std::string &word_class) {
+  return "adj" == word_class || "adv" == word_class || "past-p" == word_class || "verb" == word_class ||
+         "pres-p" == word_class || "prep" == word_class || "conj" == word_class || "pron" == word_class ||
+         "prefix" == word_class || "suffix" == word_class || "noun" == word_class || "" == word_class;
 }
 
 template <typename T>
@@ -164,8 +170,8 @@ WordClass from_db_string(const std::string &word_class) {
   else if ("null" == word_class)
     return WordClass::none;
   else
-    throw std::runtime_error(std::string("The value \"") + word_class +
-                             std::string("\" is not a valid lgeorgieff::translate::utils::WordClass values"));
+    throw Exception(std::string("The value \"") + word_class +
+                    std::string("\" is not a valid lgeorgieff::translate::utils::WordClass values"));
 }
 }  // utils
 }  // translae
