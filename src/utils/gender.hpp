@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 03/15/2015
+// Last modified: 03/16/2015
 // Description: Declares and defines the data type Gender that is used in the data base to represent a gender value
 //              in a grammar.
 // ====================================================================================================================
@@ -45,28 +45,28 @@ std::string to_string(const Gender &gender) noexcept {
 std::string to_db_string(const Gender &gender) noexcept {
   switch (gender) {
     case Gender::m:
-      return "m";
+      return "'m'";
     case Gender::f:
-      return "f";
+      return "'f'";
     case Gender::n:
-      return "n";
+      return "'n'";
     default:
       return "null";
   }
 }
-  
+
 template <typename T>
-T from_string(const std::string&);
+T from_string(const std::string &);
 
 template <>
 Gender from_string(const std::string &gender) {
-  if (gender == "")
+  if ("" == gender)
     return Gender::none;
-  else if (gender == "m")
+  else if ("m" == gender)
     return Gender::m;
-  else if (gender == "f")
+  else if ("f" == gender)
     return Gender::f;
-  else if (gender == "n")
+  else if ("n" == gender)
     return Gender::n;
   else
     throw std::runtime_error(std::string("The value \"") + gender +
@@ -78,19 +78,19 @@ T from_db_string(const std::string &);
 
 template <>
 Gender from_db_string(const std::string &gender) {
-  if (gender == "")
+  if ("null" == gender)
     return Gender::none;
-  else if (gender == "m")
+  else if ("'m'" == gender)
     return Gender::m;
-  else if (gender == "f")
+  else if ("'f'" == gender)
     return Gender::f;
-  else if (gender == "n")
+  else if ("'n'" == gender)
     return Gender::n;
   else
     throw std::runtime_error(std::string("The value \"") + gender +
                              std::string("\" is not a valid lgeorgieff::translate::utils::Gender values"));
 }
-  
+
 }  // utils
 }  // translae
 }  // lgeorgieff
