@@ -36,8 +36,7 @@ SQL_CLEANUP_SCRIPT=$(realpath ./drop_schema.sql)
 function clean_up {
     if [ "" != $TMP_PATH ]
     then
-	#rm -rf $TMP_PATH
-	echo ""
+	rm -rf $TMP_PATH
     fi
 }
 
@@ -75,7 +74,7 @@ function print_usage {
     echo "Usage: ${0} [OPTION...]"
     echo ""
     echo "-h | --help                        Shows this help"
-    echo "-l | --resource-pattern <pattern>  The file name pattern of the language"
+    echo "-r | --resource-pattern <pattern>  The file name pattern of the language"
     echo "                                   resources in the specified resource"
     echo "                                   directory that will be processed by this"
     echo "                                   script. The deault value is"
@@ -104,7 +103,7 @@ function process_arguments {
 		shift
 		LANGUAGE_RESOURCE_DIRECTORY="$1"
 		;;
-	    "--resource-pattern"|"-d")
+	    "--resource-pattern"|"-r")
 		shift
 		LANGUAGE_RESOURCE_PATTERN="$1"
 		;;
