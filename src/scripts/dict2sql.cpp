@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 03/12/2015
+// Last modified: 03/16/2015
 // Description: Implements a parser for language resource files and dumps the data into sql files.
 // ====================================================================================================================
 
@@ -210,26 +210,16 @@ LangItem process_lang(string &entry, const strings &word_classes, const string &
 // Return a string representing gender that can be directly passed into an SQL query string.
 string gender_to_sql_string(const Gender &gender, bool is_where = false) {
   string gender_str{to_db_string(gender)};
-  if (Gender::none != gender) {
-    gender_str.insert(gender_str.begin(), '\'');
-    gender_str.insert(gender_str.end(), '\'');
-    if (is_where) gender_str.insert(gender_str.begin(), '=');
-  } else if (is_where) {
-    gender_str.insert(0, "is ");
-  }
+  if (is_where && Gender::none == gender) gender_str.insert(0, "is ");
+  else if (is_where) gender_str.insert(0, "=");
   return gender_str;
 }
 
 // Return a string representing numerus that can be directly passed into an SQL query string.
 string numerus_to_sql_string(const Numerus &numerus, bool is_where = false) {
   string numerus_str{to_db_string(numerus)};
-  if (Numerus::none != numerus) {
-    numerus_str.insert(numerus_str.begin(), '\'');
-    numerus_str.insert(numerus_str.end(), '\'');
-    if (is_where) numerus_str.insert(numerus_str.begin(), '=');
-  } else if (is_where) {
-    numerus_str.insert(0, "is ");
-  }
+  if (is_where && Numerus::none == numerus) numerus_str.insert(0, "is ");
+  else if (is_where) numerus_str.insert(0, "=");
   return numerus_str;
 }
 

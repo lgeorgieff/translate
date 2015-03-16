@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 03/15/2015
+// Last modified: 03/16/2015
 // Description: Declares and defines the data type Numerus that is used in the data base to represent a numerus
 //              value in a grammar.
 // ====================================================================================================================
@@ -43,9 +43,9 @@ std::string to_string(const Numerus &numerus) noexcept {
 std::string to_db_string(const Numerus &numerus) noexcept {
   switch (numerus) {
     case Numerus::sg:
-      return "sg.";
+      return "'sg.'";
     case Numerus::pl:
-      return "pl.";
+      return "'pl.'";
     default:
       return "null";
   }
@@ -56,11 +56,11 @@ T from_string(const std::string &);
 
 template <>
 Numerus from_string(const std::string &numerus) {
-  if (numerus == "")
+  if ("" == numerus)
     return Numerus::none;
-  else if (numerus == "sg.")
+  else if ("sg." == numerus)
     return Numerus::sg;
-  else if (numerus == "pl.")
+  else if ("pl." == numerus)
     return Numerus::pl;
   else
     throw std::runtime_error(std::string("The value \"") + numerus +
@@ -72,11 +72,11 @@ T from_db_string(const std::string &);
 
 template <>
 Numerus from_db_string(const std::string &numerus) {
-  if (numerus == "")
+  if ("null" == numerus)
     return Numerus::none;
-  else if (numerus == "sg")
+  else if ("'sg.'" == numerus)
     return Numerus::sg;
-  else if (numerus == "pl")
+  else if ("'pl.'" == numerus)
     return Numerus::pl;
   else
     throw std::runtime_error(std::string("The value \"") + numerus +
