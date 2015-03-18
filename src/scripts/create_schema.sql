@@ -84,7 +84,7 @@ unique(phrase_id, comment_id)
 CREATE TABLE phrase_abbreviation
 (
 phrase_id integer REFERENCES phrase(id) NOT NULL,
-abbreviation_id integer REFERENCES comment(id) NOT NULL,
+abbreviation_id integer REFERENCES abbreviation(id) NOT NULL,
 unique(phrase_id, abbreviation_id)
 );
 
