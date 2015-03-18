@@ -300,30 +300,37 @@ void line_to_sql_statement(const LangItem &l_1, const LangItem &l_2) {
   cout << endl;
 }
 
+// Normalize the passed word_class value and check if it is a valid word_class value.
+// If so, push it to the passed container.
+// If not and strict mode is set to false, print a warning and do not push it to the passed container.
+// If not and strict mode is set to true, throw an Exception.
+void insert_potential_word_class(string &word_class, strings &container, size_t line_number) {
+  trim(word_class);
+  if (!word_class.empty() && !is_word_class(word_class) && STRICT_MODE) {
+    throw Exception{string{"Found a bad word class identifier \"" + word_class + "\" in line " +
+                           std::to_string(line_number) + "!"}};
+  } else if (!word_class.empty() && !is_word_class(word_class)) {
+    cerr << "Warning: The word class \"" << word_class << "\" in line " << std::to_string(line_number)
+         << " is unknown!" << endl;
+  } else if (!word_class.empty()) {
+    container.push_back(word_class);
+  }
+}
+
 // Process all word classes from the passed string and return a list with an item for each word class
 strings get_word_classes(string word_classes_string, size_t line_number) {
   strings result;
   string current_word_class;
   for (const char &c : word_classes_string) {
     if (c != '-' && !isalpha(c)) {
-      trim(current_word_class);
-      result.push_back(current_word_class);
+      insert_potential_word_class(current_word_class, result, line_number);
       current_word_class.clear();
     } else {
       current_word_class.insert(current_word_class.end(), std::tolower(c));
     }
   }
-  trim(current_word_class);
+  insert_potential_word_class(current_word_class, result, line_number);
 
-  if (!current_word_class.empty() && !is_word_class(current_word_class) && STRICT_MODE) {
-    throw Exception{string{"Found a bad word class identifier \"" + current_word_class + "\" in line " +
-                           std::to_string(line_number) + "!"}};
-  } else if (!current_word_class.empty() && !is_word_class(current_word_class)) {
-    cerr << "Warning: The word class \"" << current_word_class << "\" in line " << std::to_string(line_number)
-         << " is unknown!" << endl;
-  } else if (!current_word_class.empty()) {
-    result.push_back(current_word_class);
-  }
   return result;
 }
 
