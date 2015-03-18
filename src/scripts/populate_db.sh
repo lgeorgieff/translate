@@ -2,7 +2,7 @@
 
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 03/15/2015
+# Last modified: 03/18/2015
 # Description: Calls the programme dict2sql for all language resources to dump them into SQL files. Finally, these
 #              files are written into the specified data base.
 #              Be carefull when runnig this script, since your data base will be set to an initial (= empty) state.
@@ -36,7 +36,7 @@ SQL_CLEANUP_SCRIPT=$(realpath ./drop_schema.sql)
 function clean_up {
     if [ "" != $TMP_PATH ]
     then
-	rm -rf $TMP_PATH
+        rm -rf $TMP_PATH
     fi
 }
 
@@ -97,34 +97,34 @@ function print_usage {
 function process_arguments {
     while [[ $# > 0 ]]
     do
-	key="$1"
-	case "${key}" in
-	    "--resource-directory"|"-d")
-		shift
-		LANGUAGE_RESOURCE_DIRECTORY="$1"
-		;;
-	    "--resource-pattern"|"-r")
-		shift
-		LANGUAGE_RESOURCE_PATTERN="$1"
-		;;
-	    "--pgsql-options"|"-p")
-		shift
-		PGSQL_OPTIONS="$1"
-		;;
-	    "--strict-mode"|"-s")
-		STRICT_MODE="true"
-		;;
-	    "--help"|"-h")
-		print_usage
-		exit 0
-		;;
-	    *)
-		echo "Unknown argument ${key}"
-		echo "For more information run \"${SCRIPT_NAME} --help\""
-		error_exit "" 1
-		;;
-	esac
-	shift
+        key="$1"
+        case "${key}" in
+            "--resource-directory"|"-d")
+                shift
+                LANGUAGE_RESOURCE_DIRECTORY="$1"
+                ;;
+            "--resource-pattern"|"-r")
+                shift
+                LANGUAGE_RESOURCE_PATTERN="$1"
+                ;;
+            "--pgsql-options"|"-p")
+                shift
+                PGSQL_OPTIONS="$1"
+                ;;
+            "--strict-mode"|"-s")
+                STRICT_MODE="true"
+                ;;
+            "--help"|"-h")
+                print_usage
+                exit 0
+                ;;
+            *)
+                echo "Unknown argument ${key}"
+                echo "For more information run \"${SCRIPT_NAME} --help\""
+                error_exit "" 1
+                ;;
+        esac
+        shift
     done
 }
 
@@ -133,35 +133,35 @@ function process_arguments {
 function check_dependencies {
     if [ ! -f "${DUMPER_SCRIPT}" ]
     then
-	echo "The executable file ${DUMPER_SCRIPT} does not exist!" 1>&2
-	echo "To continue run cmake and make to build this project." 1>&2
-	echo "Finally, run this script again." 1>&2
-	clean_up
-	exit 1
+        echo "The executable file ${DUMPER_SCRIPT} does not exist!" 1>&2
+        echo "To continue run cmake and make to build this project." 1>&2
+        echo "Finally, run this script again." 1>&2
+        clean_up
+        exit 1
     fi
     if [ ! -x "${DUMPER_SCRIPT}" ]
     then
-	echo "The file ${DUMPER_SCRIPT} is not set as executable!" 1>&2
-	echo "To continue run \"chmod +x ${DUMPER_SCRIPT}\"." 1>&2
-	echo "Finally, run this script again." 1>&2
-	clean_up
-	exit 1       
+        echo "The file ${DUMPER_SCRIPT} is not set as executable!" 1>&2
+        echo "To continue run \"chmod +x ${DUMPER_SCRIPT}\"." 1>&2
+        echo "Finally, run this script again." 1>&2
+        clean_up
+        exit 1       
     fi
     if [ ! -f "${SQL_INIT_SCRIPT}" ]
     then
-	echo "The file ${SQL_INIT_SCRIPT} does not exist!" 1>&2
-	echo "To continue checkout this file from the git repository\"." 1>&2
-	echo "Finally, run this script again." 1>&2
-	clean_up
-	exit 1       
+        echo "The file ${SQL_INIT_SCRIPT} does not exist!" 1>&2
+        echo "To continue checkout this file from the git repository\"." 1>&2
+        echo "Finally, run this script again." 1>&2
+        clean_up
+        exit 1       
     fi
     if [ ! -f "${SQL_CLEANUP_SCRIPT}" ]
     then
-	echo "The file ${SQL_CLEANUP_SCRIPT} does not exist!" 1>&2
-	echo "To continue checkout this file from the git repository\"." 1>&2
-	echo "Finally, run this script again." 1>&2
-	clean_up
-	exit 1       
+        echo "The file ${SQL_CLEANUP_SCRIPT} does not exist!" 1>&2
+        echo "To continue checkout this file from the git repository\"." 1>&2
+        echo "Finally, run this script again." 1>&2
+        clean_up
+        exit 1       
     fi
 }
 
@@ -172,10 +172,10 @@ function get_files {
     file_expression="$2"
     for file in $(find "${directory}" -name "${file_expression}")
     do
-	if [ -f "${file}" ]
-	then
-	    echo $(realpath "${file}")
-	fi
+        if [ -f "${file}" ]
+        then
+            echo $(realpath "${file}")
+        fi
     done
 }
 
@@ -184,46 +184,55 @@ function dump_files_to_sql {
     strict_mode=""
     if [ "true" == $STRICT_MODE ]
     then
-	strict_mode="--strict-mode"
+        strict_mode="--strict-mode"
     fi
     for file in $(get_files "${LANGUAGE_RESOURCE_DIRECTORY}" "${LANGUAGE_RESOURCE_PATTERN}")
     do
-	in_lang_id=$(echo $(basename "${file}") | grep -o "^..")
-	out_lang_id=$(echo $(basename "${file}") | sed "s/\(^..-\)\(..\)\(.\+\)/\\2/")
-	sql_file="${TMP_PATH}/$(basename ${file}).sql"
-	echo "Dumping $(basename ${file}) into $(basename ${sql_file})"
-	if [ ! $(${DUMPER_SCRIPT} ${strict_mode} --in ${in_lang_id} --out ${out_lang_id} < ${file} > ${sql_file}) ] && [ "true" == ${STRICT_MODE} ]
-	then
-	    error_exit "Failed to process \"${file}\" in strict mode!" 1
-	fi
+        in_lang_id=$(echo $(basename "${file}") | grep -o "^..")
+        out_lang_id=$(echo $(basename "${file}") | sed "s/\(^..-\)\(..\)\(.\+\)/\\2/")
+        sql_file="${TMP_PATH}/$(basename ${file}).sql"
+        echo "Dumping $(basename ${file}) into $(basename ${sql_file})"
+        if [ ! $(${DUMPER_SCRIPT} ${strict_mode} --in ${in_lang_id} --out ${out_lang_id} < ${file} > ${sql_file}) ] && [ "true" == ${STRICT_MODE} ]
+        then
+            error_exit "Failed to process \"${file}\" in strict mode!" 1
+        else
+            write_to_db
+            rm "${sql_file}"
+        fi
     done
 }
 
 ### Write the created SQL files into the specified data base.
 function write_to_db {
+    for file in $(get_files "${TMP_PATH}" "*.sql")
+    do
+        echo "Populating data base with $(basename ${file}) ($(du -h ${file} | sed -e 's/\t.*//g')) ..."
+        error_message="$(psql $PGSQL_OPTIONS --file ${file} -q 2>&1)"
+        if [ "0" != "$(echo $?)" ] || [ "" != "${error_message}" ]
+        then
+            echo "${error_message}"
+            error_exit "Could not populate data base with ${file}" 1
+        fi
+    done
+}
+
+### Drop all old data and relations from the SQL data base
+### and create all required new structures, such as tables, data types, ...
+function init_db {
     echo "Cleaning data base ..."
     psql $PGSQL_OPTIONS --file $SQL_CLEANUP_SCRIPT &> /dev/null
     echo "Initializing data base ..."
     error_message="$(psql $PGSQL_OPTIONS --file $SQL_INIT_SCRIPT -q 2>&1)"
     if [ "0" != "$(echo $?)" ] || [ "" != "${error_message}" ]
     then
-	error_exit "Could not initialize data base" 1
+        error_exit "Could not initialize data base" 1
     fi
-    for file in $(get_files "${TMP_PATH}" "*.sql")
-    do
-	echo "Populating data base $(basename ${file})..."
-	error_message="$(psql $PGSQL_OPTIONS --file ${file} -q 2>&1)"
-	if [ "0" != "$(echo $?)" ] || [ "" != "${error_message}" ]
-	then
-	    echo "${error_message}"
-	    error_exit "Could not populate data base with ${file}" 1
-	fi
-    done
 }
+
 
 ### The actual calls
 process_arguments "$@"
 check_dependencies
+init_db
 dump_files_to_sql
-write_to_db
 clean_up
