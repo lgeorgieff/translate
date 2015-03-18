@@ -320,7 +320,7 @@ strings get_word_classes(string word_classes_string, size_t line_number) {
                            std::to_string(line_number) + "!"}};
   } else if (!current_word_class.empty() && !is_word_class(current_word_class)) {
     cerr << "Warning: The word class \"" << current_word_class << "\" in line " << std::to_string(line_number)
-         << "is unknown!" << endl;
+         << " is unknown!" << endl;
   } else if (!current_word_class.empty()) {
     result.push_back(current_word_class);
   }
