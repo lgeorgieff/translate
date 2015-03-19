@@ -1,7 +1,7 @@
 /*
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 09/03/2015
+# Last modified: 19/03/2015
 # Description: Creates the (postgresql) SQL data base schema for the server side of translate.
 #              Usage: psql --username translate --dbname translate --file create_schema.sql
 #######################################################################################################################
@@ -66,7 +66,7 @@ CREATE TYPE numerus AS ENUM ('pl.', 'sg.');
 
 CREATE TABLE phrase(
 id serial NOT NULL PRIMARY KEY,
-phrase varchar(128) NOT NULL,
+phrase varchar(256) NOT NULL,
 language char(2) REFERENCES language(id) NOT NULL,
 gender char(1) REFERENCES gender(id),
 numerus numerus,
