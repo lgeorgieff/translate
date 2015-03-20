@@ -1,7 +1,7 @@
 /*
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 19/03/2015
+# Last modified: 03/20/2015
 # Description: Creates the (postgresql) SQL data base schema for the server side of translate.
 #              Usage: psql --username translate --dbname translate --file create_schema.sql
 #######################################################################################################################
@@ -119,6 +119,12 @@ INSERT INTO word_class VALUES ('pron', 'pronoun');
 INSERT INTO word_class VALUES ('prefix', 'prefix');
 INSERT INTO word_class VALUES ('suffix', 'suffix');
 INSERT INTO word_class VALUES ('noun', 'noun');
+INSERT INTO word_class VALUES ('art', 'article');
+INSERT INTO word_class VALUES ('num', 'number');
+INSERT INTO word_class VALUES ('interj', 'interjection');
+INSERT INTO word_class VALUES ('phrase', 'phrase');
+INSERT INTO word_class VALUES ('idiom', 'idiom');
+
 
 INSERT INTO gender VALUES ('m', 'der - männlich (Maskulinum)');
 INSERT INTO gender VALUES ('f', 'die - weiblich (Feminimum)');
