@@ -44,7 +44,7 @@ CHECK (char_length(trim(comment)) > 0)
 CREATE TABLE abbreviation
 (
 id serial NOT NULL PRIMARY KEY,	
-abbreviation varchar(64) NOT NULL UNIQUE,
+abbreviation varchar(256) NOT NULL UNIQUE,
 CHECK (char_length(trim(abbreviation)) > 0)
 );
 
