@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 03/16/2015
+// Last modified: 03/20/2015
 // Description: Declares and defines the data type Gender that is used in the data base to represent a gender value
 //              in a grammar.
 // ====================================================================================================================
@@ -70,7 +70,7 @@ Gender from_string(const std::string &gender) {
     return Gender::n;
   else
     throw Exception(std::string("The value \"") + gender +
-                    std::string("\" is not a valid lgeorgieff::translate::utils::Gender values"));
+                    std::string("\" is not a valid lgeorgieff::translate::utils::Gender value"));
 }
 
 template <typename T>
@@ -88,7 +88,7 @@ Gender from_db_string(const std::string &gender) {
     return Gender::n;
   else
     throw Exception(std::string("The value \"") + gender +
-                    std::string("\" is not a valid lgeorgieff::translate::utils::Gender values"));
+                    std::string("\" is not a valid lgeorgieff::translate::utils::Gender value"));
 }
 
 }  // utils
