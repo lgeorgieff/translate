@@ -2,7 +2,7 @@
 
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 03/18/2015
+# Last modified: 03/20/2015
 # Description: Calls the programme dict2sql for all language resources to dump them into SQL files. Finally, these
 #              files are written into the specified data base.
 #              Be carefull when runnig this script, since your data base will be set to an initial (= empty) state.
@@ -25,7 +25,8 @@
 SCRIPT_NAME=$(basename ${0})
 LANGUAGE_RESOURCE_PATTERN="[A-Z][A-Z]-[A-Z][A-Z].txt"
 LANGUAGE_RESOURCE_DIRECTORY="."
-TMP_PATH=$(mktemp -d -t translate_XXXXXXXX)
+TMP_PATH=""
+TMP_PATH_SET_BY_USER=false
 PGSQL_OPTIONS="--dbname translate --username translate"
 STRICT_MODE="false"
 DUMPER_SCRIPT=$(realpath ./dict2sql)
@@ -60,10 +61,20 @@ function error_exit {
 
 # Check if the temporary folder could be created.
 # If not exit with status 1.
-if [ "" == $TMP_PATH ]
-then
-    error_exit "Could not create a temporary folder" 1
-fi
+function check_tmp_folder {
+    if [ "true" == $TMP_PATH_SET_BY_USER  ]
+    then
+        mkdir $(realpath "${TMP_PATH}")
+    else
+        TMP_PATH=$(mktemp -d -t translate_XXXXXXXX)
+    fi
+    if [ "" == $TMP_PATH ] || [ ! -d "${TMP_PATH}" ]
+    then
+        TMP_PATH=""
+        error_exit "Could not create a temporary folder" 1
+    fi
+}
+
 
 ### Print the usage of this script.
 function print_usage {
@@ -86,6 +97,11 @@ function print_usage {
     echo "                                   language resources are written to. The"
     echo "                                   default value is"
     echo "                                   --dbname translate --username translate"
+    echo "-t | --tmp-directory <dir>         Allows to set the temporary folder for"
+    echo "                                   this script. This can be useful if /tmp/"
+    echo "                                   is mounted on a separate device such as"
+    echo "                                   on tmpfs and cannot offer enough space,"
+    echo "                                   i.e. about 2.0GB"
     echo "-s | --strict-mode                 If set, each error in the language"
     echo "                                   resource files aborts this script from"
     echo "                                   further processing"
@@ -113,6 +129,11 @@ function process_arguments {
                 ;;
             "--strict-mode"|"-s")
                 STRICT_MODE="true"
+                ;;
+            "--tmp-directory"|"-t")
+                shift
+                TMP_PATH="$1"
+                TMP_PATH_SET_BY_USER=true
                 ;;
             "--help"|"-h")
                 print_usage
@@ -232,6 +253,7 @@ function init_db {
 
 ### The actual calls
 process_arguments "$@"
+check_tmp_folder
 check_dependencies
 init_db
 dump_files_to_sql
