@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 03/20/2015
+// Last modified: 03/22/2015
 // Description: Declares and defines the data type WordClass that is used in the data base to represent a word class
 //              value in a grammar.
 // ====================================================================================================================
@@ -153,7 +153,7 @@ template <>
 WordClass from_db_string(const std::string &word_class) {
   if("null" == word_class) {
     return WordClass::none;
-  } else if (word_class.size() >= 2) {
+  } else if (word_class.size() > 2) {
     return from_string<WordClass>(word_class.substr(1, word_class.size() - 2));
   } else {
     throw Exception(std::string("The value \"") + word_class +
