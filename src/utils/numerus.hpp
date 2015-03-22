@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 03/20/2015
+// Last modified: 03/22/2015
 // Description: Declares and defines the data type Numerus that is used in the data base to represent a numerus
 //              value in a grammar.
 // ====================================================================================================================
@@ -41,14 +41,9 @@ std::string to_string(const Numerus &numerus) noexcept {
 }
 
 std::string to_db_string(const Numerus &numerus) noexcept {
-  switch (numerus) {
-    case Numerus::sg:
-      return "'sg.'";
-    case Numerus::pl:
-      return "'pl.'";
-    default:
-      return "null";
-  }
+  std::string str{to_string(numerus)};
+  if(str.empty()) return "null";
+  else return "'" + str + "'";
 }
 
 template <typename T>
@@ -72,15 +67,14 @@ T from_db_string(const std::string &);
 
 template <>
 Numerus from_db_string(const std::string &numerus) {
-  if ("null" == numerus)
+  if("null" == numerus) {
     return Numerus::none;
-  else if ("'sg.'" == numerus)
-    return Numerus::sg;
-  else if ("'pl.'" == numerus)
-    return Numerus::pl;
-  else
+  } else if (numerus.size() > 2) {
+    return from_string<Numerus>(numerus.substr(1, numerus.size() - 2));
+  } else {
     throw Exception(std::string("The value \"") + numerus +
                     std::string("\" is not a valid lgeorgieff::translate::utils::Numerus value"));
+  }
 }
 
 }  // utils
