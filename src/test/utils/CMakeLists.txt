@@ -21,7 +21,7 @@ project(translate_test_utils)
 
 ### register all source files
 set(TEST_UTILS_SOURCE_FILES ../../utils/exception.cpp gender_unit_test.cpp word_class_unit_test.cpp
-                            numerus_unit_test.cpp test_main.cpp)
+                            helper_unit_test.cpp numerus_unit_test.cpp test_main.cpp)
 
 ### set all C++ flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lgtest -lgtest_main")
