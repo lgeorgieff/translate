@@ -1,7 +1,7 @@
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 02/12/2015
-# Description: Build unit tests for the server part.
+# Last modified: 02/22/2015
+# Description: Build unit tests for the utils part
 #######################################################################################################################
 
 
@@ -17,14 +17,14 @@
 #######################################################################################################################
 
 ### project setup
-project(translate_test_server)
+project(translate_test_utils)
 
 ### register all source files
-set(TEST_SERVER_SOURCE_FILES ../../utils/exception.cpp ../../server/db_exception.cpp ../../server/connection_string.cpp
-			     connection_string_unit_test.cpp test_main.cpp)
+set(TEST_UTILS_SOURCE_FILES ../../utils/exception.cpp gender_unit_test.cpp word_class_unit_test.cpp
+                            helper_unit_test.cpp numerus_unit_test.cpp test_main.cpp)
 
 ### set all C++ flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lgtest -lgtest_main")
 
 ### create a static library
-add_executable(server_test ${TEST_SERVER_SOURCE_FILES})
+add_executable(utils_test ${TEST_UTILS_SOURCE_FILES})

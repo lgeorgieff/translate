@@ -33,12 +33,12 @@ using std::string;
 using std::stringstream;
 
 TEST(ssl_mode, to_string) {
-  EXPECT_EQ(string("disable"), to_string(SSL_Mode::DISABLE));
-  EXPECT_EQ(string("allow"), to_string(SSL_Mode::ALLOW));
-  EXPECT_EQ(string("prefer"), to_string(SSL_Mode::PREFER));
-  EXPECT_EQ(string("require"), to_string(SSL_Mode::REQUIRE));
-  EXPECT_EQ(string("verify-ca"), to_string(SSL_Mode::VERIFY_CA));
-  EXPECT_EQ(string("verify-full"), to_string(SSL_Mode::VERIFY_FULL));
+  EXPECT_EQ(string{"disable"}, to_string(SSL_Mode::DISABLE));
+  EXPECT_EQ(string{"allow"}, to_string(SSL_Mode::ALLOW));
+  EXPECT_EQ(string{"prefer"}, to_string(SSL_Mode::PREFER));
+  EXPECT_EQ(string{"require"}, to_string(SSL_Mode::REQUIRE));
+  EXPECT_EQ(string{"verify-ca"}, to_string(SSL_Mode::VERIFY_CA));
+  EXPECT_EQ(string{"verify-full"}, to_string(SSL_Mode::VERIFY_FULL));
   EXPECT_THROW(to_string((SSL_Mode)'c'), DB_Exception);
   stringstream ss;
   ss << SSL_Mode::REQUIRE;
@@ -64,15 +64,15 @@ TEST(connection_string, operators) {
   Connection_String css[CSS_DIM] = {cs_1, cs_2, cs_3};
   for (Connection_String cs : css) {
     EXPECT_TRUE(cs.has_user());
-    EXPECT_EQ(string("postgres"), cs.user());
+    EXPECT_EQ(string{"postgres"}, cs.user());
     EXPECT_FALSE(cs.has_host());
     EXPECT_EQ(string{}, cs.host());
     EXPECT_TRUE(cs.has_hostaddr());
-    EXPECT_EQ(string("127.0.0.1"), cs.hostaddr());
+    EXPECT_EQ(string{"127.0.0.1"}, cs.hostaddr());
     EXPECT_FALSE(cs.has_password());
     EXPECT_EQ(string{}, cs.password());
     EXPECT_TRUE(cs.has_dbname());
-    EXPECT_EQ(string("translate"), cs.dbname());
+    EXPECT_EQ(string{"translate"}, cs.dbname());
     EXPECT_FALSE(cs.has_options());
     EXPECT_EQ(string{}, cs.options());
     EXPECT_FALSE(cs.has_client_encoding());
@@ -123,11 +123,11 @@ TEST(connection_string, operators) {
 }
 
 TEST(connection_string, defaults) {
-  EXPECT_EQ(string("postgres"), Connection_String::DEFAULT_USER);
-  EXPECT_EQ(string("127.0.0.1"), Connection_String::DEFAULT_HOSTADDR);
-  EXPECT_EQ(string("localhost"), Connection_String::DEFAULT_HOST);
+  EXPECT_EQ(string{"postgres"}, Connection_String::DEFAULT_USER);
+  EXPECT_EQ(string{"127.0.0.1"}, Connection_String::DEFAULT_HOSTADDR);
+  EXPECT_EQ(string{"localhost"}, Connection_String::DEFAULT_HOST);
   EXPECT_EQ(string{}, Connection_String::DEFAULT_PASSWORD);
-  EXPECT_EQ(string("translate"), Connection_String::DEFAULT_DBNAME);
+  EXPECT_EQ(string{"translate"}, Connection_String::DEFAULT_DBNAME);
   EXPECT_EQ(5432, Connection_String::DEFAULT_PORT);
   EXPECT_EQ(SSL_Mode::PREFER, Connection_String::DEFAULT_SSLMODE);
   EXPECT_EQ(false, Connection_String::DEFAULT_REQUIRESSL);
@@ -136,7 +136,7 @@ TEST(connection_string, defaults) {
 
 TEST(connection_string, host_addr_host_name) {
   Connection_String cs_1;
-  EXPECT_EQ(string("127.0.0.1"), cs_1.hostaddr());
+  EXPECT_EQ(string{"127.0.0.1"}, cs_1.hostaddr());
   EXPECT_TRUE(cs_1.has_hostaddr());
   EXPECT_EQ(string{}, cs_1.host());
   EXPECT_FALSE(cs_1.has_host());
@@ -148,7 +148,7 @@ TEST(connection_string, host_addr_host_name) {
   cs_1.host("\t\n\r my-host.com   ");
   EXPECT_EQ(string{}, cs_1.hostaddr());
   EXPECT_FALSE(cs_1.has_hostaddr());
-  EXPECT_EQ(string("my-host.com"), cs_1.host());
+  EXPECT_EQ(string{"my-host.com"}, cs_1.host());
   EXPECT_TRUE(cs_1.has_host());
   EXPECT_THROW(cs_1.hostaddr("123.12.12.1"), DB_Exception);
   cs_1.host("");

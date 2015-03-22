@@ -1,7 +1,7 @@
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 02/12/2015
-# Description: Build unit tests for the server part.
+# Last modified: 03/12/2015
+# Description: Build configuration for somce scripts written in C++.
 #######################################################################################################################
 
 
@@ -16,15 +16,15 @@
 # Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #######################################################################################################################
 
+
 ### project setup
-project(translate_test_server)
+project(translate_scripts)
 
-### register all source files
-set(TEST_SERVER_SOURCE_FILES ../../utils/exception.cpp ../../server/db_exception.cpp ../../server/connection_string.cpp
-			     connection_string_unit_test.cpp test_main.cpp)
+### set the destination folder of the compiled files to the script folder itself
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/scripts)
 
-### set all C++ flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lgtest -lgtest_main")
+### register all source files for the script part
+set(SCRIPT_SOURCE_FILES ../utils/exception.cpp ../utils/command_line_exception.cpp ./dict2sql.cpp)
 
-### create a static library
-add_executable(server_test ${TEST_SERVER_SOURCE_FILES})
+### create the script executable
+add_executable(dict2sql ${SCRIPT_SOURCE_FILES})
