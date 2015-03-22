@@ -1,7 +1,7 @@
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
 # Last modified: 02/22/2015
-# Description: A dummy CMakeLists.txt for calling the corresponding sub-CMakeLists.txt of all tests.
+# Description: Build unit tests for the utils part
 #######################################################################################################################
 
 
@@ -16,10 +16,14 @@
 # Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #######################################################################################################################
 
+### project setup
+project(translate_test_utils)
 
-### set output folders for all tests
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/../bin/test)
+### register all source files
+set(TEST_UTILS_SOURCE_FILES ../../utils/exception.cpp gender_unit_test.cpp test_main.cpp)
 
-### register all sub-modules
-add_subdirectory(server)
-add_subdirectory(utils)
+### set all C++ flags
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lgtest -lgtest_main")
+
+### create a static library
+add_executable(utils_test ${TEST_UTILS_SOURCE_FILES})
