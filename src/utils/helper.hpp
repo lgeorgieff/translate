@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/03/2015
+// Last modified: 03/22/2015
 // Description: Defines several helper functions for the entire project.
 // ====================================================================================================================
 
@@ -25,6 +25,8 @@
 #include <functional>
 #include <algorithm>
 
+
+#include <iostream>
 using std::string;
 
 namespace lgeorgieff {
@@ -43,7 +45,7 @@ void trim_right(string &str) {
   if (str.empty() || !isspace(str[str.size() - 1])) return;
   string::reverse_iterator start_position{
       std::find_if_not(str.rbegin(), str.rend(), std::ptr_fun<int, int>(std::isspace))};
-  if (start_position != str.rend()) str.erase(start_position.base(), str.end());
+  str.erase(start_position.base(), str.end());
 }
 
 // Removes all whitespace at the beginning and at the end of the passed string
