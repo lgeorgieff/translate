@@ -18,6 +18,7 @@
 // ====================================================================================================================
 
 #include "connection_string.hpp"
+#include "db_query.hpp"
 
 #include <pqxx/pqxx>
 #include <iostream>
@@ -28,6 +29,7 @@
 #include <algorithm>
 
 using lgeorgieff::translate::server::Connection_String;
+using lgeorgieff::translate::server::DB_Query;
 
 using std::cout;
 using std::cin;
