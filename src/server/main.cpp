@@ -36,20 +36,8 @@ using std::cin;
 using std::string;
 using std::endl;
 
-std::string read_sql_file() {
-  std::ifstream sql("create_schema.sql");
-  std::string result;
-  if (sql.is_open()) {
-    std::string line;
-    while (getline(sql, line)) {
-      result += "\n" + line;
-    }
-  }
-  sql.close();
-  return result;
-}
-
 int main(const int argc, const char **argv) {
+  /*
   try {
     Connection_String connection_string{};
     connection_string.user(argv[1]);
@@ -60,13 +48,14 @@ int main(const int argc, const char **argv) {
 
     pqxx::connection c(connection_string.to_string());
     pqxx::work w(c);
-    pqxx::result r = w.exec(read_sql_file());
+    //    pqxx::result r = w.exec(read_sql_file());
     w.commit();
     std::cout << r.size() << std::endl;
   } catch (const std::exception &e) {
     std::cerr << e.what() << std::endl;
     return 1;
   }
+  */
 
   return 0;
 }
