@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 03/22/2015
+// Last modified: 03/23/2015
 // Description: Implements the DB_Query class that allows to query the data base for language information.
 // ====================================================================================================================
 
@@ -55,7 +55,7 @@ const std::string DB_Query::EXACT_MATCH_QUERY =
     "     LEFT OUTER JOIN word_class wc_out ON wc_out.id = pw_out.word_class_id"
     "     LEFT OUTER JOIN phrase_comment pc_out ON pc_out.phrase_id = ph_out.id"
     "     LEFT OUTER JOIN comment co_out ON co_out.id = pc_out.comment_id"
-    "where ph_in.phrase = '%s'and ph_out.language = '%s';";
+    "where ph_in.phrase = '%s' and ph_in.language = '%s' and ph_out.language = '%s';";
 
 const std::string DB_Query::EXACT_MATCH_WORD_CLASS_QUERY =
     "select"
@@ -88,7 +88,8 @@ const std::string DB_Query::EXACT_MATCH_WORD_CLASS_QUERY =
     "     LEFT OUTER JOIN word_class wc_out ON wc_out.id = pw_out.word_class_id"
     "     LEFT OUTER JOIN phrase_comment pc_out ON pc_out.phrase_id = ph_out.id"
     "     LEFT OUTER JOIN comment co_out ON co_out.id = pc_out.comment_id"
-    "where ph_in.phrase = '%s'and ph_out.language = '%s' and wc_in.name = '%s'and wc_out.name = '%s';";
+    "where ph_in.phrase = '%s'and ph_in.language = '%s' and ph_out.language = '%s'"
+    "     and wc_in.name = '%s'and wc_out.name = '%s';";
 
 }  // server
 }  // translate
