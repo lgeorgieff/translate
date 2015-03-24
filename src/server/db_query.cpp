@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 03/23/2015
+// Last modified: 03/24/2015
 // Description: Implements the DB_Query class that allows to query the data base for language information.
 // ====================================================================================================================
 
@@ -17,13 +17,49 @@
 // ====================================================================================================================
 
 #include "db_query.hpp"
+#include "connection_string.hpp"
+#include "db_exception.hpp"
 
+#include <pqxx/pqxx>
 #include <string>
 #include <sstream>
 
 namespace lgeorgieff {
 namespace translate {
 namespace server {
+
+DB_Query::DB_Query(const Connection_String& connection_string) : db_connection_{nullptr} {
+  this->db_connection_ = new pqxx::connection(connection_string.to_string());
+  this->connection_self_created_ = true;
+}
+  
+  DB_Query::DB_Query(pqxx::connection* db_connection) : db_connection_{db_connection}, query_result_{}, connection_self_created_{false} {
+  if (!this->db_connection_) throw DB_Exception("db_connection must not be a nullptr!");
+}
+
+DB_Query::~DB_Query() {
+  if (this->connection_self_created_) {
+    delete this->db_connection_;
+    this->db_connection_ = nullptr;
+  }
+}
+
+DB_Query& DB_Query::operator()(const string& phrase_in, const string& language_in, const string& language_out) {
+  pqxx::work query(*this->db_connection_);
+  this->query_result_ = query.exec(this->generate_exact_match_query(phrase_in, language_in, language_out));
+  query.commit();
+  // TODO: offer API to request result from outside class
+  return *this;
+}
+
+DB_Query& DB_Query::operator()(const string& phrase_in, const string& language_in, const string& language_out, const string& word_class) {
+  pqxx::work query(*this->db_connection_);
+  this->query_result_ =
+      query.exec(this->generate_exact_match_word_class_query(phrase_in, language_in, language_out, word_class));
+  query.commit();
+  // TODO: offer API to request result from outside class
+  return *this;
+}
 
 std::string DB_Query::generate_exact_match_query(const std::string& phrase_in, const std::string& language_in,
                                                  const std::string& language_out) {
@@ -58,8 +94,9 @@ std::string DB_Query::generate_exact_match_query(const std::string& phrase_in, c
         " LEFT OUTER JOIN word_class wc_out ON wc_out.id = pw_out.word_class_id"
         " LEFT OUTER JOIN phrase_comment pc_out ON pc_out.phrase_id = ph_out.id"
         " LEFT OUTER JOIN comment co_out ON co_out.id = pc_out.comment_id"
-        " where ph_in.phrase = '" << phrase_in << "' and ph_in.language = '" << language_in
-     << "' and ph_out.language = '" << language_out << "';";
+        " where ph_in.phrase = '" << this->db_connection_->esc(phrase_in) << "' and ph_in.language = '"
+     << this->db_connection_->esc(language_in) << "' and ph_out.language = '" << this->db_connection_->esc(language_out)
+     << "';";
   return ss.str();
 }
 
@@ -98,9 +135,10 @@ std::string DB_Query::generate_exact_match_word_class_query(const std::string& p
         " LEFT OUTER JOIN word_class wc_out ON wc_out.id = pw_out.word_class_id"
         " LEFT OUTER JOIN phrase_comment pc_out ON pc_out.phrase_id = ph_out.id"
         " LEFT OUTER JOIN comment co_out ON co_out.id = pc_out.comment_id"
-        " where ph_in.phrase = '" << phrase_in << "' and ph_in.language = '" << language_in
-     << "' and ph_out.language = '" << language_out << "' and wc_in.name = '" << word_class
-     << "'and wc_out.name = '" << word_class << "';";
+        " where ph_in.phrase = '" << this->db_connection_->esc(phrase_in) << "' and ph_in.language = '"
+     << this->db_connection_->esc(language_in) << "' and ph_out.language = '" << this->db_connection_->esc(language_out)
+     << "' and wc_in.name = '" << this->db_connection_->esc(word_class) << "'and wc_out.name = '"
+     << this->db_connection_->esc(word_class) << "';";
   return ss.str();
 }
 

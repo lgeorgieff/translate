@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 03/23/2015
+// Last modified: 03/24/2015
 // Description: Defines the DB_Query class that allows to query the data base for language information.
 // ====================================================================================================================
 
@@ -28,17 +28,27 @@ namespace lgeorgieff {
 namespace translate {
 namespace server {
 
+// TODO: add comments
 class DB_Query {
  public:
   DB_Query() = delete;
-  DB_Query(const Connection_String&);
-  DB_Query(pqxx::connection&);
+  explicit DB_Query(const Connection_String&);
+  explicit DB_Query(pqxx::connection*);
+  DB_Query(DB_Query&&) = default;
+  DB_Query& operator=(const DB_Query&) = default;
+  DB_Query& operator=(DB_Query&&) = default;
+  ~DB_Query();
+
+  DB_Query& operator()(const string&, const string&, const string&);
+  DB_Query& operator()(const string&, const string&, const string&, const string&);
 
  private:
-  static std::string generate_exact_match_query(const std::string&, const std::string&, const std::string&);
-  static std::string generate_exact_match_word_class_query(const std::string&, const std::string&, const std::string&,
+  std::string generate_exact_match_query(const std::string&, const std::string&, const std::string&);
+  std::string generate_exact_match_word_class_query(const std::string&, const std::string&, const std::string&,
                                                            const std::string&);
-  pqxx::connection& db_connection_;
+  pqxx::connection* db_connection_;
+  pqxx::result query_result_;
+  bool connection_self_created_;
 };  // DB_Query
 
 }  // server
