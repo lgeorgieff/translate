@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 03/24/2015
+// Last modified: 03/25/2015
 // Description: Defines the DB_Query class that allows to query the data base for language information.
 // ====================================================================================================================
 
@@ -42,10 +42,18 @@ class DB_Query {
   DB_Query& operator()(const string&, const string&, const string&);
   DB_Query& operator()(const string&, const string&, const string&, const string&);
 
+  pqxx::result::const_iterator begin() const;
+  pqxx::result::const_iterator end() const;
+  pqxx::result::const_reverse_iterator rbegin() const;
+  pqxx::result::const_reverse_iterator rend() const;
+  size_t size() const;
+  bool empty() const;
+  void clear();
+
  private:
   std::string generate_exact_match_query(const std::string&, const std::string&, const std::string&);
   std::string generate_exact_match_word_class_query(const std::string&, const std::string&, const std::string&,
-                                                           const std::string&);
+                                                    const std::string&);
   pqxx::connection* db_connection_;
   pqxx::result query_result_;
   bool connection_self_created_;

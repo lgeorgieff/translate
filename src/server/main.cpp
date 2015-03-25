@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 03/22/2015
+// Last modified: 03/25/2015
 // Description: This file serves just as a stub for running the server part until the final server entry point will be
 //              implemented.
 // ====================================================================================================================
@@ -37,25 +37,17 @@ using std::string;
 using std::endl;
 
 int main(const int argc, const char **argv) {
-  /*
-  try {
-    Connection_String connection_string{};
-    connection_string.user(argv[1]);
-    connection_string.password(argv[2]);
-    connection_string.dbname("translate");
-    connection_string.hostaddr("127.0.0.1");
-    cout << connection_string << endl;
-
-    pqxx::connection c(connection_string.to_string());
-    pqxx::work w(c);
-    //    pqxx::result r = w.exec(read_sql_file());
-    w.commit();
-    std::cout << r.size() << std::endl;
-  } catch (const std::exception &e) {
-    std::cerr << e.what() << std::endl;
-    return 1;
+  Connection_String connection_string{};
+  connection_string.user(argv[1]);
+  connection_string.dbname("translate");
+  connection_string.hostaddr("127.0.0.1");
+  DB_Query db_query(connection_string);
+  db_query("stehen", "DE", "EN", "verb");
+  for(const pqxx::result::tuple tuple : db_query) {
+    for(const auto item : tuple) {
+      if (!to_string(item).empty()) cout << "_" << item << "_" << " ";
+    }
+    cout << endl;
   }
-  */
-
   return 0;
 }

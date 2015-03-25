@@ -28,6 +28,20 @@ namespace lgeorgieff {
 namespace translate {
 namespace server {
 
+pqxx::result::const_iterator DB_Query::begin() const { return this->query_result_.begin(); }
+
+pqxx::result::const_iterator DB_Query::end() const { return this->query_result_.end(); }
+
+pqxx::result::const_reverse_iterator DB_Query::rbegin() const { return this->query_result_.rbegin(); }
+
+pqxx::result::const_reverse_iterator DB_Query::rend() const { return this->query_result_.rend(); }
+
+size_t DB_Query::size() const { return this->query_result_.empty(); }
+
+bool DB_Query::empty() const { return this->query_result_.empty(); }
+
+void DB_Query::clear() { this->query_result_.clear(); }
+
 DB_Query::DB_Query(const Connection_String& connection_string) : db_connection_{nullptr} {
   this->db_connection_ = new pqxx::connection(connection_string.to_string());
   this->connection_self_created_ = true;
@@ -49,16 +63,15 @@ DB_Query& DB_Query::operator()(const string& phrase_in, const string& language_i
   pqxx::work query(*this->db_connection_);
   this->query_result_ = query.exec(this->generate_exact_match_query(phrase_in, language_in, language_out));
   query.commit();
-  // TODO: offer API to request result from outside class
   return *this;
 }
 
-DB_Query& DB_Query::operator()(const string& phrase_in, const string& language_in, const string& language_out, const string& word_class) {
+DB_Query& DB_Query::operator()(const string& phrase_in, const string& language_in, const string& language_out,
+                               const string& word_class) {
   pqxx::work query(*this->db_connection_);
   this->query_result_ =
       query.exec(this->generate_exact_match_word_class_query(phrase_in, language_in, language_out, word_class));
   query.commit();
-  // TODO: offer API to request result from outside class
   return *this;
 }
 
