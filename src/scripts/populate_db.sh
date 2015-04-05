@@ -2,7 +2,7 @@
 
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 03/20/2015
+# Last modified: 04/05/2015
 # Description: Calls the programme dict2sql for all language resources to dump them into SQL files. Finally, these
 #              files are written into the specified data base.
 #              Be carefull when runnig this script, since your data base will be set to an initial (= empty) state.
@@ -90,7 +90,7 @@ function print_usage {
     echo "                                   directory that will be processed by this"
     echo "                                   script. The deault value is"
     echo "                                   \"${LANGUAGE_RESOURCE_PATTERN}\""
-    echo "-d | --resource-directrory <dir>   The directory that is searched for the"
+    echo "-d | --resource-directory <dir>    The directory that is searched for the"
     echo "                                   language resource files. The default"
     echo "                                   value is \"${LANGUAGE_RESOURCE_DIRECTORY}\""
     echo "-p | --pgsql-options <options>     Options for the data base in which the"
