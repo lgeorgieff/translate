@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 20/03/2015
+// Last modified: 04/04/2015
 // Description: Implements a parser for language resource files and dumps the data into sql files.
 // ====================================================================================================================
 
@@ -237,48 +237,62 @@ void language_to_sql_statement(const LangItem &lang) {
   string gender_where_str{gender_to_sql_string(lang.gender, true)};
   string numerus_where_str{numerus_to_sql_string(lang.numerus, true)};
 
-  cout << "INSERT INTO phrase (phrase, language, gender, numerus) SELECT '" << lang.phrase << "', '" << lang.language
-       << "', " << gender_str << ", " << numerus_str << " WHERE NOT EXISTS (SELECT 1 FROM phrase WHERE phrase='"
-       << lang.phrase << "' and language='" << lang.language << "' and gender " << gender_where_str << " and numerus "
-       << numerus_where_str << ");" << endl;
-
-  for (const string &word_class : lang.word_classes) {
-    cout << "INSERT INTO phrase_word_class (phrase_id, word_class_id) SELECT (SELECT id FROM PHRASE WHERE phrase='"
-         << lang.phrase << "' and language='" << lang.language << "' and gender " << gender_where_str
-         << " and numerus " << numerus_where_str << "), '" << word_class
-         << "' WHERE NOT EXISTS (SELECT 1 FROM phrase_word_class WHERE phrase_id=(SELECT id FROM PHRASE WHERE phrase='"
-         << lang.phrase << "' and language='" << lang.language << "' and gender " << gender_where_str
-         << " and numerus " << numerus_where_str << ") and word_class_id='" << word_class << "');" << endl;
-  }
-
+  // Insert comment entry into the table "comment".
   for (const string &comment : lang.comments) {
     cout << "INSERT INTO comment (comment) SELECT '" << comment
          << "' WHERE NOT EXISTS (SELECT 1 FROM comment WHERE comment='" << comment << "');" << endl;
-    cout << "INSERT INTO phrase_comment (phrase_id, comment_id) SELECT (SELECT id FROM phrase WHERE phrase='"
-         << lang.phrase << "' and language='" << lang.language << "' and gender " << gender_where_str
-         << " and numerus " << numerus_where_str << "), (SELECT id FROM comment WHERE comment='" << comment
-         << "') WHERE NOT EXISTS (SELECT 1 FROM phrase_comment WHERE phrase_id=(SELECT id FROM phrase WHERE phrase='"
-         << lang.phrase << "' and language='" << lang.language << "' and gender " << gender_where_str
-         << " and numerus " << numerus_where_str << ") and comment_id=(SELECT id FROM comment WHERE comment='"
-         << comment << "'));" << endl;
   }
 
+  // Insert abbreviation entry into the table "abbreviation".
   for (const string &abbreviation : lang.abbreviations) {
     cout << "INSERT INTO abbreviation (abbreviation) SELECT '" << abbreviation
          << "' WHERE NOT EXISTS (SELECT 1 FROM abbreviation WHERE abbreviation='" << abbreviation << "');" << endl;
-    cout << "INSERT INTO phrase_abbreviation (phrase_id, abbreviation_id) SELECT (SELECT id FROM phrase WHERE phrase='"
-         << lang.phrase << "' and language='" << lang.language << "' and gender " << gender_where_str
-         << " and numerus " << numerus_where_str << "), (SELECT id FROM abbreviation WHERE abbreviation='"
-         << abbreviation
-         << "') WHERE NOT EXISTS (SELECT 1 FROM phrase_abbreviation WHERE phrase_id=(SELECT id FROM phrase WHERE "
-            "phrase='" << lang.phrase << "' and language='" << lang.language << "' and gender " << gender_where_str
-         << " and numerus " << numerus_where_str
-         << ") and abbreviation_id=(SELECT id FROM abbreviation WHERE abbreviation='" << abbreviation << "'));"
-         << endl;
   }
+
+  // Insert entry into the table "phrase".
+  strings::const_iterator word_class_iter{lang.word_classes.cbegin()};
+  strings::const_iterator word_class_end{lang.word_classes.cend()};
+  do  {
+    string word_class_str{"null"};
+    string word_class_where_str{"is null"};
+    if (word_class_iter != word_class_end) {
+      word_class_str = "'" + *word_class_iter + "'";
+      word_class_where_str = "= '" + *word_class_iter++ + "'";
+    }
+    cout << "INSERT INTO phrase (phrase, language, gender, numerus, word_class) SELECT '" << lang.phrase << "', '"
+         << lang.language << "', " << gender_str << ", " << numerus_str << ", " << word_class_str
+         << " WHERE NOT EXISTS (SELECT 1 FROM phrase WHERE phrase='" << lang.phrase << "' and language='"
+         << lang.language << "' and gender " << gender_where_str << " and numerus " << numerus_where_str
+         << " and word_class " << word_class_where_str << ");" << endl;
+
+    // Insert phrase_id and comment_id into the table "phrase_comment".
+    for (const string &comment : lang.comments) {
+      cout << "INSERT INTO phrase_comment (phrase_id, comment_id) SELECT (SELECT id FROM phrase WHERE phrase='"
+           << lang.phrase << "' and language='" << lang.language << "' and gender " << gender_where_str
+           << " and numerus " << numerus_where_str << " and word_class " << word_class_where_str
+           << "), (SELECT id FROM comment WHERE comment='" << comment
+           << "') WHERE NOT EXISTS (SELECT 1 FROM phrase_comment WHERE phrase_id=(SELECT id FROM phrase WHERE phrase='"
+           << lang.phrase << "' and language='" << lang.language << "' and gender " << gender_where_str
+           << " and numerus " << numerus_where_str << " and word_class " << word_class_where_str
+           << ") and comment_id=(SELECT id FROM comment WHERE comment='" << comment << "'));" << endl;
+    }
+
+    // Insert phrase_id and abbreviation_id into the table "phrase_abbreviation".
+    for (const string &abbreviation : lang.abbreviations) {
+      cout << "INSERT INTO phrase_abbreviation (phrase_id, abbreviation_id) SELECT (SELECT id FROM phrase WHERE "
+              "phrase='" << lang.phrase << "' and language='" << lang.language << "' and gender " << gender_where_str
+           << " and numerus " << numerus_where_str << " and word_class " << word_class_where_str
+           << "), (SELECT id FROM abbreviation WHERE abbreviation='" << abbreviation
+           << "') WHERE NOT EXISTS (SELECT 1 FROM phrase_abbreviation WHERE phrase_id=(SELECT id FROM phrase WHERE "
+              "phrase='" << lang.phrase << "' and language='" << lang.language << "' and gender " << gender_where_str
+           << " and numerus " << numerus_where_str << " and word_class " << word_class_where_str
+           << ") and abbreviation_id=(SELECT id FROM abbreviation WHERE abbreviation='" << abbreviation << "'));"
+           << endl;
+    }
+  } while (word_class_iter != word_class_end);
 }
 
-// Transform a language item to an SQL statement, so that it can be inserted to a DB.
+// Transform a language item to an SQL statement, so that it can be inserted into a DB.
 void line_to_sql_statement(const LangItem &l_1, const LangItem &l_2) {
   language_to_sql_statement(l_1);
   language_to_sql_statement(l_2);
@@ -287,15 +301,24 @@ void line_to_sql_statement(const LangItem &l_1, const LangItem &l_2) {
   string gender_str_2{gender_to_sql_string(l_2.gender, true)};
   string numerus_str_2{numerus_to_sql_string(l_2.numerus, true)};
 
-  cout << "INSERT INTO phrase_translation (phrase_id_in, phrase_id_out) SELECT (SELECT id FROM phrase WHERE(phrase='"
-       << l_1.phrase << "' and language='" << l_1.language << "' and gender " << gender_str_1 << " and numerus "
-       << numerus_str_1 << ")), (SELECT id FROM phrase WHERE(phrase='" << l_2.phrase << "' and language='"
-       << l_2.language << "' and gender " << gender_str_2 << " and numerus " << numerus_str_2
-       << ")) WHERE NOT EXISTS (SELECT 1 FROM phrase_translation WHERE phrase_id_in=(SELECT id FROM phrase "
-          "WHERE(phrase='" << l_1.phrase << "' and language='" << l_1.language << "' and gender " << gender_str_1
-       << " and numerus " << numerus_str_1 << ")) and phrase_id_out=(SELECT id FROM phrase WHERE(phrase='"
-       << l_2.phrase << "' and language='" << l_2.language << "' and gender " << gender_str_2 << " and numerus "
-       << numerus_str_2 << ")));" << endl;
+  strings::const_iterator word_class_iter{l_1.word_classes.cbegin()};
+  strings::const_iterator word_class_end{l_1.word_classes.cend()};
+  do {
+    string word_class_where_str{"is null"};
+    if (word_class_iter != word_class_end) word_class_where_str = "= '" + *word_class_iter++ + "'";
+
+    cout << "INSERT INTO phrase_translation (phrase_id_in, phrase_id_out) SELECT (SELECT id FROM phrase WHERE(phrase='"
+         << l_1.phrase << "' and language='" << l_1.language << "' and gender " << gender_str_1 << " and numerus "
+         << numerus_str_1 << " and word_class " << word_class_where_str << ")), (SELECT id FROM phrase WHERE(phrase='"
+         << l_2.phrase << "' and language='" << l_2.language << "' and gender " << gender_str_2 << " and numerus "
+         << numerus_str_2 << " and word_class " << word_class_where_str
+         << ")) WHERE NOT EXISTS (SELECT 1 FROM phrase_translation WHERE phrase_id_in=(SELECT id FROM phrase "
+            "WHERE(phrase='" << l_1.phrase << "' and language='" << l_1.language << "' and gender " << gender_str_1
+         << " and numerus " << numerus_str_1 << " and word_class " << word_class_where_str
+         << ")) and phrase_id_out=(SELECT id FROM phrase WHERE(phrase='" << l_2.phrase << "' and language='"
+         << l_2.language << "' and gender " << gender_str_2 << " and numerus " << numerus_str_2 << " and word_class "
+         << word_class_where_str << ")));" << endl;
+  } while (word_class_iter != word_class_end);
 
   cout << endl;
 }
