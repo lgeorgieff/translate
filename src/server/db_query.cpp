@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 04/04/2015
+// Last modified: 04/05/2015
 // Description: Implements the DB_Query class that allows to query the data base for language information.
 // ====================================================================================================================
 
@@ -23,6 +23,7 @@
 #include <pqxx/pqxx>
 #include <string>
 #include <sstream>
+#include <iostream>
 
 namespace lgeorgieff {
 namespace translate {
@@ -59,47 +60,31 @@ DB_Query::~DB_Query() {
   }
 }
 
-DB_Query& DB_Query::operator()(const string& phrase_in, const string& language_in, const string& language_out) {
-  pqxx::work query(*this->db_connection_);
-  this->query_result_ = query.exec(this->generate_exact_match_query(phrase_in, language_in, language_out));
-  query.commit();
-  return *this;
-}
-
-DB_Query& DB_Query::operator()(const string& phrase_in, const string& language_in, const string& language_out,
-                               const string& word_class) {
-  pqxx::work query(*this->db_connection_);
-  this->query_result_ =
-      query.exec(this->generate_exact_match_word_class_query(phrase_in, language_in, language_out, word_class));
-  query.commit();
-  return *this;
-}
-
-std::string DB_Query::generate_exact_match_query(const std::string& phrase_in, const std::string& language_in,
-                                                 const std::string& language_out) {
-  std::string phrase_in_where_str{"= '" + this->db_connection_->esc(phrase_in) + "'"};
-  if ("null" == phrase_in) phrase_in_where_str = "is null";
-  std::string language_in_where_str{"= '" + this->db_connection_->esc(language_in) + "'"};
-  if ("null" == language_in) language_in_where_str = "is null";
-  std::string language_out_where_str{"= '" + this->db_connection_->esc(language_out) + "'"};
-  if ("null" == language_out) language_out_where_str = "is null";
+DB_Query& DB_Query::request_phrase(const string& phrase_in, const string& language_in, const string& language_out) {
+  std::string phrase_in_where_str{"is null"};
+  if ("null" != phrase_in) phrase_in_where_str = "= '" + this->db_connection_->esc(phrase_in) + "'";
+  std::string language_in_where_str{"is null"};
+  if ("null" != language_in) language_in_where_str = "= '" + this->db_connection_->esc(language_in) + "'";
+  std::string language_out_where_str{"is null"};
+  if ("null" != language_out) language_out_where_str = "= '" + this->db_connection_->esc(language_out) + "'";
+  std::string word_class_where_str{"is null"};
   std::stringstream ss;
-  ss << "select"
-        " ph_in.language as language_in,"
-        " ph_in.phrase as phrase_in,"
-        " ph_in.word_class as word_class_out,"
-        " ph_in.gender as gender_in,"
-        " ph_in.numerus as numerus_in,"
-        " ab_in.abbreviation as abbreviation_in,"
-        " co_in.comment as comment_in,"
-        " ph_out.language as language_out,"
-        " ph_out.phrase as phrase_out,"
-        " ph_out.word_class as word_class_in,"
-        " ph_out.gender as gender_out,"
-        " ph_out.numerus as numerus_out,"
-        " ab_out.abbreviation as abbriviation_out,"
-        " co_out.comment as comment_out "
-        "from phrase ph_in"
+  ss << "SELECT"
+        " ph_in.language AS language_in,"
+        " ph_in.phrase AS phrase_in,"
+        " ph_in.word_clASs AS word_clASs_out,"
+        " ph_in.gender AS gender_in,"
+        " ph_in.numerus AS numerus_in,"
+        " ab_in.abbreviation AS abbreviation_in,"
+        " co_in.comment AS comment_in,"
+        " ph_out.language AS language_out,"
+        " ph_out.phrase AS phrase_out,"
+        " ph_out.word_clASs AS word_clASs_in,"
+        " ph_out.gender AS gender_out,"
+        " ph_out.numerus AS numerus_out,"
+        " ab_out.abbreviation AS abbriviation_out,"
+        " co_out.comment AS comment_out "
+        "SELECTfrom phrase ph_in"
         " LEFT OUTER JOIN phrase_abbreviation pa_in ON ph_in.id = pa_in.phrase_id"
         " LEFT OUTER JOIN abbreviation ab_in ON ab_in.id = pa_in.abbreviation_id"
         " LEFT OUTER JOIN phrase_comment pc_in ON pc_in.phrase_id = ph_in.id"
@@ -110,41 +95,41 @@ std::string DB_Query::generate_exact_match_query(const std::string& phrase_in, c
         " LEFT OUTER JOIN abbreviation ab_out ON ab_out.id = pa_out.abbreviation_id"
         " LEFT OUTER JOIN phrase_comment pc_out ON pc_out.phrase_id = ph_out.id"
         " LEFT OUTER JOIN comment co_out ON co_out.id = pc_out.comment_id "
-        "where ph_in.phrase " << phrase_in_where_str << " and ph_in.language " << language_in_where_str
-     << " and ph_out.language " << language_out_where_str << ";";
-  return ss.str();
+        "WHERE ph_in.phrase " << phrase_in_where_str << " AND ph_in.language " << language_in_where_str
+     << " AND ph_out.language " << language_out_where_str << ";";
+  pqxx::work query(*this->db_connection_);
+  this->query_result_ = query.exec(ss.str());
+  query.commit();
+  return *this;
 }
 
-std::string DB_Query::generate_exact_match_word_class_query(const std::string& phrase_in,
-                                                            const std::string& language_in,
-                                                            const std::string& language_out,
-                                                            const std::string& word_class) {
-  std::string phrase_in_where_str{"= '" + this->db_connection_->esc(phrase_in) + "'"};
-  if ("null" == phrase_in) phrase_in_where_str = "is null";
-  std::string language_in_where_str{"= '" + this->db_connection_->esc(language_in) + "'"};
-  if ("null" == language_in) language_in_where_str = "is null";
-  std::string language_out_where_str{"= '" + this->db_connection_->esc(language_out) + "'"};
-  if ("null" == language_out) language_out_where_str = "is null";
-  std::string word_class_where_str{"= '" + this->db_connection_->esc(word_class) + "'"};
-  if ("null" == word_class) word_class_where_str = "is null";
-
+DB_Query& DB_Query::request_phrase(const string& phrase_in, const string& language_in, const string& language_out,
+                                   const string& word_class) {
+  std::string phrase_in_where_str{"is null"};
+  if ("null" != phrase_in) phrase_in_where_str = "= '" + this->db_connection_->esc(phrase_in) + "'";
+  std::string language_in_where_str{"is null"};
+  if ("null" != language_in) language_in_where_str = "= '" + this->db_connection_->esc(language_in) + "'";
+  std::string language_out_where_str{"is null"};
+  if ("null" != language_out) language_out_where_str = "= '" + this->db_connection_->esc(language_out) + "'";
+  std::string word_class_where_str{"is null"};
+  if ("null" != word_class) word_class_where_str = "= '" + this->db_connection_->esc(word_class) + "'";
   std::stringstream ss;
-  ss << "select"
-        " ph_in.language as language_in,"
-        " ph_in.phrase as phrase_in,"
-        " ph_in.word_class as word_class_in,"
-        " ph_in.gender as gender_in,"
-        " ph_in.numerus as numerus_in,"
-        " ab_in.abbreviation as abbreviation_in,"
-        " co_in.comment as comment_in,"
-        " ph_out.language as language_out,"
-        " ph_out.phrase as phrase_out,"
-        " ph_out.word_class as word_class_out,"
-        " ph_out.gender as gender_out,"
-        " ph_out.numerus as numerus_out,"
-        " ab_out.abbreviation as abbriviation_out,"
-        " co_out.comment as comment_out "
-        "from phrase ph_in"
+  ss << "SELECT"
+        " ph_in.language AS language_in,"
+        " ph_in.phrase AS phrASe_in,"
+        " ph_in.word_class AS word_class_in,"
+        " ph_in.gender AS gender_in,"
+        " ph_in.numerus AS numerus_in,"
+        " ab_in.abbreviation AS abbreviation_in,"
+        " co_in.comment AS comment_in,"
+        " ph_out.language AS language_out,"
+        " ph_out.phrase AS phrASe_out,"
+        " ph_out.word_class AS word_class_out,"
+        " ph_out.gender AS gender_out,"
+        " ph_out.numerus AS numerus_out,"
+        " ab_out.abbreviation AS abbriviation_out,"
+        " co_out.comment AS comment_out "
+        "FROM phrase ph_in"
         " LEFT OUTER JOIN phrase_abbreviation pa_in ON ph_in.id = pa_in.phrase_id"
         " LEFT OUTER JOIN abbreviation ab_in ON ab_in.id = pa_in.abbreviation_id"
         " LEFT OUTER JOIN phrase_comment pc_in ON pc_in.phrase_id = ph_in.id"
@@ -155,10 +140,74 @@ std::string DB_Query::generate_exact_match_word_class_query(const std::string& p
         " LEFT OUTER JOIN abbreviation ab_out ON ab_out.id = pa_out.abbreviation_id"
         " LEFT OUTER JOIN phrase_comment pc_out ON pc_out.phrase_id = ph_out.id"
         " LEFT OUTER JOIN comment co_out ON co_out.id = pc_out.comment_id "
-        "where ph_in.phrase " << phrase_in_where_str << " and ph_in.language " << language_in_where_str
-     << " and ph_out.language " << language_out_where_str << " and ph_in.word_class " << word_class_where_str
-     << " and ph_out.word_class " << word_class_where_str << ";";
-  return ss.str();
+        "WHERE ph_in.phrase " << phrase_in_where_str << " AND ph_in.language " << language_in_where_str
+     << " AND ph_out.language " << language_out_where_str << " AND ph_in.word_class " << word_class_where_str
+     << " AND ph_out.word_class " << word_class_where_str << ";";
+  pqxx::work query(*this->db_connection_);
+  this->query_result_ = query.exec(ss.str());
+  query.commit();
+  return *this;
+}
+
+DB_Query& DB_Query::request_language(const string& language_name) {
+  pqxx::work query(*this->db_connection_);
+  std::stringstream ss;
+  string language_name_where_str{"is null"};
+  if ("null" != language_name) language_name_where_str = "ILIKE '" + this->db_connection_->esc(language_name) + "'";
+  ss << "SELECT id FROM language WHERE name " << language_name_where_str << ";";
+  this->query_result_ = query.exec(ss.str());
+  query.commit();
+  return *this;
+}
+
+DB_Query& DB_Query::request_all_languages() {
+  pqxx::work query(*this->db_connection_);
+  this->query_result_ = query.exec("SELECT * FROM language;");
+  query.commit();
+  return *this;
+}
+
+DB_Query& DB_Query::request_word_class(const string& word_class_name) {
+  pqxx::work query(*this->db_connection_);
+  std::stringstream ss;
+  string word_class_name_where_str{"is null"};
+  if ("null" != word_class_name)
+    word_class_name_where_str = "ILIKE '" + this->db_connection_->esc(word_class_name) + "'";
+  ss << "SELECT id FROM word_class_description WHERE name " << word_class_name_where_str << ";";
+  this->query_result_ = query.exec(ss.str());
+  query.commit();
+  return *this;
+}
+
+DB_Query& DB_Query::request_all_word_classes() {
+  pqxx::work query(*this->db_connection_);
+  this->query_result_ = query.exec("SELECT * FROM word_class_description;");
+  query.commit();
+  return *this;
+}
+
+DB_Query& DB_Query::request_gender(const string& gender_name) {
+  pqxx::work query(*this->db_connection_);
+  std::stringstream ss;
+  string gender_name_where_str{"is null"};
+  if ("null" != gender_name) gender_name_where_str = "ILIKE '" + this->db_connection_->esc(gender_name) + "'";
+  ss << "SELECT id, description FROM gender_description WHERE name " << gender_name_where_str << ";";
+  this->query_result_ = query.exec(ss.str());
+  query.commit();
+  return *this;
+}
+
+DB_Query& DB_Query::request_all_genders() {
+  pqxx::work query(*this->db_connection_);
+  this->query_result_ = query.exec("SELECT * FROM gender_description;");
+  query.commit();
+  return *this;
+}
+DB_Query& DB_Query::request_all_numeri() {
+  pqxx::work query(*this->db_connection_);
+  this->query_result_ = query.exec("SELECT * from unnest(enum_range(NULL::numerus));");
+  query.commit();
+  return *this;
 }
 
 }  // server

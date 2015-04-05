@@ -42,7 +42,15 @@ int main(const int argc, const char **argv) {
   connection_string.dbname("translate");
   connection_string.hostaddr("127.0.0.1");
   DB_Query db_query(connection_string);
-  db_query("stehen", "DE", "EN", "verb");
+  db_query.request_phrase("stehen", "DE", "EN", "verb");
+  // db_query.request_phrase("stehen", "DE", "EN");
+  // db_query.request_all_languages();
+  // db_query.request_language("deutsch");
+  // db_query.request_word_class("Adjective");
+  // db_query.request_all_word_classes();
+  // db_query.request_gender("das");
+  // db_query.request_all_genders();
+  // db_query.request_all_numeri();
   for(const pqxx::result::tuple tuple : db_query) {
     for(const auto item : tuple) {
       if (!to_string(item).empty()) cout << "_" << item << "_" << " ";
