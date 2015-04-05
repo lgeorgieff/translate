@@ -1,7 +1,7 @@
 /*
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 04/04/2015
+# Last modified: 04/05/2015
 # Description: Creates the (postgresql) SQL data base schema for the server side of translate.
 #              Usage: psql --username translate --dbname translate --file create_schema.sql
 #######################################################################################################################
@@ -59,6 +59,7 @@ CHECK (char_length(trim(name)) > 0)
 CREATE TABLE gender_description
 (
 id char(1) NOT NULL PRIMARY KEY,
+name varchar(8) NOT NULL PRIMARY KEY,
 description varchar(64) NOT NULL
 );
 
@@ -119,9 +120,9 @@ INSERT INTO word_class_description VALUES ('interj', 'interjection');
 INSERT INTO word_class_description VALUES ('phrase', 'phrase');
 INSERT INTO word_class_description VALUES ('idiom', 'idiom');
 
-INSERT INTO gender_description VALUES ('m', 'der - männlich (Maskulinum)');
-INSERT INTO gender_description VALUES ('f', 'die - weiblich (Feminimum)');
-INSERT INTO gender_description VALUES ('n', 'das sachlich (Neutrum)');
+INSERT INTO gender_description VALUES ('m', 'der', 'männlich (Maskulinum)');
+INSERT INTO gender_description VALUES ('f', 'die', 'weiblich (Feminimum)');
+INSERT INTO gender_description VALUES ('n', 'das', 'sachlich (Neutrum)');
 
 INSERT INTO language VALUES ('BG', 'български');
 INSERT INTO language VALUES ('BS', 'bosanski');
