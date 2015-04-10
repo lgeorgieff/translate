@@ -1,6 +1,6 @@
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 03/22/2015
+# Last modified: 04/10/2015
 # Description: Build configuration for the server part of translate.
 #######################################################################################################################
 
@@ -21,7 +21,8 @@
 project(translate_server)
 
 ### register all source files for the server part
-set(SERVER_SOURCE_FILES ../utils/exception.cpp db_exception.cpp connection_string.cpp db_query.cpp main.cpp)
+set(SERVER_SOURCE_FILES ../utils/exception.cpp ../utils/numerus.cpp ../utils/gender.cpp ../utils/word_class.cpp
+                        ../utils/helper.cpp db_exception.cpp connection_string.cpp db_query.cpp main.cpp)
 
 ### set all C++ flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lpqxx -lpq")

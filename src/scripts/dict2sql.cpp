@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 04/04/2015
+// Last modified: 04/10/2015
 // Description: Implements a parser for language resource files and dumps the data into sql files.
 // ====================================================================================================================
 

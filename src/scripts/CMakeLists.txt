@@ -1,6 +1,6 @@
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 03/12/2015
+# Last modified: 04/10/2015
 # Description: Build configuration for somce scripts written in C++.
 #######################################################################################################################
 
@@ -24,7 +24,8 @@ project(translate_scripts)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/scripts)
 
 ### register all source files for the script part
-set(SCRIPT_SOURCE_FILES ../utils/exception.cpp ../utils/command_line_exception.cpp ./dict2sql.cpp)
+set(SCRIPT_SOURCE_FILES ../utils/exception.cpp ../utils/command_line_exception.cpp ../utils/numerus.cpp
+                        ../utils/gender.cpp ../utils/word_class.cpp ../utils/helper.cpp ./dict2sql.cpp)
 
 ### create the script executable
 add_executable(dict2sql ${SCRIPT_SOURCE_FILES})

@@ -1,8 +1,8 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
 // Last modified: 04/10/2015
-// Description: Defines the data type Gender that is used in the data base to represent a gender value in a grammar
-//              and declares several helper functions for it.
+// Description: Defines several helper functions for the data type Numerus that is used in the data base to represent
+//              a numerus value in a grammar.
 // ====================================================================================================================
 
 // ====================================================================================================================
@@ -17,35 +17,61 @@
 // Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 // ====================================================================================================================
 
-#ifndef GENDER_HPP_
-#define GENDER_HPP_
-
-#include <string>
+#include "numerus.hpp"
+#include "exception.hpp"
 
 namespace lgeorgieff {
 namespace translate {
 namespace utils {
 
-enum class Gender : char { none = 1, m = 2, f = 4, n = 8 };
+std::string to_string(const Numerus &numerus) noexcept {
+  switch (numerus) {
+    case Numerus::sg:
+      return "sg.";
+    case Numerus::pl:
+      return "pl.";
+    default:
+      return "";
+  }
+}
 
-std::string to_string(const Gender &) noexcept;
-
-std::string to_db_string(const Gender &) noexcept;
+std::string to_db_string(const Numerus &numerus) noexcept {
+  std::string str{to_string(numerus)};
+  if(str.empty()) return "null";
+  else return "'" + str + "'";
+}
 
 template <typename T>
 T from_string(const std::string &);
 
 template <>
-Gender from_string(const std::string &);
+Numerus from_string(const std::string &numerus) {
+  if ("" == numerus)
+    return Numerus::none;
+  else if ("sg." == numerus)
+    return Numerus::sg;
+  else if ("pl." == numerus)
+    return Numerus::pl;
+  else
+    throw Exception(std::string("The value \"") + numerus +
+                    std::string("\" is not a valid lgeorgieff::translate::utils::Numerus value"));
+}
 
 template <typename T>
 T from_db_string(const std::string &);
 
 template <>
-Gender from_db_string(const std::string &);
+Numerus from_db_string(const std::string &numerus) {
+  if("null" == numerus) {
+    return Numerus::none;
+  } else if (numerus.size() > 2) {
+    return from_string<Numerus>(numerus.substr(1, numerus.size() - 2));
+  } else {
+    throw Exception(std::string("The value \"") + numerus +
+                    std::string("\" is not a valid lgeorgieff::translate::utils::Numerus value"));
+  }
+}
 
 }  // utils
 }  // translae
 }  // lgeorgieff
-
-#endif  // GENDER_HPP_
