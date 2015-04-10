@@ -24,11 +24,11 @@
 #include <string>
 #include <sstream>
 
-using lgeorgieff::translate::server::Connection_String;
+using lgeorgieff::translate::server::ConnectionString;
 using lgeorgieff::translate::server::to_string;
 using lgeorgieff::translate::server::from_string;
 using lgeorgieff::translate::server::DB_Exception;
-typedef lgeorgieff::translate::server::Connection_String::SSL_Mode SSL_Mode;
+typedef lgeorgieff::translate::server::ConnectionString::SSL_Mode SSL_Mode;
 using std::string;
 using std::stringstream;
 
@@ -57,12 +57,12 @@ TEST(ssl_mode, from_string) {
 }
 
 TEST(connection_string, operators) {
-  Connection_String cs_1;
-  Connection_String cs_2{cs_1};
-  Connection_String cs_3 = cs_1;
+  ConnectionString cs_1;
+  ConnectionString cs_2{cs_1};
+  ConnectionString cs_3 = cs_1;
   const size_t CSS_DIM{3};
-  Connection_String css[CSS_DIM] = {cs_1, cs_2, cs_3};
-  for (Connection_String cs : css) {
+  ConnectionString css[CSS_DIM] = {cs_1, cs_2, cs_3};
+  for (ConnectionString cs : css) {
     EXPECT_TRUE(cs.has_user());
     EXPECT_EQ(string{"postgres"}, cs.user());
     EXPECT_FALSE(cs.has_host());
@@ -123,19 +123,19 @@ TEST(connection_string, operators) {
 }
 
 TEST(connection_string, defaults) {
-  EXPECT_EQ(string{"postgres"}, Connection_String::DEFAULT_USER);
-  EXPECT_EQ(string{"127.0.0.1"}, Connection_String::DEFAULT_HOSTADDR);
-  EXPECT_EQ(string{"localhost"}, Connection_String::DEFAULT_HOST);
-  EXPECT_EQ(string{}, Connection_String::DEFAULT_PASSWORD);
-  EXPECT_EQ(string{"translate"}, Connection_String::DEFAULT_DBNAME);
-  EXPECT_EQ(5432, Connection_String::DEFAULT_PORT);
-  EXPECT_EQ(SSL_Mode::PREFER, Connection_String::DEFAULT_SSLMODE);
-  EXPECT_EQ(false, Connection_String::DEFAULT_REQUIRESSL);
-  EXPECT_EQ(true, Connection_String::DEFAULT_KEEPALIVES);
+  EXPECT_EQ(string{"postgres"}, ConnectionString::DEFAULT_USER);
+  EXPECT_EQ(string{"127.0.0.1"}, ConnectionString::DEFAULT_HOSTADDR);
+  EXPECT_EQ(string{"localhost"}, ConnectionString::DEFAULT_HOST);
+  EXPECT_EQ(string{}, ConnectionString::DEFAULT_PASSWORD);
+  EXPECT_EQ(string{"translate"}, ConnectionString::DEFAULT_DBNAME);
+  EXPECT_EQ(5432, ConnectionString::DEFAULT_PORT);
+  EXPECT_EQ(SSL_Mode::PREFER, ConnectionString::DEFAULT_SSLMODE);
+  EXPECT_EQ(false, ConnectionString::DEFAULT_REQUIRESSL);
+  EXPECT_EQ(true, ConnectionString::DEFAULT_KEEPALIVES);
 }
 
 TEST(connection_string, host_addr_host_name) {
-  Connection_String cs_1;
+  ConnectionString cs_1;
   EXPECT_EQ(string{"127.0.0.1"}, cs_1.hostaddr());
   EXPECT_TRUE(cs_1.has_hostaddr());
   EXPECT_EQ(string{}, cs_1.host());
@@ -157,7 +157,7 @@ TEST(connection_string, host_addr_host_name) {
 }
 
 TEST(connection_string, to_string) {
-  Connection_String cs_1;
+  ConnectionString cs_1;
   string str_1{"user=postgres hostaddr=127.0.0.1 dbname=translate"};
   EXPECT_EQ(str_1, cs_1.to_string());
   stringstream ss;
@@ -198,7 +198,7 @@ TEST(connection_string, to_string) {
       "requiressl=1"};
   EXPECT_EQ(str_2, cs_1.to_string());
 
-  Connection_String cs_2{cs_1};
+  ConnectionString cs_2{cs_1};
   cs_1.options("'opt1=\"1 2 3\" opt2=3 '   \n");
   cs_2.gsslib("");
   cs_2.service(" \n\t\n     \t");
@@ -208,8 +208,8 @@ TEST(connection_string, to_string) {
   cs_2.keepalives_count(-3);
   cs_2.sslmode(SSL_Mode::ALLOW);
   cs_2.port(0);
-  cs_2.keepalives(Connection_String::DEFAULT_KEEPALIVES);
-  cs_2.requiressl(Connection_String::DEFAULT_REQUIRESSL);
+  cs_2.keepalives(ConnectionString::DEFAULT_KEEPALIVES);
+  cs_2.requiressl(ConnectionString::DEFAULT_REQUIRESSL);
   string str_3{
       "user=me host=my-db-host.com password='my passwd' dbname=MyDB options='opt1=\"1 2 3\" opt2=3 ' "
       "client_encoding=utf-8 application_name=myApp fallback_application_name=myFallbackApp "

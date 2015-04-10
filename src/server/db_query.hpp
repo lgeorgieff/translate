@@ -36,7 +36,7 @@ class DB_Query {
   // Instantiates a DB_Query object depending on the passed connection string instance.
   // Internally a pqxx::connection object is maintained for realizing the connection to the data base. It is deleted
   // when the destructor is called.
-  explicit DB_Query(const Connection_String&);
+  explicit DB_Query(const ConnectionString&);
   // Instantiates a DB_Query object depending on the passed connection instance. The connection instance has to be
   // deleted by the user after this class does not need it anymore.
   explicit DB_Query(pqxx::connection*);

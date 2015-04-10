@@ -43,7 +43,7 @@ bool DB_Query::empty() const { return this->query_result_.empty(); }
 
 void DB_Query::clear() { this->query_result_.clear(); }
 
-DB_Query::DB_Query(const Connection_String& connection_string) : db_connection_{nullptr} {
+DB_Query::DB_Query(const ConnectionString& connection_string) : db_connection_{nullptr} {
   this->db_connection_ = new pqxx::connection(connection_string.to_string());
   this->connection_self_created_ = true;
 }

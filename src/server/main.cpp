@@ -28,7 +28,7 @@
 #include <cctype>
 #include <algorithm>
 
-using lgeorgieff::translate::server::Connection_String;
+using lgeorgieff::translate::server::ConnectionString;
 using lgeorgieff::translate::server::DB_Query;
 
 using std::cout;
@@ -37,7 +37,7 @@ using std::string;
 using std::endl;
 
 int main(const int argc, const char **argv) {
-  Connection_String connection_string{};
+  ConnectionString connection_string{};
   connection_string.user(argv[1]);
   connection_string.dbname("translate");
   connection_string.hostaddr("127.0.0.1");
