@@ -1,8 +1,8 @@
 
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 04/05/2015
-// Description: Defines the DB_Query class that allows to query the data base for language information.
+// Last modified: 04/11/2015
+// Description: Defines the DbQuery class that allows to query the data base for language information.
 // ====================================================================================================================
 
 // ====================================================================================================================
@@ -30,39 +30,39 @@ namespace translate {
 namespace server {
 
 // Encapsulates the functionality to query the translation data base for predefined queries.
-class DB_Query {
+class DbQuery {
  public:
-  DB_Query() = delete;
-  // Instantiates a DB_Query object depending on the passed connection string instance.
+  DbQuery() = delete;
+  // Instantiates a DbQuery object depending on the passed connection string instance.
   // Internally a pqxx::connection object is maintained for realizing the connection to the data base. It is deleted
   // when the destructor is called.
-  explicit DB_Query(const ConnectionString&);
-  // Instantiates a DB_Query object depending on the passed connection instance. The connection instance has to be
+  explicit DbQuery(const ConnectionString&);
+  // Instantiates a DbQuery object depending on the passed connection instance. The connection instance has to be
   // deleted by the user after this class does not need it anymore.
-  explicit DB_Query(pqxx::connection*);
-  DB_Query(DB_Query&&) = default;
-  DB_Query& operator=(const DB_Query&) = default;
-  DB_Query& operator=(DB_Query&&) = default;
-  ~DB_Query();
+  explicit DbQuery(pqxx::connection*);
+  DbQuery(DbQuery&&) = default;
+  DbQuery& operator=(const DbQuery&) = default;
+  DbQuery& operator=(DbQuery&&) = default;
+  ~DbQuery();
 
   // Requests all data for a phrase translation without taking care on the word classes.
-  DB_Query& request_phrase(const string&, const string&, const string&);
+  DbQuery& request_phrase(const string&, const string&, const string&);
   // Requests all data for a phrase translation with taking care on the word classes.
-  DB_Query& request_phrase(const string&, const string&, const string&, const string&);
+  DbQuery& request_phrase(const string&, const string&, const string&, const string&);
   // Request an identifier for the given language (case insensitive).
-  DB_Query& request_language(const string&);
+  DbQuery& request_language(const string&);
   // Request all language identifiers and names.
-  DB_Query& request_all_languages();
+  DbQuery& request_all_languages();
   // Request an identifier for the given word class (case insensitive).
-  DB_Query& request_word_class(const string&);
+  DbQuery& request_word_class(const string&);
   // Request all word class identifiers and names.
-  DB_Query& request_all_word_classes();
+  DbQuery& request_all_word_classes();
   // Request an identifier for the given gender (case insensitive).
-  DB_Query& request_gender(const string&);
+  DbQuery& request_gender(const string&);
   // Request all gender identifiers and names.
-  DB_Query& request_all_genders();
+  DbQuery& request_all_genders();
   // Request all numerus identifiers.
-  DB_Query& request_all_numeri();
+  DbQuery& request_all_numeri();
 
   // Returns a start const_iterator pointing to the result data structure of the last request.
   pqxx::result::const_iterator begin() const;
@@ -84,7 +84,7 @@ class DB_Query {
   pqxx::connection* db_connection_;
   pqxx::result query_result_;
   bool connection_self_created_;
-};  // DB_Query
+};  // DbQuery
 
 }  // server
 }  // translate

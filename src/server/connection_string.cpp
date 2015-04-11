@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 04/10/2015
+// Last modified: 04/11/2015
 // Description: The ConnectionString implementation which is an abstraction class for postgresql connection strings.
 // ====================================================================================================================
 
@@ -137,7 +137,7 @@ bool ConnectionString::has_user() const noexcept { return !this->user_.empty(); 
 string ConnectionString::host() const noexcept { return this->host_; }
 
 void ConnectionString::host(const string &host) {
-  if (this->has_hostaddr()) throw DB_Exception("ConnectionString: cannot set host when host_addr is set!");
+  if (this->has_hostaddr()) throw DbException("ConnectionString: cannot set host when host_addr is set!");
   this->host_ = host;
   normalize_value(this->host_);
 }
@@ -147,7 +147,7 @@ bool ConnectionString::has_host() const noexcept { return !this->host_.empty(); 
 string ConnectionString::hostaddr() const noexcept { return this->host_addr_; }
 
 void ConnectionString::hostaddr(const string &host_addr) {
-  if (this->has_host()) throw DB_Exception("ConnectionString: cannot set host_addr when host is set!");
+  if (this->has_host()) throw DbException("ConnectionString: cannot set host_addr when host is set!");
   this->host_addr_ = host_addr;
   normalize_value(this->host_addr_);
 }
@@ -391,7 +391,7 @@ string to_string(const ConnectionString::SSL_Mode &sslmode) {
     case ConnectionString::SSL_Mode::VERIFY_FULL:
       return "verify-full";
     default:
-      throw DB_Exception("sslmode \"" + std::to_string(static_cast<char>(sslmode)) + "\" is invalid!");
+      throw DbException("sslmode \"" + std::to_string(static_cast<char>(sslmode)) + "\" is invalid!");
   }
 }
 
@@ -402,7 +402,7 @@ ConnectionString::SSL_Mode from_string(const string &sslmode) {
   if (sslmode == "require") return ConnectionString::SSL_Mode::REQUIRE;
   if (sslmode == "verify-ca") return ConnectionString::SSL_Mode::VERIFY_CA;
   if (sslmode == "verify-full") return ConnectionString::SSL_Mode::VERIFY_FULL;
-  throw DB_Exception("sslmode \"" + sslmode + "\" is invalid!");
+  throw DbException("sslmode \"" + sslmode + "\" is invalid!");
 }
 
 ostream &operator<<(ostream &os, const ConnectionString::SSL_Mode &sslmode) {

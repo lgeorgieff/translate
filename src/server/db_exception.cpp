@@ -1,7 +1,7 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 02/01/2015
-// Description: Provides the implementation for the exception DB_Exception which is thrown if any error occurs during
+// Last modified: 04/11/2015
+// Description: Provides the implementation for the exception DbException which is thrown if any error occurs during
 //              a data base operation.
 // ====================================================================================================================
 
@@ -27,7 +27,7 @@ using std::string;
 namespace lgeorgieff {
 namespace translate {
 namespace server {
-DB_Exception::DB_Exception(const string &what) : Exception{what} {}
+DbException::DbException(const string &what) : Exception{what} {}
 }  // server
 }  // translate
 }  // lgeorgieff

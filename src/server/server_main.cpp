@@ -29,8 +29,7 @@
 
 
 using lgeorgieff::translate::server::ConnectionString;
-using lgeorgieff::translate::server::DB_Query;
-using lgeorgieff::translate::server::DB_Exception;
+using lgeorgieff::translate::server::DbException;
 using lgeorgieff::translate::utils::CommandLineException;
 using lgeorgieff::translate::utils::string_to_size_t;
 
@@ -115,7 +114,7 @@ int main(const int argc, const char **argv) {
     std::cerr << err.what() << std::endl;
     std::cerr << "Use \"" << argv[0] << " -h\" to see the usage instructions for " << argv[0] << std::endl;
     return 1;
-  } catch (DB_Exception err) {
+  } catch (DbException err) {
     std::cerr << err.what() << std::endl;
     return 1;
   }

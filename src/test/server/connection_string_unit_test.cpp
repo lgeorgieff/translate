@@ -1,6 +1,6 @@
  // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 02/08/2015
+// Last modified: 04/11/2015
 // Description: Unit test for the connection_string class
 // ====================================================================================================================
 
@@ -27,7 +27,7 @@
 using lgeorgieff::translate::server::ConnectionString;
 using lgeorgieff::translate::server::to_string;
 using lgeorgieff::translate::server::from_string;
-using lgeorgieff::translate::server::DB_Exception;
+using lgeorgieff::translate::server::DbException;
 typedef lgeorgieff::translate::server::ConnectionString::SSL_Mode SSL_Mode;
 using std::string;
 using std::stringstream;
@@ -39,7 +39,7 @@ TEST(ssl_mode, to_string) {
   EXPECT_EQ(string{"require"}, to_string(SSL_Mode::REQUIRE));
   EXPECT_EQ(string{"verify-ca"}, to_string(SSL_Mode::VERIFY_CA));
   EXPECT_EQ(string{"verify-full"}, to_string(SSL_Mode::VERIFY_FULL));
-  EXPECT_THROW(to_string((SSL_Mode)'c'), DB_Exception);
+  EXPECT_THROW(to_string((SSL_Mode)'c'), DbException);
   stringstream ss;
   ss << SSL_Mode::REQUIRE;
   EXPECT_EQ("require", ss.str());
@@ -52,8 +52,8 @@ TEST(ssl_mode, from_string) {
   EXPECT_EQ(SSL_Mode::REQUIRE, from_string("require"));
   EXPECT_EQ(SSL_Mode::VERIFY_CA, from_string("verify-ca"));
   EXPECT_EQ(SSL_Mode::VERIFY_FULL, from_string("verify-full"));
-  EXPECT_THROW(from_string("Disable"), DB_Exception);
-  EXPECT_THROW(from_string(""), DB_Exception);
+  EXPECT_THROW(from_string("Disable"), DbException);
+  EXPECT_THROW(from_string(""), DbException);
 }
 
 TEST(connection_string, operators) {
@@ -150,10 +150,10 @@ TEST(connection_string, host_addr_host_name) {
   EXPECT_FALSE(cs_1.has_hostaddr());
   EXPECT_EQ(string{"my-host.com"}, cs_1.host());
   EXPECT_TRUE(cs_1.has_host());
-  EXPECT_THROW(cs_1.hostaddr("123.12.12.1"), DB_Exception);
+  EXPECT_THROW(cs_1.hostaddr("123.12.12.1"), DbException);
   cs_1.host("");
   cs_1.hostaddr("123.12.12.1");
-  EXPECT_THROW(cs_1.host("my-host.com"), DB_Exception);
+  EXPECT_THROW(cs_1.host("my-host.com"), DbException);
 }
 
 TEST(connection_string, to_string) {

@@ -1,7 +1,7 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
 // Last modified: 04/05/2015
-// Description: Implements the DB_Query class that allows to query the data base for language information.
+// Description: Implements the DbQuery class that allows to query the data base for language information.
 // ====================================================================================================================
 
 // ====================================================================================================================
@@ -29,38 +29,38 @@ namespace lgeorgieff {
 namespace translate {
 namespace server {
 
-pqxx::result::const_iterator DB_Query::begin() const { return this->query_result_.begin(); }
+pqxx::result::const_iterator DbQuery::begin() const { return this->query_result_.begin(); }
 
-pqxx::result::const_iterator DB_Query::end() const { return this->query_result_.end(); }
+pqxx::result::const_iterator DbQuery::end() const { return this->query_result_.end(); }
 
-pqxx::result::const_reverse_iterator DB_Query::rbegin() const { return this->query_result_.rbegin(); }
+pqxx::result::const_reverse_iterator DbQuery::rbegin() const { return this->query_result_.rbegin(); }
 
-pqxx::result::const_reverse_iterator DB_Query::rend() const { return this->query_result_.rend(); }
+pqxx::result::const_reverse_iterator DbQuery::rend() const { return this->query_result_.rend(); }
 
-size_t DB_Query::size() const { return this->query_result_.empty(); }
+size_t DbQuery::size() const { return this->query_result_.empty(); }
 
-bool DB_Query::empty() const { return this->query_result_.empty(); }
+bool DbQuery::empty() const { return this->query_result_.empty(); }
 
-void DB_Query::clear() { this->query_result_.clear(); }
+void DbQuery::clear() { this->query_result_.clear(); }
 
-DB_Query::DB_Query(const ConnectionString& connection_string) : db_connection_{nullptr} {
+DbQuery::DbQuery(const ConnectionString& connection_string) : db_connection_{nullptr} {
   this->db_connection_ = new pqxx::connection(connection_string.to_string());
   this->connection_self_created_ = true;
 }
 
-DB_Query::DB_Query(pqxx::connection* db_connection)
+DbQuery::DbQuery(pqxx::connection* db_connection)
     : db_connection_{db_connection}, query_result_{}, connection_self_created_{false} {
-  if (!this->db_connection_) throw DB_Exception("db_connection must not be a nullptr!");
+  if (!this->db_connection_) throw DbException("db_connection must not be a nullptr!");
 }
 
-DB_Query::~DB_Query() {
+DbQuery::~DbQuery() {
   if (this->connection_self_created_) {
     delete this->db_connection_;
     this->db_connection_ = nullptr;
   }
 }
 
-DB_Query& DB_Query::request_phrase(const string& phrase_in, const string& language_in, const string& language_out) {
+DbQuery& DbQuery::request_phrase(const string& phrase_in, const string& language_in, const string& language_out) {
   std::string phrase_in_where_str{"is null"};
   if ("null" != phrase_in) phrase_in_where_str = "= '" + this->db_connection_->esc(phrase_in) + "'";
   std::string language_in_where_str{"is null"};
@@ -103,7 +103,7 @@ DB_Query& DB_Query::request_phrase(const string& phrase_in, const string& langua
   return *this;
 }
 
-DB_Query& DB_Query::request_phrase(const string& phrase_in, const string& language_in, const string& language_out,
+DbQuery& DbQuery::request_phrase(const string& phrase_in, const string& language_in, const string& language_out,
                                    const string& word_class) {
   std::string phrase_in_where_str{"is null"};
   if ("null" != phrase_in) phrase_in_where_str = "= '" + this->db_connection_->esc(phrase_in) + "'";
@@ -149,7 +149,7 @@ DB_Query& DB_Query::request_phrase(const string& phrase_in, const string& langua
   return *this;
 }
 
-DB_Query& DB_Query::request_language(const string& language_name) {
+DbQuery& DbQuery::request_language(const string& language_name) {
   pqxx::work query(*this->db_connection_);
   std::stringstream ss;
   string language_name_where_str{"is null"};
@@ -160,14 +160,14 @@ DB_Query& DB_Query::request_language(const string& language_name) {
   return *this;
 }
 
-DB_Query& DB_Query::request_all_languages() {
+DbQuery& DbQuery::request_all_languages() {
   pqxx::work query(*this->db_connection_);
   this->query_result_ = query.exec("SELECT * FROM language;");
   query.commit();
   return *this;
 }
 
-DB_Query& DB_Query::request_word_class(const string& word_class_name) {
+DbQuery& DbQuery::request_word_class(const string& word_class_name) {
   pqxx::work query(*this->db_connection_);
   std::stringstream ss;
   string word_class_name_where_str{"is null"};
@@ -179,14 +179,14 @@ DB_Query& DB_Query::request_word_class(const string& word_class_name) {
   return *this;
 }
 
-DB_Query& DB_Query::request_all_word_classes() {
+DbQuery& DbQuery::request_all_word_classes() {
   pqxx::work query(*this->db_connection_);
   this->query_result_ = query.exec("SELECT * FROM word_class_description;");
   query.commit();
   return *this;
 }
 
-DB_Query& DB_Query::request_gender(const string& gender_name) {
+DbQuery& DbQuery::request_gender(const string& gender_name) {
   pqxx::work query(*this->db_connection_);
   std::stringstream ss;
   string gender_name_where_str{"is null"};
@@ -197,13 +197,13 @@ DB_Query& DB_Query::request_gender(const string& gender_name) {
   return *this;
 }
 
-DB_Query& DB_Query::request_all_genders() {
+DbQuery& DbQuery::request_all_genders() {
   pqxx::work query(*this->db_connection_);
   this->query_result_ = query.exec("SELECT * FROM gender_description;");
   query.commit();
   return *this;
 }
-DB_Query& DB_Query::request_all_numeri() {
+DbQuery& DbQuery::request_all_numeri() {
   pqxx::work query(*this->db_connection_);
   this->query_result_ = query.exec("SELECT * from unnest(enum_range(NULL::numerus));");
   query.commit();
