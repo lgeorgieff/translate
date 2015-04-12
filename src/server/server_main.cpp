@@ -1,7 +1,8 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 04/11/2015
-// Description: Implements the RESTful server for the translation service.
+// Last modified: 04/12/2015
+// Description: Implements command line parsing and starting process of the RESTful server API for the translation
+//              service.
 // ====================================================================================================================
 
 // ====================================================================================================================
@@ -20,6 +21,7 @@
 #include "db_exception.hpp"
 #include "connection_string.hpp"
 #include "../utils/helper.hpp"
+#include "server.hpp"
 
 #include <pqxx/pqxx>
 #include <iostream>
@@ -30,6 +32,7 @@
 
 using lgeorgieff::translate::server::ConnectionString;
 using lgeorgieff::translate::server::DbException;
+using lgeorgieff::translate::server::Server;
 using lgeorgieff::translate::utils::CommandLineException;
 using lgeorgieff::translate::utils::string_to_size_t;
 
@@ -119,6 +122,7 @@ int main(const int argc, const char **argv) {
     return 1;
   }
 
-  // TODO: start service
+  Server server{connection_string, service_address, service_port};
+  server.listen();
   return 0;
 }
