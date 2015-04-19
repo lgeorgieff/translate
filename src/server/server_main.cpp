@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 04/12/2015
+// Last modified: 17/12/2015
 // Description: Implements command line parsing and starting process of the RESTful server API for the translation
 //              service.
 // ====================================================================================================================

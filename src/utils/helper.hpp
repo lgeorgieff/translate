@@ -49,6 +49,11 @@ void normalize_whitespace(std::string &);
 // an std::invalid_argument exception is thrown.
 size_t string_to_size_t(const std::string &);
 
+  // Returns true if the first c-string starts with the second c-string. Returns false otherwise.
+bool cstring_starts_with(const char *, const char *);
+
+// Returns true if the first c-string ends with the second c-string. Returns false otherwise.
+bool cstring_ends_with(const char *, const char *);
 }  // utils
 }  // translate
 }  // lgeorgieff

@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 04/10/2015
+// Last modified: 04/19/2015
 // Description: Defines several helper functions for the entire project.
 // ====================================================================================================================
 
@@ -24,14 +24,12 @@ namespace lgeorgieff {
 namespace translate {
 namespace utils {
 
-// Removes all whitespace at the beginning of the passed string
 void trim_left(string &str) {
   if (str.empty() || !isspace(str[0])) return;
   string::iterator stop_position{std::find_if_not(str.begin(), str.end(), std::ptr_fun<int, int>(std::isspace))};
   str.erase(str.begin(), stop_position);
 }
 
-// Removes all whitespce at the end of the passed string
 void trim_right(string &str) {
   if (str.empty() || !isspace(str[str.size() - 1])) return;
   string::reverse_iterator start_position{
@@ -39,15 +37,11 @@ void trim_right(string &str) {
   str.erase(start_position.base(), str.end());
 }
 
-// Removes all whitespace at the beginning and at the end of the passed string
 void trim(string &str) {
   trim_left(str);
   trim_right(str);
 }
 
-// Removes all whitespace at the beginning and at the end of the passed string. In addition all whitespace in the
-// string which are not at the beginning or at the end are transformed to blanks. Finally, all remaining whitespace
-// characters are replaced by blanks.
 void normalize_whitespace(string &str) {
   trim(str);
   size_t pos{0};
@@ -63,13 +57,32 @@ void normalize_whitespace(string &str) {
   }
 }
 
-//
 size_t string_to_size_t(const std::string &str) {
   size_t number;
   std::stringstream ss(str);
   ss >> number;
   if (ss.fail()) throw std::invalid_argument("The value \"" + str + "\" is not a valid number!");
   return number;
+}
+
+bool cstring_starts_with(const char *container, const char *containee) {
+  const char *pos_container{container};
+  const char *pos_containee{containee};
+  for (; *pos_container && *pos_containee; ++pos_container, ++pos_containee)
+    if (*pos_container != *pos_containee) return false;
+  return !*pos_containee;
+}
+
+bool cstring_ends_with(const char *container, const char *containee) {
+  const char *begin_container{container};
+  const char *begin_containee{containee};
+  while(*container) ++container;
+  while(*containee) ++containee;
+
+  for (; container != begin_container && containee != begin_containee; --container, --containee)
+    if (*container != *containee) return false;
+  if (containee == begin_containee && *containee == *container) return true;
+  return false;
 }
 
 }  // utils

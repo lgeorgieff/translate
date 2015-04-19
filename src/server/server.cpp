@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 04/12/2015
+// Last modified: 04/19/2015
 // Description: Defines the RESTful server for the translation service.
 // ====================================================================================================================
 
@@ -16,18 +16,35 @@
 // Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 // ====================================================================================================================
 
-
 #include "server.hpp"
 #include "server_exception.hpp"
+#include "../utils/helper.hpp"
 
 #include <unistd.h>
+#include <cstring>
+
+#include <iostream> // TODO: remove
+
+using lgeorgieff::translate::utils::cstring_starts_with;
+using lgeorgieff::translate::utils::cstring_ends_with;
 
 namespace lgeorgieff {
 namespace translate {
 namespace server {
 
-// TODO: implement multi-threading for server => 15 threads (make variable) =>
-//       https://github.com/cesanta/mongoose/blob/master/examples/multi_threaded_server/multi_threaded_server.c
+const char *Server::URL_LANGUAGES{"/languages/"};
+const char *Server::URL_LANGUAGE_ID_PREFIX{"/language/id/"};
+const char *Server::URL_LANGUAGE_NAME_PREFIX{"/language/name/"};
+const char *Server::URL_WORD_CLASSES{"/word_classes"};
+const char *Server::URL_WORD_CLASS_ID_PREFIX{"/word_class/id/"};
+const char *Server::URL_WORD_CLASS_NAME_PREFIX{"/word_class/name/"};
+const char *Server::URL_GENDERS{"/genders"};
+const char *Server::URL_GENDER_ID_PREFIX{"/gender/id/"};
+const char *Server::URL_GENDER_NAME_PREFIX{"/gender/name/"};
+const char *Server::URL_NUMERI{"/numeri"};
+const char *Server::URL_NUMERUS_ID_PREFIX{"/numerus/id/"};
+const char *Server::URL_NUMERUS_NAME_PREFIX{"/numerus/name/"};
+const char *Server::URL_TRANSLATION_PREFIX{"/translation/"};
 
 Server::Server(const ConnectionString &db_connection_string, std::string service_address, size_t service_port)
     : connection_address__{service_address + ":" + std::to_string(service_port)},
@@ -55,7 +72,55 @@ int Server::request_handler(mg_connection *connection, enum mg_event event) {
     case MG_AUTH:
       return MG_TRUE;
     case MG_REQUEST:
-      mg_printf_data(connection, "Hello World!!!");
+      if(!strcmp(connection->request_method, "GET")) {
+        char *url = nullptr;
+        if(cstring_ends_with(connection->uri, "/")) {
+          url = new char[strlen(connection->uri)];
+          strcpy(url, connection->uri);
+        } else {
+          url = new char[strlen(connection->uri) + 1];
+          strcpy(url, connection->uri);
+          strcat(url, "/");
+        }
+        if (!strcmp(url, URL_LANGUAGES)) {
+          mg_printf_data(connection, "URL_LANGUAGES: %s", url);
+        } else if (cstring_starts_with(url, URL_LANGUAGE_ID_PREFIX)) {
+          mg_printf_data(connection, "URL_LANGUAGES: %s", url);
+        } else if (cstring_starts_with(url, URL_LANGUAGE_NAME_PREFIX)) {
+          mg_printf_data(connection, "URL_LANGUAGE_NAME_PREFIX: %s", url);
+        } else if (!strcmp(url, URL_WORD_CLASSES)) {
+          mg_printf_data(connection, "URL_WORD_CLASSES: %s", url);
+        } else if (cstring_starts_with(url, URL_WORD_CLASS_ID_PREFIX)) {
+          mg_printf_data(connection, "URL_WORD_CLASS_ID_PREFIX: %s", url);
+        } else if (cstring_starts_with(url, URL_WORD_CLASS_NAME_PREFIX)) {
+          mg_printf_data(connection, "URL_WORD_CLASS_NAME_PREFIX: %s", url);
+        } else if (!strcmp(url, URL_GENDERS)) {
+          mg_printf_data(connection, "URL_GENDERS: %s", url);
+        } else if (cstring_starts_with(url, URL_GENDER_ID_PREFIX)) {
+          mg_printf_data(connection, "URL_GENDER_ID_PREFIX: %s", url);
+        } else if (cstring_starts_with(url, URL_GENDER_NAME_PREFIX)) {
+          mg_printf_data(connection, "URL_GENDER_NAME_PREFIX: %s", url);
+        } else if (!strcmp(url, URL_NUMERI)) {
+          mg_printf_data(connection, "URL_NUMERI: %s", url);
+        } else if (cstring_starts_with(url, URL_NUMERUS_ID_PREFIX)) {
+          mg_printf_data(connection, "URL_NUMERUS_ID_PREFIX: %s", url);
+        } else if (cstring_starts_with(url, URL_NUMERUS_NAME_PREFIX)) {
+          mg_printf_data(connection, "URL_NUMERUS_NAME_PREFIX: %s", url);
+        } else {
+          mg_printf_data(connection, "ERROR: bad url (GET): %s", url);
+          // TODO: implement error handling
+        }
+      } else if (!strcmp(connection->request_method, "POS")) {
+        if (cstring_starts_with(connection->uri, URL_TRANSLATION_PREFIX)) {
+          // TODO: implement
+        } else {
+          mg_printf_data(connection, "ERROR: bad url (POST)");
+          // TODO: implement error handling
+        }
+      } else {
+        mg_printf_data(connection, "ERROR: bad method");
+        // TODO: implement error handling
+      }
       return MG_TRUE;
     default:
       return MG_FALSE;
