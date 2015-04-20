@@ -1,6 +1,6 @@
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 03/12/2015
+# Last modified: 04/20/2015
 # Description: Main CMakeLists.txt file for building this project. The actual modules are built by calling
 #              CMakeLists.txt of the corresponding sub-directories.
 #              Common options:
@@ -44,6 +44,8 @@ option(WALL "Use the compiler option -Wall for all targets if set to ON" ON)
 option(WEXTRA "Use the compiler option -Wextra for all targets if set to ON" ON)
 option(CPP14 "The compiler option std=c++14 that will be used for all targets if set to ON. Otherwise c++11 is used" ON)
 option(WITH_TESTS "Compiles all tests if set to ON. Otherwise the compilation of tests is ommitted" OFF)
+
+include_directories("./libs/mongoose-5.5")
 
 ### set all C++ flags used for all sub-modules, e.g. warnings and C++ standard version
 if(${WALL})
