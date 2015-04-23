@@ -1,6 +1,6 @@
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 04/20/2015
+# Last modified: 04/23/2015
 # Description: Main CMakeLists.txt file for building this project. The actual modules are built by calling
 #              CMakeLists.txt of the corresponding sub-directories.
 #              Common options:
@@ -28,11 +28,12 @@
 #######################################################################################################################
 
 
+
 ### project setup
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
-project (translate)
-set (translate_VERSION_MAJOR 0)
-set (translate_VERSION_MINOR 1)
+project(translate)
+set(translate_VERSION_MAJOR 0)
+set(translate_VERSION_MINOR 1)
 
 ### set output folders
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/../bin/lib)
@@ -44,6 +45,12 @@ option(WALL "Use the compiler option -Wall for all targets if set to ON" ON)
 option(WEXTRA "Use the compiler option -Wextra for all targets if set to ON" ON)
 option(CPP14 "The compiler option std=c++14 that will be used for all targets if set to ON. Otherwise c++11 is used" ON)
 option(WITH_TESTS "Compiles all tests if set to ON. Otherwise the compilation of tests is ommitted" OFF)
+
+### set default values for jsoncpp options
+OPTION(JSONCPP_WITH_TESTS "Compile and (for jsoncpp_check) run JsonCpp test executables" ${WITH_TESTS})
+OPTION(JSONCPP_WITH_POST_BUILD_UNITTEST "Automatically run unit-tests as a post build step" OFF)
+OPTION(JSONCPP_WITH_PKGCONFIG_SUPPORT "Generate and install .pc files" OFF)
+
 
 include_directories("./libs/mongoose-5.5")
 
