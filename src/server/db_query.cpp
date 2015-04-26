@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 04/05/2015
+// Last modified: 04/26/2015
 // Description: Implements the DbQuery class that allows to query the data base for language information.
 // ====================================================================================================================
 
@@ -37,7 +37,7 @@ pqxx::result::const_reverse_iterator DbQuery::rbegin() const { return this->quer
 
 pqxx::result::const_reverse_iterator DbQuery::rend() const { return this->query_result_.rend(); }
 
-size_t DbQuery::size() const { return this->query_result_.empty(); }
+size_t DbQuery::size() const { return this->query_result_.size(); }
 
 bool DbQuery::empty() const { return this->query_result_.empty(); }
 
