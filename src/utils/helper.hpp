@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 04/10/2015
+// Last modified: 04/27/2015
 // Description: Declares several helper functions for the entire project.
 // ====================================================================================================================
 
@@ -19,13 +19,7 @@
 #ifndef HELPER_HPP_
 #define HELPER_HPP_
 
-#include <cstddef>
 #include <string>
-#include <cctype>
-#include <functional>
-#include <algorithm>
-#include <stdexcept>
-#include <sstream>
 
 namespace lgeorgieff {
 namespace translate {
@@ -54,6 +48,10 @@ bool cstring_starts_with(const char *, const char *);
 
 // Returns true if the first c-string ends with the second c-string. Returns false otherwise.
 bool cstring_ends_with(const char *, const char *);
+
+// Returns the last path segment of the passed URL string, e.g. return "file" for the following URL
+// "http://localhost:1234/my/path/to/file#def?attr=12"
+  std::string get_last_path_from_url(const char *, bool=true);
 }  // utils
 }  // translate
 }  // lgeorgieff

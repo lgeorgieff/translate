@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 04/19/2015
+// Last modified: 04/27/2015
 // Description: Defines several helper functions for the entire project.
 // ====================================================================================================================
 
@@ -18,31 +18,38 @@
 
 #include "helper.hpp"
 
-using std::string;
+#include <cstddef>
+#include <cctype>
+#include <functional>
+#include <algorithm>
+#include <stdexcept>
+#include <sstream>
 
+
+#include <iostream> // TODO: remove
 namespace lgeorgieff {
 namespace translate {
 namespace utils {
 
-void trim_left(string &str) {
+void trim_left(std::string &str) {
   if (str.empty() || !isspace(str[0])) return;
-  string::iterator stop_position{std::find_if_not(str.begin(), str.end(), std::ptr_fun<int, int>(std::isspace))};
+  std::string::iterator stop_position{std::find_if_not(str.begin(), str.end(), std::ptr_fun<int, int>(std::isspace))};
   str.erase(str.begin(), stop_position);
 }
 
-void trim_right(string &str) {
+void trim_right(std::string &str) {
   if (str.empty() || !isspace(str[str.size() - 1])) return;
-  string::reverse_iterator start_position{
+  std::string::reverse_iterator start_position{
       std::find_if_not(str.rbegin(), str.rend(), std::ptr_fun<int, int>(std::isspace))};
   str.erase(start_position.base(), str.end());
 }
 
-void trim(string &str) {
+void trim(std::string &str) {
   trim_left(str);
   trim_right(str);
 }
 
-void normalize_whitespace(string &str) {
+void normalize_whitespace(std::string &str) {
   trim(str);
   size_t pos{0};
   while (pos < str.size()) {
@@ -76,13 +83,31 @@ bool cstring_starts_with(const char *container, const char *containee) {
 bool cstring_ends_with(const char *container, const char *containee) {
   const char *begin_container{container};
   const char *begin_containee{containee};
-  while(*container) ++container;
-  while(*containee) ++containee;
+  while (*container) ++container;
+  while (*containee) ++containee;
 
   for (; container != begin_container && containee != begin_containee; --container, --containee)
     if (*container != *containee) return false;
   if (containee == begin_containee && *containee == *container) return true;
   return false;
+}
+
+std::string get_last_path_from_url(const char *url, bool ignore_closing_separator) {
+  const char *begin{url};
+  const char *end{url};
+  while (*url) {
+    if ('/' == *url && (ignore_closing_separator && *(url + 1) && '#' != *(url + 1) && '?' != *(url + 1))) {
+      begin = url + 1;
+    }
+    if('#' == *url || '?' == *url) {
+      end = url;
+      break;
+    }
+    ++url;
+    end = url;
+  }
+  if (*(end - 1) == '/' && end != begin) --end;
+  return std::string{begin, end};
 }
 
 }  // utils
