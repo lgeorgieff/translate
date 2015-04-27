@@ -149,12 +149,23 @@ DbQuery& DbQuery::request_phrase(const string& phrase_in, const string& language
   return *this;
 }
 
-DbQuery& DbQuery::request_language(const string& language_name) {
+DbQuery& DbQuery::request_language_by_name(const string& language_name) {
   pqxx::work query(*this->db_connection_);
   std::stringstream ss;
   string language_name_where_str{"is null"};
   if ("null" != language_name) language_name_where_str = "ILIKE '" + this->db_connection_->esc(language_name) + "'";
   ss << "SELECT id FROM language WHERE name " << language_name_where_str << ";";
+  this->query_result_ = query.exec(ss.str());
+  query.commit();
+  return *this;
+}
+
+DbQuery& DbQuery::request_language_by_id(const string& language_id) {
+  pqxx::work query(*this->db_connection_);
+  std::stringstream ss;
+  string language_id_where_str{"is null"};
+  if ("null" != language_id) language_id_where_str = "= '" + this->db_connection_->esc(language_id) + "'";
+  ss << "SELECT name FROM language WHERE id " << language_id_where_str << ";";
   this->query_result_ = query.exec(ss.str());
   query.commit();
   return *this;

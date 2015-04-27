@@ -49,8 +49,10 @@ class DbQuery {
   DbQuery& request_phrase(const string&, const string&, const string&);
   // Requests all data for a phrase translation with taking care on the word classes.
   DbQuery& request_phrase(const string&, const string&, const string&, const string&);
-  // Request an identifier for the given language (case insensitive).
-  DbQuery& request_language(const string&);
+  // Request an identifier for the given language name (case insensitive).
+  DbQuery& request_language_by_name(const string&);
+  // Request the language name for the given language id.
+  DbQuery& request_language_by_id(const string&);
   // Request all language identifiers and names.
   DbQuery& request_all_languages();
   // Request an identifier for the given word class (case insensitive).
