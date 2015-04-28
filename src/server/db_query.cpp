@@ -23,7 +23,6 @@
 #include <pqxx/pqxx>
 #include <string>
 #include <sstream>
-#include <iostream>
 
 namespace lgeorgieff {
 namespace translate {
