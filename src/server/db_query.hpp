@@ -61,8 +61,10 @@ class DbQuery {
   DbQuery& request_word_class_by_id(const string&);
   // Request all word class identifiers and names.
   DbQuery& request_all_word_classes();
-  // Request an identifier for the given gender (case insensitive).
-  DbQuery& request_gender(const string&);
+  // Request an identifier for the given gender name (case insensitive).
+  DbQuery& request_gender_by_name(const string&);
+  // Request a name for the given gender id.
+  DbQuery& request_gender_by_id(const string&);
   // Request all gender identifiers and names.
   DbQuery& request_all_genders();
   // Request all numerus identifiers.

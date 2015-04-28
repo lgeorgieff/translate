@@ -208,12 +208,23 @@ DbQuery& DbQuery::request_all_word_classes() {
   return *this;
 }
 
-DbQuery& DbQuery::request_gender(const string& gender_name) {
+DbQuery& DbQuery::request_gender_by_name(const string& gender_name) {
   pqxx::work query(*this->db_connection_);
   std::stringstream ss;
   string gender_name_where_str{"is null"};
   if ("null" != gender_name) gender_name_where_str = "ILIKE '" + this->db_connection_->esc(gender_name) + "'";
   ss << "SELECT id, description FROM gender_description WHERE name " << gender_name_where_str << ";";
+  this->query_result_ = query.exec(ss.str());
+  query.commit();
+  return *this;
+}
+
+DbQuery& DbQuery::request_gender_by_id(const string& gender_id) {
+  pqxx::work query(*this->db_connection_);
+  std::stringstream ss;
+  string gender_id_where_str{"is null"};
+  if ("null" != gender_id) gender_id_where_str = "= '" + this->db_connection_->esc(gender_id) + "'";
+  ss << "SELECT name, description FROM gender_description WHERE id " << gender_id_where_str << ";";
   this->query_result_ = query.exec(ss.str());
   query.commit();
   return *this;
