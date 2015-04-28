@@ -1,7 +1,7 @@
 
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 04/11/2015
+// Last modified: 04/28/2015
 // Description: Defines the DbQuery class that allows to query the data base for language information.
 // ====================================================================================================================
 
@@ -55,8 +55,10 @@ class DbQuery {
   DbQuery& request_language_by_id(const string&);
   // Request all language identifiers and names.
   DbQuery& request_all_languages();
-  // Request an identifier for the given word class (case insensitive).
-  DbQuery& request_word_class(const string&);
+  // Request an identifier for the given word class name (case insensitive).
+  DbQuery& request_word_class_by_name(const string&);
+  // Request a name for the given word class id.
+  DbQuery& request_word_class_by_id(const string&);
   // Request all word class identifiers and names.
   DbQuery& request_all_word_classes();
   // Request an identifier for the given gender (case insensitive).

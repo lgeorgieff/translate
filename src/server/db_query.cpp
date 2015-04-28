@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 04/26/2015
+// Last modified: 04/28/2015
 // Description: Implements the DbQuery class that allows to query the data base for language information.
 // ====================================================================================================================
 
@@ -177,13 +177,25 @@ DbQuery& DbQuery::request_all_languages() {
   return *this;
 }
 
-DbQuery& DbQuery::request_word_class(const string& word_class_name) {
+DbQuery& DbQuery::request_word_class_by_name(const string& word_class_name) {
   pqxx::work query(*this->db_connection_);
   std::stringstream ss;
   string word_class_name_where_str{"is null"};
   if ("null" != word_class_name)
     word_class_name_where_str = "ILIKE '" + this->db_connection_->esc(word_class_name) + "'";
   ss << "SELECT id FROM word_class_description WHERE name " << word_class_name_where_str << ";";
+  this->query_result_ = query.exec(ss.str());
+  query.commit();
+  return *this;
+}
+
+DbQuery& DbQuery::request_word_class_by_id(const string& word_class_id) {
+  pqxx::work query(*this->db_connection_);
+  std::stringstream ss;
+  string word_class_id_where_str{"is null"};
+  if ("null" != word_class_id)
+    word_class_id_where_str = "= '" + this->db_connection_->esc(word_class_id) + "'";
+  ss << "SELECT name FROM word_class_description WHERE id " << word_class_id_where_str << ";";
   this->query_result_ = query.exec(ss.str());
   query.commit();
   return *this;
