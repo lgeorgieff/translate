@@ -83,7 +83,7 @@ DbQuery& DbQuery::request_phrase(const string& phrase_in, const string& language
         " ph_out.numerus AS numerus_out,"
         " ab_out.abbreviation AS abbriviation_out,"
         " co_out.comment AS comment_out "
-        "SELECTfrom phrase ph_in"
+        "from phrase ph_in"
         " LEFT OUTER JOIN phrase_abbreviation pa_in ON ph_in.id = pa_in.phrase_id"
         " LEFT OUTER JOIN abbreviation ab_in ON ab_in.id = pa_in.abbreviation_id"
         " LEFT OUTER JOIN phrase_comment pc_in ON pc_in.phrase_id = ph_in.id"
