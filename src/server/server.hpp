@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 04/19/2015
+// Last modified: 04/30/2015
 // Description: Declares the RESTful server for the translation service.
 // ====================================================================================================================
 
@@ -32,14 +32,11 @@
 //  GET /gender/id/<id> => {"gender" : "<gender name>", "description": "<gender description>"}
 //  GET /gender/name/<name> => {"id" : "<gender id>", "description": "<gender description>"}
 //
-//  GET /numeri => [{"numerus": "<numerus name>", "id" : "<numerus id>"}]
-//  GET /numerus/id/<id> => "<numerus name>"
-//  GET /numerus/name/<name> => "<numerus id>"
+//  GET /numeri => ["numerus-id", "numerus-id"]
 //
 //  POST /translation/<language id source>/<language id target>/:
-//    {"phrase": "<phrase origin>", "word_class": "<word class id>", "gender": "<gender id>",
-//     "numerus": "<numerus id>", "show_phrase": <bool>, "show_word_class": <bool>, "show_gender": <bool>,
-//     "show_numerus": <bool>, "show_abbreviation": bool, "show_comment": <bool>}
+//    {"phrase": "<phrase origin>", "word_class": "<word class id>", "show_phrase": <bool>, "show_word_class": <bool>,
+//    "show_gender": <bool>, "show_numerus": <bool>, "show_abbreviation": bool, "show_comment": <bool>}
 //    => [{"origin_phrase": "<phrase origin language>", "origin_word_class": "<word class origin language>",
 //         "origin_gender": "<gender origin language>", "origin_numerus": "<numerus>": "<numerus origin language>",
 //         "origin_comment": "<comment origin language>", "origin_abbreviation": "<abbreviation origin language>",
@@ -53,6 +50,7 @@
 #define SERVER_HPP_
 
 #include "connection_string.hpp"
+#include "db_query.hpp"
 
 #include "mongoose.h"
 
@@ -88,22 +86,12 @@ class Server {
   static const char *URL_GENDER_NAME_PREFIX;
 
   static const char *URL_NUMERI;
-  static const char *URL_NUMERUS_ID_PREFIX;
-  static const char *URL_NUMERUS_NAME_PREFIX;
 
   static const char *URL_TRANSLATION_PREFIX;
 
   // Some methods that extract information from the passed URL
-  static std::string get_language_id_from_url(const std::string &);
-  static std::string get_language_name_from_url(const std::string &);
-  static std::string get_word_class_id_from_url(const std::string &);
-  static std::string get_word_class_name_from_url(const std::string &);
-  static std::string get_gender_id_from_url(const std::string &);
-  static std::string get_gender_name_from_url(const std::string &);
-  static std::string get_numerus_id_from_url(const std::string &);
-  static std::string get_numerus_name_from_url(const std::string &);
-  static std::string get_origin_language_id_from_url(const std::string &);
-  static std::string get_target_language_id_from_url(const std::string &);
+  static std::string get_origin_language_id_from_url(const char *);
+  static std::string get_target_language_id_from_url(const char *);
 
  private:
   // The handler that is invoked by the server when a new request is received
@@ -111,8 +99,8 @@ class Server {
 
   // The connection address of the running server, i.e. address and port
   std::string connection_address__;
-  // The data base connection string to the translation data base
-  ConnectionString db_connection_string__;
+  // The query object that connects this server instance to the data base
+  DbQuery db_query__;
   // The mongoose server instance
   mg_server *server__;
 }; // Server
