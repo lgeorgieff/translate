@@ -77,6 +77,8 @@ namespace server {
 
 using lgeorgieff::translate::utils::JsonException;
 
+const std::string JSON::JSON_INDENTATION_STRING{""};
+
 std::string JSON::all_languages_to_json(const DbQuery &db_query) {
   return generic_multiple_result_to_json(db_query, {"id", "name"}, {{"id", "id"}, {"name", "language"}});
 }
@@ -129,8 +131,7 @@ std::string JSON::all_numeri_to_json(const DbQuery &db_query) {
     row[0].to(str_container);
     result.append(str_container);
   }
-  Json::StreamWriterBuilder json_writer;
-  return Json::writeString(json_writer, result);
+  return json_value_to_string(result);
 }
 
 // Returns the following JSON string:
@@ -223,9 +224,7 @@ std::string JSON::phrase_to_json(const DbQuery &db_query, const Json::Value &use
     }
 
   }  // for(const pqxx::tuple &row : db_query)
-
-  Json::StreamWriterBuilder json_writer;
-  return Json::writeString(json_writer, result);
+  return json_value_to_string(result);
 }  // JSON::phrase_to_json
 
 std::string JSON::generic_multiple_result_to_json(const DbQuery &db_query,
@@ -248,8 +247,7 @@ std::string JSON::generic_multiple_result_to_json(const DbQuery &db_query,
     }
     result.append(json_row);
   }
-  Json::StreamWriterBuilder json_writer;
-  return Json::writeString(json_writer, result);
+  return json_value_to_string(result);
 }
 
 std::string JSON::generic_single_result_to_json(const DbQuery &db_query, const std::string &column_name) {
@@ -268,8 +266,7 @@ std::string JSON::generic_single_result_to_json(const DbQuery &db_query, const s
     throw JsonException("Cannot transform multiple DB results (" + std::to_string(db_query.size()) +
                         std::string{") to JSON string!"});
   }
-  Json::StreamWriterBuilder json_writer;
-  return Json::writeString(json_writer, result);
+  return json_value_to_string(result);
 }
 
 std::string JSON::generic_single_complex_result_to_json(const DbQuery &db_query,
@@ -299,8 +296,13 @@ std::string JSON::generic_single_complex_result_to_json(const DbQuery &db_query,
     throw JsonException("Cannot transform multiple DB results (" + std::to_string(db_query.size()) +
                         std::string{") to JSON string!"});
   }
+  return json_value_to_string(result);
+}
+
+std::string JSON::json_value_to_string(const Json::Value &value) {
   Json::StreamWriterBuilder json_writer;
-  return Json::writeString(json_writer, result);
+  json_writer.settings_["indentation"] = "";
+  return Json::writeString(json_writer, value);
 }
 
 }  // server

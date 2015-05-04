@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 04/30/2015
+// Last modified: 05/04/2015
 // Description: Declares a class with several static methods for transforming DB query results into JSON string.
 // ====================================================================================================================
 
@@ -34,6 +34,10 @@ namespace server {
 // A static class that transforms DB results in form of DbQuery instances into JSON strings.
 class JSON {
  public:
+  // The character string that is used for the final json string indentation.
+  // Here "" is used, i.e. no indentation. For a pretty print functionality use "\t".
+  static const std::string JSON_INDENTATION_STRING;
+
   // Transforms a set of all languages from te DB into a JSON array.
   static std::string all_languages_to_json(const DbQuery &);
   // Transforms a language name from the DB into a JSON string.
@@ -59,9 +63,11 @@ class JSON {
   static std::string all_numeri_to_json(const DbQuery &);
 
   // Transforms a DB result for a phrase translation corresponding to the passed DbQuery and Json::Value.
-  // The Json::Value string contains the request (POST) data from the user that specifies what the answer should contain, e.g.
+  // The Json::Value string contains the request (POST) data from the user that specifies what the answer should
+  // contain, e.g.
   // comments, abbreviations, ...
   static std::string phrase_to_json(const DbQuery &, const Json::Value &);
+
  private:
   JSON() = delete;
   JSON(const JSON &) = delete;
@@ -80,6 +86,9 @@ class JSON {
   // strings.
   static std::string generic_single_complex_result_to_json(const DbQuery &, const std::vector<std::string> &,
                                                            const std::map<std::string, std::string> &);
+
+  // Returns a string value that represents the passed json value.
+  static std::string json_value_to_string(const Json::Value &);
 };  // JSON
 
 }  // server
