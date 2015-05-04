@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/03/2015
+// Last modified: 05/04/2015
 // Description: Defines the RESTful server for the translation service.
 // ====================================================================================================================
 
@@ -38,7 +38,7 @@ void handle_http_error(mg_connection *connection, int status_code, const std::st
   mg_send_status(connection, status_code);
   mg_printf_data(connection, "%s", message.c_str());
 }
-} // anonymous namespace
+}  // anonymous namespace
 
 namespace lgeorgieff {
 namespace translate {
@@ -76,7 +76,7 @@ void Server::listen() {
 }
 
 Server::~Server() {
-  if(this->server__) {
+  if (this->server__) {
     mg_destroy_server(&this->server__);
     this->server__ = nullptr;
   }
@@ -93,7 +93,7 @@ std::string Server::get_origin_language_id_from_url(const char *url) {
 std::string Server::get_target_language_id_from_url(const char *url) {
   // don't check prefix and origin language id here, must be ensured outside this function
   url += strlen(Server::URL_TRANSLATION_PREFIX);
-  for(; *url && '/' != *url; ++url)
+  for (; *url && '/' != *url; ++url)
     ;
   ++url;
   std::string language_id{};
@@ -217,23 +217,28 @@ int Server::request_handler(mg_connection *connection, enum mg_event event) {
               std::string origin_phrase{""};
               if (user_options.isObject()) {
                 Json::Value extracted_phrase{user_options.get("phrase", "")};
-                if(!extracted_phrase.isString()) {
-                  handle_http_error(connection, 400, "Expected a JSON object with at least the string member \"phrase\"!");
+                if (!extracted_phrase.isString()) {
+                  handle_http_error(connection, 400,
+                                    "Expected a JSON object with at least the string member \"phrase\"!");
                   delete[] url;
                   return MG_TRUE;
                 }
                 origin_phrase = extracted_phrase.asString();
               }
-              if(origin_phrase.empty()) {
+              if (origin_phrase.empty()) {
                 handle_http_error(connection, 400, "Phrase for translation must not be empty!");
                 delete[] url;
                 return MG_TRUE;
               }
               std::string word_class{""};
               Json::Value extracted_word_class{user_options.get("word_class", "")};
-              if(extracted_word_class.isString()) word_class = extracted_word_class.asString();
-              if (word_class.empty()) db_query->request_phrase(origin_phrase, get_origin_language_id_from_url(url), get_target_language_id_from_url(url));
-              else db_query->request_phrase(origin_phrase, get_origin_language_id_from_url(url), get_target_language_id_from_url(url), word_class);
+              if (extracted_word_class.isString()) word_class = extracted_word_class.asString();
+              if (word_class.empty())
+                db_query->request_phrase(origin_phrase, get_origin_language_id_from_url(url),
+                                         get_target_language_id_from_url(url));
+              else
+                db_query->request_phrase(origin_phrase, get_origin_language_id_from_url(url),
+                                         get_target_language_id_from_url(url), word_class);
               if (db_query->empty()) {
                 std::string error_message{"No translation found for \"" + origin_phrase +
                                           (word_class.empty() ? "" : " (" + word_class + ")") + "\"!"};
@@ -266,8 +271,8 @@ int Server::request_handler(mg_connection *connection, enum mg_event event) {
   }
 
   return 0;
-} // Server::request_handler
+}  // Server::request_handler
 
-} // server
-} // translate
-} // server
+}  // server
+}  // translate
+}  // server

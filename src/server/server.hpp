@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 04/30/2015
+// Last modified: 05/04/2015
 // Description: Declares the RESTful server for the translation service.
 // ====================================================================================================================
 
@@ -57,7 +57,6 @@
 #include <cstddef>
 #include <string>
 
-
 namespace lgeorgieff {
 namespace translate {
 namespace server {
@@ -103,9 +102,9 @@ class Server {
   DbQuery db_query__;
   // The mongoose server instance
   mg_server *server__;
-}; // Server
-} // server
-} // translate
-} // lgeorgieff
+};  // Server
+}  // server
+}  // translate
+}  // lgeorgieff
 
-#endif // SERVER_HPP_
+#endif  // SERVER_HPP_
