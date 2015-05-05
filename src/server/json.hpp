@@ -68,6 +68,9 @@ class JSON {
   // comments, abbreviations, ...
   static std::string phrase_to_json(const DbQuery &, const Json::Value &);
 
+  // Returns a string value that represents the passed json value.
+  static std::string json_value_to_string(const Json::Value &);
+
  private:
   JSON() = delete;
   JSON(const JSON &) = delete;
@@ -86,9 +89,6 @@ class JSON {
   // strings.
   static std::string generic_single_complex_result_to_json(const DbQuery &, const std::vector<std::string> &,
                                                            const std::map<std::string, std::string> &);
-
-  // Returns a string value that represents the passed json value.
-  static std::string json_value_to_string(const Json::Value &);
 };  // JSON
 
 }  // server

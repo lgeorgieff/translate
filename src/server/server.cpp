@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/04/2015
+// Last modified: 05/05/2015
 // Description: Defines the RESTful server for the translation service.
 // ====================================================================================================================
 
@@ -36,7 +36,8 @@ namespace {
 void handle_http_error(mg_connection *connection, int status_code, const std::string &message) {
   std::cerr << "HTTP " << status_code << ": " << message << std::endl;
   mg_send_status(connection, status_code);
-  mg_printf_data(connection, "%s", message.c_str());
+  std::string json_string{lgeorgieff::translate::server::JSON::json_value_to_string(message)};
+  mg_printf_data(connection, "%s", json_string.c_str());
 }
 }  // anonymous namespace
 
