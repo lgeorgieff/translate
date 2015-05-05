@@ -35,8 +35,16 @@ namespace {
 // given error message to the connection structure.
 void handle_http_error(mg_connection *connection, int status_code, const std::string &message) {
   std::cerr << "HTTP " << status_code << ": " << message << std::endl;
+  mg_send_header(connection, "content-type", "application/json");
   mg_send_status(connection, status_code);
   std::string json_string{lgeorgieff::translate::server::JSON::json_value_to_string(message)};
+  mg_printf_data(connection, "%s", json_string.c_str());
+}
+
+// A helper function that sets the HTTP content-type "application/json" and writes the passed json string to the HTTP
+// connection.
+void send_json_data(mg_connection *connection, const std::string &json_string) {
+  mg_send_header(connection, "content-type", "application/json");
   mg_printf_data(connection, "%s", json_string.c_str());
 }
 }  // anonymous namespace
@@ -123,7 +131,7 @@ int Server::request_handler(mg_connection *connection, enum mg_event event) {
           if (!strcmp(url, URL_LANGUAGES)) {
             db_query->request_all_languages();
             string json{JSON::all_languages_to_json(*db_query)};
-            mg_printf_data(connection, "%s", json.c_str());
+            send_json_data(connection, json);
           } else if (cstring_starts_with(url, URL_LANGUAGE_ID_PREFIX)) {
             db_query->request_language_by_id(get_last_path_from_url(url));
             if (db_query->empty()) {
@@ -131,7 +139,7 @@ int Server::request_handler(mg_connection *connection, enum mg_event event) {
               handle_http_error(connection, 404, error_message);
             } else {
               string json{JSON::language_name_to_json(*db_query)};
-              mg_printf_data(connection, "%s", json.c_str());
+              send_json_data(connection, json);
             }
           } else if (cstring_starts_with(url, URL_LANGUAGE_NAME_PREFIX)) {
             db_query->request_language_by_name(get_last_path_from_url(url));
@@ -140,12 +148,12 @@ int Server::request_handler(mg_connection *connection, enum mg_event event) {
               handle_http_error(connection, 404, error_message);
             } else {
               string json{JSON::language_id_to_json(*db_query)};
-              mg_printf_data(connection, "%s", json.c_str());
+              send_json_data(connection, json);
             }
           } else if (!strcmp(url, URL_WORD_CLASSES)) {
             db_query->request_all_word_classes();
             string json{JSON::all_word_classes_to_json(*db_query)};
-            mg_printf_data(connection, "%s", json.c_str());
+            send_json_data(connection, json);
           } else if (cstring_starts_with(url, URL_WORD_CLASS_ID_PREFIX)) {
             db_query->request_word_class_by_id(get_last_path_from_url(url));
             if (db_query->empty()) {
@@ -153,7 +161,7 @@ int Server::request_handler(mg_connection *connection, enum mg_event event) {
               handle_http_error(connection, 404, error_message);
             } else {
               string json{JSON::word_class_name_to_json(*db_query)};
-              mg_printf_data(connection, "%s", json.c_str());
+              send_json_data(connection, json);
             }
           } else if (cstring_starts_with(url, URL_WORD_CLASS_NAME_PREFIX)) {
             db_query->request_word_class_by_name(get_last_path_from_url(url));
@@ -162,12 +170,12 @@ int Server::request_handler(mg_connection *connection, enum mg_event event) {
               handle_http_error(connection, 404, error_message);
             } else {
               string json{JSON::word_class_id_to_json(*db_query)};
-              mg_printf_data(connection, "%s", json.c_str());
+              send_json_data(connection, json);
             }
           } else if (!strcmp(url, URL_GENDERS)) {
             db_query->request_all_genders();
             string json{JSON::all_genders_to_json(*db_query)};
-            mg_printf_data(connection, "%s", json.c_str());
+            send_json_data(connection, json);
           } else if (cstring_starts_with(url, URL_GENDER_ID_PREFIX)) {
             db_query->request_gender_by_id(get_last_path_from_url(url));
             if (db_query->empty()) {
@@ -175,7 +183,7 @@ int Server::request_handler(mg_connection *connection, enum mg_event event) {
               handle_http_error(connection, 404, error_message);
             } else {
               string json{JSON::gender_name_to_json(*db_query)};
-              mg_printf_data(connection, "%s", json.c_str());
+              send_json_data(connection, json);
             }
           } else if (cstring_starts_with(url, URL_GENDER_NAME_PREFIX)) {
             db_query->request_gender_by_name(get_last_path_from_url(url));
@@ -184,12 +192,12 @@ int Server::request_handler(mg_connection *connection, enum mg_event event) {
               handle_http_error(connection, 404, error_message);
             } else {
               string json{JSON::gender_id_to_json(*db_query)};
-              mg_printf_data(connection, "%s", json.c_str());
+              send_json_data(connection, json);
             }
           } else if (!strcmp(url, URL_NUMERI)) {
             db_query->request_all_numeri();
             string json{JSON::all_numeri_to_json(*db_query)};
-            mg_printf_data(connection, "%s", json.c_str());
+            send_json_data(connection, json);
           } else {
             // 400 => Bad Request (Bad URL)
             std::string error_message{"Bad Request: called GET on \"" + std::string{url} + "\"!"};
@@ -246,7 +254,7 @@ int Server::request_handler(mg_connection *connection, enum mg_event event) {
                 handle_http_error(connection, 404, error_message);
               } else {
                 string json{JSON::phrase_to_json(*db_query, user_options)};
-                mg_printf_data(connection, "%s", json.c_str());
+                send_json_data(connection, json);
               }
             }
           } else {
