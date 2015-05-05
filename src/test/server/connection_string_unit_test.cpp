@@ -1,6 +1,6 @@
  // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 04/11/2015
+// Last modified: 05/05/2015
 // Description: Unit test for the connection_string class
 // ====================================================================================================================
 
@@ -18,8 +18,8 @@
 
 #include "gtest/gtest.h"
 
-#include "../../server/connection_string.hpp"
-#include "../../server/db_exception.hpp"
+#include "server/connection_string.hpp"
+#include "server/db_exception.hpp"
 
 #include <string>
 #include <sstream>

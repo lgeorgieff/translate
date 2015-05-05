@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 04/11/2015
+// Last modified: 05/05/2015
 // Description: The ConnectionString implementation which is an abstraction class for postgresql connection strings.
 // ====================================================================================================================
 
@@ -18,7 +18,7 @@
 
 #include "connection_string.hpp"
 #include "db_exception.hpp"
-#include "../utils/helper.hpp"
+#include "utils/helper.hpp"
 
 #include <algorithm>
 #include <cctype>

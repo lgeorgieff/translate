@@ -1,6 +1,6 @@
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 04/10/2015
+# Last modified: 05/05/2015
 # Description: Build configuration for somce scripts written in C++.
 #######################################################################################################################
 
@@ -19,6 +19,9 @@
 
 ### project setup
 project(translate_scripts)
+
+### set all include paths
+include_directories("../")
 
 ### set the destination folder of the compiled files to the script folder itself
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/scripts)

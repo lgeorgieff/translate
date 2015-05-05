@@ -1,6 +1,6 @@
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 04/23/2015
+# Last modified: 05/05/2015
 # Description: Main CMakeLists.txt file for building this project. The actual modules are built by calling
 #              CMakeLists.txt of the corresponding sub-directories.
 #              Common options:
@@ -51,8 +51,9 @@ OPTION(JSONCPP_WITH_TESTS "Compile and (for jsoncpp_check) run JsonCpp test exec
 OPTION(JSONCPP_WITH_POST_BUILD_UNITTEST "Automatically run unit-tests as a post build step" OFF)
 OPTION(JSONCPP_WITH_PKGCONFIG_SUPPORT "Generate and install .pc files" OFF)
 
-
-include_directories("./libs/mongoose-5.5")
+### set all include paths
+include_directories("./libs/mongoose-5.5/")
+include_directories("./utils/")
 
 ### set all C++ flags used for all sub-modules, e.g. warnings and C++ standard version
 if(${WALL})

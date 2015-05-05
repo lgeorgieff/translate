@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/04/2015
+// Last modified: 05/05/2015
 // Description: Defines a class with several static methods for transforming DB query results into JSON string.
 // ====================================================================================================================
 
@@ -17,7 +17,7 @@
 // ====================================================================================================================
 
 #include "json.hpp"
-#include "../utils/json_exception.hpp"
+#include "utils/json_exception.hpp"
 
 #include <pqxx/pqxx>
 #include <cstring>

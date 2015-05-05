@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 17/12/2015
+// Last modified: 05/05/2015
 // Description: Implements command line parsing and starting process of the RESTful server API for the translation
 //              service.
 // ====================================================================================================================
@@ -17,10 +17,10 @@
 // Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 // ====================================================================================================================
 
-#include "../utils/command_line_exception.hpp"
+#include "utils/command_line_exception.hpp"
 #include "db_exception.hpp"
 #include "connection_string.hpp"
-#include "../utils/helper.hpp"
+#include "utils/helper.hpp"
 #include "server.hpp"
 
 #include <pqxx/pqxx>

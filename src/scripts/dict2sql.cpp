@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 04/10/2015
+// Last modified: 05/05/2015
 // Description: Implements a parser for language resource files and dumps the data into sql files.
 // ====================================================================================================================
 
@@ -16,12 +16,12 @@
 // Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 // ====================================================================================================================
 
-#include "../utils/gender.hpp"
-#include "../utils/numerus.hpp"
-#include "../utils/word_class.hpp"
-#include "../utils/helper.hpp"
-#include "../utils/exception.hpp"
-#include "../utils/command_line_exception.hpp"
+#include "utils/gender.hpp"
+#include "utils/numerus.hpp"
+#include "utils/word_class.hpp"
+#include "utils/helper.hpp"
+#include "utils/exception.hpp"
+#include "utils/command_line_exception.hpp"
 
 #include <cctype>
 #include <cstring>

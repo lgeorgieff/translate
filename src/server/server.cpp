@@ -19,8 +19,8 @@
 #include "server.hpp"
 #include "server_exception.hpp"
 #include "json.hpp"
-#include "../utils/helper.hpp"
-#include "../utils/exception.hpp"
+#include "utils/helper.hpp"
+#include "utils/exception.hpp"
 
 #include "json/json.h"
 

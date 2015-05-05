@@ -1,6 +1,6 @@
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 05/04/2015
+# Last modified: 05/05/2015
 # Description: Build configuration for the server part of translate.
 #######################################################################################################################
 
@@ -19,6 +19,9 @@
 
 ### project setup
 project(translate_server)
+
+### set all include paths
+include_directories("../")
 
 ### register all source files for the server part
 set(SERVER_SOURCE_FILES ../utils/exception.cpp ../utils/json_exception.cpp db_exception.cpp server_exception.cpp

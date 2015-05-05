@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 04/12/2015
+// Last modified: 05/05/2015
 // Description: Declares the exception ServerException which is thrown if any error occurs during a server operation.
 // ====================================================================================================================
 
@@ -19,7 +19,7 @@
 #ifndef SERVER_EXCEPTION_HPP_
 #define SERVER_EXCEPTION_HPP_
 
-#include "../utils/exception.hpp"
+#include "utils/exception.hpp"
 
 #include <string>
 
