@@ -1,7 +1,7 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 02/09/2015
-// Description: The Connection_String declaration which is an abstraction class for postgresql connection strings.
+// Last modified: 04/10/2015
+// Description: The ConnectionString declaration which is an abstraction class for postgresql connection strings.
 //              More information to postgresql connetion string available at:
 //              http://www.postgresql.org/docs/9.1/static/libpq-connect.html
 // ====================================================================================================================
@@ -31,22 +31,22 @@ using std::ostream;
 namespace lgeorgieff {
 namespace translate {
 namespace server {
-class Connection_String {
+class ConnectionString {
  public:
   enum class SSL_Mode : char { DISABLE = 1, ALLOW = 2, PREFER = 4, REQUIRE = 8, VERIFY_CA = 16, VERIFY_FULL = 32 };
 
  public:
   /// A constructor that takes all supported connection string attributes
-  Connection_String();
-  Connection_String(const Connection_String&) = default;
-  Connection_String(Connection_String&&) = default;
+  ConnectionString();
+  ConnectionString(const ConnectionString&) = default;
+  ConnectionString(ConnectionString&&) = default;
 
-  Connection_String& operator=(const Connection_String&) = default;
-  Connection_String& operator=(Connection_String&&) = default;
-  bool operator==(const Connection_String&);
-  bool operator!=(const Connection_String&);
+  ConnectionString& operator=(const ConnectionString&) = default;
+  ConnectionString& operator=(ConnectionString&&) = default;
+  bool operator==(const ConnectionString&);
+  bool operator!=(const ConnectionString&);
 
-  ~Connection_String() = default;
+  ~ConnectionString() = default;
 
   // The default value for user if no one is provided
   static const string DEFAULT_USER;
@@ -176,13 +176,13 @@ class Connection_String {
   bool require_ssl_;
   bool require_ssl_set_;
   bool ssl_mode_set_;
-};  // Connection_String
+};  // ConnectionString
 
-ostream& operator<<(ostream&, const Connection_String&);
+ostream& operator<<(ostream&, const ConnectionString&);
 
-string to_string(const Connection_String::SSL_Mode&);
-Connection_String::SSL_Mode from_string(const string&);
-ostream& operator<<(ostream&, const Connection_String::SSL_Mode&);
+string to_string(const ConnectionString::SSL_Mode&);
+ConnectionString::SSL_Mode from_string(const string&);
+ostream& operator<<(ostream&, const ConnectionString::SSL_Mode&);
 }  // server
 }  // translate
 }  // lgeorgieff

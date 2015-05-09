@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 02/22/2015
+// Last modified: 05/05/2015
 // Description: Unit test for the WordClass enum class and its helper functions.
 // ====================================================================================================================
 
@@ -18,8 +18,8 @@
 
 #include "gtest/gtest.h"
 
-#include "../../utils/word_class.hpp"
-#include "../../utils/exception.hpp"
+#include "utils/word_class.hpp"
+#include "utils/exception.hpp"
 
 #include <string>
 

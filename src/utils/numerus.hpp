@@ -1,8 +1,8 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 03/22/2015
-// Description: Declares and defines the data type Numerus that is used in the data base to represent a numerus
-//              value in a grammar.
+// Last modified: 04/10/2015
+// Description: Defines the data type Numerus that is used in the data base to represent a numerus value in a grammar
+//              and declares several helper functions for it.
 // ====================================================================================================================
 
 // ====================================================================================================================
@@ -20,7 +20,6 @@
 #ifndef NUMERUS_HPP_
 #define NUMERUS_HPP_
 
-#include "exception.hpp"
 #include <string>
 
 namespace lgeorgieff {
@@ -29,53 +28,21 @@ namespace utils {
 
 enum class Numerus : char { none = 1, sg = 2, pl = 4 };
 
-std::string to_string(const Numerus &numerus) noexcept {
-  switch (numerus) {
-    case Numerus::sg:
-      return "sg.";
-    case Numerus::pl:
-      return "pl.";
-    default:
-      return "";
-  }
-}
+std::string to_string(const Numerus &) noexcept;
 
-std::string to_db_string(const Numerus &numerus) noexcept {
-  std::string str{to_string(numerus)};
-  if(str.empty()) return "null";
-  else return "'" + str + "'";
-}
+std::string to_db_string(const Numerus &) noexcept;
 
 template <typename T>
 T from_string(const std::string &);
 
 template <>
-Numerus from_string(const std::string &numerus) {
-  if ("" == numerus)
-    return Numerus::none;
-  else if ("sg." == numerus)
-    return Numerus::sg;
-  else if ("pl." == numerus)
-    return Numerus::pl;
-  else
-    throw Exception(std::string("The value \"") + numerus +
-                    std::string("\" is not a valid lgeorgieff::translate::utils::Numerus value"));
-}
+Numerus from_string(const std::string &);
 
 template <typename T>
 T from_db_string(const std::string &);
 
 template <>
-Numerus from_db_string(const std::string &numerus) {
-  if("null" == numerus) {
-    return Numerus::none;
-  } else if (numerus.size() > 2) {
-    return from_string<Numerus>(numerus.substr(1, numerus.size() - 2));
-  } else {
-    throw Exception(std::string("The value \"") + numerus +
-                    std::string("\" is not a valid lgeorgieff::translate::utils::Numerus value"));
-  }
-}
+Numerus from_db_string(const std::string &);
 
 }  // utils
 }  // translae

@@ -1,7 +1,7 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
 // Last modified: 05/05/2015
-// Description: Declares the exception DbException which is thrown if any error occurs during a data base operation.
+// Description: Declares the exception ServerException which is thrown if any error occurs during a server operation.
 // ====================================================================================================================
 
 // ====================================================================================================================
@@ -16,8 +16,8 @@
 // Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 // ====================================================================================================================
 
-#ifndef DB_EXCEPTION_HPP_
-#define DB_EXCEPTION_HPP_
+#ifndef SERVER_EXCEPTION_HPP_
+#define SERVER_EXCEPTION_HPP_
 
 #include "utils/exception.hpp"
 
@@ -26,19 +26,19 @@
 namespace lgeorgieff {
 namespace translate {
 namespace server {
-class DbException : public lgeorgieff::translate::utils::Exception {
+class ServerException : public lgeorgieff::translate::utils::Exception {
  public:
-  DbException(const std::string&);
-  DbException(const DbException&) = default;
-  DbException(DbException&&) = default;
+  ServerException(const std::string&);
+  ServerException(const ServerException&) = default;
+  ServerException(ServerException&&) = default;
 
-  DbException& operator=(const DbException&) = default;
-  DbException& operator=(DbException&&) = default;
+  ServerException& operator=(const ServerException&) = default;
+  ServerException& operator=(ServerException&&) = default;
 
-  virtual ~DbException() = default;
-};  // DbException
+  virtual ~ServerException() = default;
+};  // ServerException
 }  // server
 }  // translate
 }  // lgeorgieff
 
-#endif  // DB_EXCEPTION_HPP_
+#endif  // SERVER_EXCEPTION_HPP_

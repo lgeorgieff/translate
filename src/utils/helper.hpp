@@ -1,7 +1,7 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 03/22/2015
-// Description: Defines several helper functions for the entire project.
+// Last modified: 04/27/2015
+// Description: Declares several helper functions for the entire project.
 // ====================================================================================================================
 
 // ====================================================================================================================
@@ -19,59 +19,39 @@
 #ifndef HELPER_HPP_
 #define HELPER_HPP_
 
-#include <cstddef>
 #include <string>
-#include <cctype>
-#include <functional>
-#include <algorithm>
-
-
-#include <iostream>
-using std::string;
 
 namespace lgeorgieff {
 namespace translate {
 namespace utils {
 
 // Removes all whitespace at the beginning of the passed string
-void trim_left(string &str) {
-  if (str.empty() || !isspace(str[0])) return;
-  string::iterator stop_position{std::find_if_not(str.begin(), str.end(), std::ptr_fun<int, int>(std::isspace))};
-  str.erase(str.begin(), stop_position);
-}
+void trim_left(std::string &);
 
 // Removes all whitespce at the end of the passed string
-void trim_right(string &str) {
-  if (str.empty() || !isspace(str[str.size() - 1])) return;
-  string::reverse_iterator start_position{
-      std::find_if_not(str.rbegin(), str.rend(), std::ptr_fun<int, int>(std::isspace))};
-  str.erase(start_position.base(), str.end());
-}
+void trim_right(std::string &);
 
 // Removes all whitespace at the beginning and at the end of the passed string
-void trim(string &str) {
-  trim_left(str);
-  trim_right(str);
-}
+void trim(std::string &);
 
 // Removes all whitespace at the beginning and at the end of the passed string. In addition all whitespace in the
 // string which are not at the beginning or at the end are transformed to blanks. Finally, all remaining whitespace
 // characters are replaced by blanks.
-void normalize_whitespace(string &str) {
-  trim(str);
-  size_t pos{0};
-  while(pos < str.size()) {
-    if(std::isspace(str[pos]) && str[pos - 1] == ' '){
-      str.erase(pos, 1);
-    } else if(std::isspace(str[pos])) {
-      str[pos] = ' ';
-      ++pos;
-    } else {
-      ++pos;
-    }
-  }
-}
-  
+void normalize_whitespace(std::string &);
+
+// Returns a size_t value corresponding to the passed string value. If the passed string value is not a valid size_t,
+// an std::invalid_argument exception is thrown.
+size_t string_to_size_t(const std::string &);
+
+  // Returns true if the first c-string starts with the second c-string. Returns false otherwise.
+bool cstring_starts_with(const char *, const char *);
+
+// Returns true if the first c-string ends with the second c-string. Returns false otherwise.
+bool cstring_ends_with(const char *, const char *);
+
+// Returns the last path segment of the passed URL string, e.g. return "file" for the following URL
+// "http://localhost:1234/my/path/to/file#def?attr=12"
+  std::string get_last_path_from_url(const char *, bool=true);
 }  // utils
 }  // translate
 }  // lgeorgieff

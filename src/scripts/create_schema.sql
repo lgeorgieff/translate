@@ -1,7 +1,7 @@
 /*
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 03/20/2015
+# Last modified: 04/05/2015
 # Description: Creates the (postgresql) SQL data base schema for the server side of translate.
 #              Usage: psql --username translate --dbname translate --file create_schema.sql
 #######################################################################################################################
@@ -48,7 +48,7 @@ abbreviation varchar(256) NOT NULL UNIQUE,
 CHECK (char_length(trim(abbreviation)) > 0)
 );
 
-CREATE TABLE word_class
+CREATE TABLE word_class_description
 (
 id varchar(8) NOT NULL PRIMARY KEY,
 name varchar(64) NOT NULL UNIQUE,
@@ -56,22 +56,25 @@ CHECK (char_length(trim(id)) > 0),
 CHECK (char_length(trim(name)) > 0)
 );
 
-CREATE TABLE gender
+CREATE TABLE gender_description
 (
 id char(1) NOT NULL PRIMARY KEY,
+name varchar(8) NOT NULL PRIMARY KEY,
 description varchar(64) NOT NULL
 );
 
 CREATE TYPE numerus AS ENUM ('pl.', 'sg.');
 
-CREATE TABLE phrase(
+CREATE TABLE phrase
+(
 id serial NOT NULL PRIMARY KEY,
 phrase varchar(256) NOT NULL,
 language char(2) REFERENCES language(id) NOT NULL,
-gender char(1) REFERENCES gender(id),
+gender char(1) REFERENCES gender_description(id),
 numerus numerus,
+word_class varchar(8) REFERENCES word_class_description,
 CHECK (char_length(trim(phrase)) > 0),
-unique(phrase, language, gender, numerus)
+unique(phrase, language, gender, numerus, word_class)
 );
 
 CREATE TABLE phrase_comment
@@ -95,40 +98,31 @@ phrase_id_out integer REFERENCES phrase(id) NOT NULL,
 unique(phrase_id_in, phrase_id_out)
 );
 
-CREATE TABLE phrase_word_class
-(
-phrase_id integer REFERENCES phrase(id) NOT NULL,
-word_class_id varchar(8) REFERENCES word_class(id) NOT NULL,
-unique(phrase_id, word_class_id)
-);
-
-
 /*
 #######################################################################################################################
 ### Insert the basic values into all tables
 #######################################################################################################################
 */
-INSERT INTO word_class VALUES ('adj', 'adjective');
-INSERT INTO word_class VALUES ('adv', 'adverb/adverbial');
-INSERT INTO word_class VALUES ('past-p', 'past participle');
-INSERT INTO word_class VALUES ('verb', 'verb (infinitive)');
-INSERT INTO word_class VALUES ('pres-p', 'present participle');
-INSERT INTO word_class VALUES ('prep', 'preposition/adposition');
-INSERT INTO word_class VALUES ('conj', 'conjunction');
-INSERT INTO word_class VALUES ('pron', 'pronoun');
-INSERT INTO word_class VALUES ('prefix', 'prefix');
-INSERT INTO word_class VALUES ('suffix', 'suffix');
-INSERT INTO word_class VALUES ('noun', 'noun');
-INSERT INTO word_class VALUES ('art', 'article');
-INSERT INTO word_class VALUES ('num', 'number');
-INSERT INTO word_class VALUES ('interj', 'interjection');
-INSERT INTO word_class VALUES ('phrase', 'phrase');
-INSERT INTO word_class VALUES ('idiom', 'idiom');
+INSERT INTO word_class_description VALUES ('adj', 'adjective');
+INSERT INTO word_class_description VALUES ('adv', 'adverb/adverbial');
+INSERT INTO word_class_description VALUES ('past-p', 'past participle');
+INSERT INTO word_class_description VALUES ('verb', 'verb (infinitive)');
+INSERT INTO word_class_description VALUES ('pres-p', 'present participle');
+INSERT INTO word_class_description VALUES ('prep', 'preposition/adposition');
+INSERT INTO word_class_description VALUES ('conj', 'conjunction');
+INSERT INTO word_class_description VALUES ('pron', 'pronoun');
+INSERT INTO word_class_description VALUES ('prefix', 'prefix');
+INSERT INTO word_class_description VALUES ('suffix', 'suffix');
+INSERT INTO word_class_description VALUES ('noun', 'noun');
+INSERT INTO word_class_description VALUES ('art', 'article');
+INSERT INTO word_class_description VALUES ('num', 'number');
+INSERT INTO word_class_description VALUES ('interj', 'interjection');
+INSERT INTO word_class_description VALUES ('phrase', 'phrase');
+INSERT INTO word_class_description VALUES ('idiom', 'idiom');
 
-
-INSERT INTO gender VALUES ('m', 'der - männlich (Maskulinum)');
-INSERT INTO gender VALUES ('f', 'die - weiblich (Feminimum)');
-INSERT INTO gender VALUES ('n', 'das sachlich (Neutrum)');
+INSERT INTO gender_description VALUES ('m', 'der', 'männlich (Maskulinum)');
+INSERT INTO gender_description VALUES ('f', 'die', 'weiblich (Feminimum)');
+INSERT INTO gender_description VALUES ('n', 'das', 'sachlich (Neutrum)');
 
 INSERT INTO language VALUES ('BG', 'български');
 INSERT INTO language VALUES ('BS', 'bosanski');

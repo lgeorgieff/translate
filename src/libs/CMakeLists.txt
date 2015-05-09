@@ -1,6 +1,6 @@
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 01/31/2015
+# Last modified: 04/23/2015
 # Description: A dummy CMakeLists.txt for calling the corresponding sub-CMakeLists.txt of all used libraries.
 #######################################################################################################################
 
@@ -19,3 +19,4 @@
 
 ### register all sub-modules
 add_subdirectory(mongoose-5.5)
+add_subdirectory(jsoncpp)
