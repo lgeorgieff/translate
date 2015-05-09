@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/05/2015
+// Last modified: 05/09/2015
 // Description: Defines the RESTful server for the translation service.
 // ====================================================================================================================
 
@@ -27,8 +27,6 @@
 #include <unistd.h>
 #include <cstring>
 #include <iostream>
-
-// TODO: page/request with API info => see HTTP standard
 
 namespace {
 // A helper function that sets the passed HTTP status code on the passed connection structure and finally writes the
