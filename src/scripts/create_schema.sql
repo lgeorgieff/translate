@@ -1,7 +1,7 @@
 /*
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 04/05/2015
+# Last modified: 05/11/2015
 # Description: Creates the (postgresql) SQL data base schema for the server side of translate.
 #              Usage: psql --username translate --dbname translate --file create_schema.sql
 #######################################################################################################################
