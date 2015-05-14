@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/05/2015
+// Last modified: 05/14/2015
 // Description: Implements command line parsing and starting process of the RESTful server API for the translation
 //              service.
 // ====================================================================================================================
@@ -28,7 +28,6 @@
 #include <string>
 #include <cstring>
 #include <stdexcept>
-
 
 using lgeorgieff::translate::server::ConnectionString;
 using lgeorgieff::translate::server::DbException;
@@ -61,29 +60,32 @@ std::string get_usage(const string &programme_name) {
 }
 
 // Processes all command line arguments and sets the corresponding coniguration values.
-void process_cmd_arguments(const int argc, const char **argv) {
+bool process_cmd_arguments(const int argc, const char **argv) {
   bool db_host_set{false};
   bool db_addr_set{false};
-  for(int pos{1}; pos < argc; ++pos) {
-    if(!strcmp("-h", argv[pos]) || !strcmp("--help", argv[pos])) {
+  for (int pos{1}; pos < argc; ++pos) {
+    if (!strcmp("-h", argv[pos]) || !strcmp("--help", argv[pos])) {
       std::cout << get_usage(argv[0]) << std::endl;
-    } else if((!strcmp("-u", argv[pos]) || !strcmp("--db-username", argv[pos])) && pos != argc - 1) {
+      return true;
+    } else if ((!strcmp("-u", argv[pos]) || !strcmp("--db-username", argv[pos])) && pos != argc - 1) {
       connection_string.user(argv[++pos]);
-    } else if((!strcmp("-c", argv[pos]) || !strcmp("--db-password", argv[pos])) && pos != argc - 1) {
+    } else if ((!strcmp("-c", argv[pos]) || !strcmp("--db-password", argv[pos])) && pos != argc - 1) {
       connection_string.password(argv[++pos]);
-    } else if((!strcmp("-l", argv[pos]) || !strcmp("--db-host", argv[pos])) && pos != argc - 1) {
-      if (db_addr_set)
+    } else if ((!strcmp("-l", argv[pos]) || !strcmp("--db-host", argv[pos])) && pos != argc - 1) {
+      if (db_addr_set) {
         throw CommandLineException(
             "The option \"-l|--db-host\" cannot be used together with the option \"-a|--db-address\"!");
+      }
       // The default setting of ConnectionString is to set the hostaddr value to "127.0.0.1", so we have to unset it
       // before setting the host value.
       connection_string.hostaddr("");
       connection_string.host(argv[++pos]);
       db_host_set = true;
-    } else if((!strcmp("-a", argv[pos]) || !strcmp("--db-address", argv[pos])) && pos != argc - 1) {
-      if (db_host_set)
+    } else if ((!strcmp("-a", argv[pos]) || !strcmp("--db-address", argv[pos])) && pos != argc - 1) {
+      if (db_host_set) {
         throw CommandLineException(
             "The option \"-a|--db-address\" cannot be used together with the option \"-l|--db-host\"!");
+      }
       connection_string.hostaddr(argv[++pos]);
       db_addr_set = true;
     } else if ((!strcmp("-d", argv[pos]) || !strcmp("--db", argv[pos])) && pos != argc - 1) {
@@ -95,24 +97,25 @@ void process_cmd_arguments(const int argc, const char **argv) {
       } catch (std::invalid_argument err) {
         throw CommandLineException(std::string("The value \"") + argv[pos] + "\" is not a valid port value!");
       }
-    } else if((!strcmp("-P", argv[pos]) || !strcmp("--service-port", argv[pos])) && pos != argc - 1) {
+    } else if ((!strcmp("-P", argv[pos]) || !strcmp("--service-port", argv[pos])) && pos != argc - 1) {
       try {
         service_port = string_to_size_t(argv[++pos]);
       } catch (std::invalid_argument err) {
         throw CommandLineException(std::string("The value \"") + argv[pos] + "\" is not a valid port value!");
       }
-    } else if((!strcmp("-L", argv[pos]) || !strcmp("--service-address", argv[pos])) && pos != argc - 1) {
+    } else if ((!strcmp("-L", argv[pos]) || !strcmp("--service-address", argv[pos])) && pos != argc - 1) {
       service_address = argv[++pos];
     } else {
       throw CommandLineException(std::string("The option \"") + argv[pos] + "\" is not supported!");
     }
-  }
+  }  // for(int pos{1}; pos < argc; ++pos)
+  return false;
 }
 
 // The entry point for this programme.
 int main(const int argc, const char **argv) {
   try {
-    process_cmd_arguments(argc, argv);
+    if (process_cmd_arguments(argc, argv)) return 0;
   } catch (CommandLineException err) {
     std::cerr << err.what() << std::endl;
     std::cerr << "Use \"" << argv[0] << " -h\" to see the usage instructions for " << argv[0] << std::endl;
