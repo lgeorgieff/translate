@@ -1,7 +1,8 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/05/2015
-// Description: Declares the exception DbException which is thrown if any error occurs during a data base operation.
+// Last modified: 03/03/2015
+// Description: Declares the exception NotImplementedException which is thrown if any invoked functionality is not
+//              implemented.
 // ====================================================================================================================
 
 // ====================================================================================================================
@@ -16,29 +17,29 @@
 // Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 // ====================================================================================================================
 
-#ifndef DB_EXCEPTION_HPP_
-#define DB_EXCEPTION_HPP_
+#ifndef NOT_IMPLEMENTED_EXCEPTION_HPP_
+#define NOT_IMPLEMENTED_EXCEPTION_HPP_
 
-#include "utils/exception.hpp"
+#include "exception.hpp"
 
 #include <string>
 
 namespace lgeorgieff {
 namespace translate {
-namespace server {
-class DbException : public lgeorgieff::translate::utils::Exception {
+namespace utils {
+class NotImplementedException : public Exception {
  public:
-  DbException(const std::string&);
-  DbException(const DbException&) = default;
-  DbException(DbException&&) = default;
+  NotImplementedException(const std::string&);
+  NotImplementedException(const NotImplementedException&) = default;
+  NotImplementedException(NotImplementedException&&) = default;
 
-  DbException& operator=(const DbException&) = default;
-  DbException& operator=(DbException&&) = default;
+  NotImplementedException& operator=(const NotImplementedException&) = default;
+  NotImplementedException& operator=(NotImplementedException&&) = default;
 
-  virtual ~DbException() = default;
-};  // DbException
-}  // server
+  virtual ~NotImplementedException() = default;
+};  // NotImplementedException
+}  // utils
 }  // translate
 }  // lgeorgieff
 
-#endif  // DB_EXCEPTION_HPP_
+#endif  // Not_Implemented_EXCEPTION_HPP_

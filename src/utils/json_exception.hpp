@@ -1,7 +1,7 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/05/2015
-// Description: Declares the exception DbException which is thrown if any error occurs during a data base operation.
+// Last modified: 04/27/2015
+// Description: Declares the exception JsonException which is thrown if any JSON transformation occurs.
 // ====================================================================================================================
 
 // ====================================================================================================================
@@ -16,29 +16,29 @@
 // Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 // ====================================================================================================================
 
-#ifndef DB_EXCEPTION_HPP_
-#define DB_EXCEPTION_HPP_
+#ifndef JSON_EXCEPTION_HPP_
+#define JSON_EXCEPTION_HPP_
 
-#include "utils/exception.hpp"
+#include "exception.hpp"
 
 #include <string>
 
 namespace lgeorgieff {
 namespace translate {
-namespace server {
-class DbException : public lgeorgieff::translate::utils::Exception {
+namespace utils {
+class JsonException : public Exception {
  public:
-  DbException(const std::string&);
-  DbException(const DbException&) = default;
-  DbException(DbException&&) = default;
+  JsonException(const std::string&);
+  JsonException(const JsonException&) = default;
+  JsonException(JsonException&&) = default;
 
-  DbException& operator=(const DbException&) = default;
-  DbException& operator=(DbException&&) = default;
+  JsonException& operator=(const JsonException&) = default;
+  JsonException& operator=(JsonException&&) = default;
 
-  virtual ~DbException() = default;
-};  // DbException
-}  // server
+  virtual ~JsonException() = default;
+};  // JsonException
+}  // utils
 }  // translate
 }  // lgeorgieff
 
-#endif  // DB_EXCEPTION_HPP_
+#endif  // JSON_EXCEPTION_HPP_

@@ -1,7 +1,8 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/05/2015
-// Description: Declares the exception DbException which is thrown if any error occurs during a data base operation.
+// Last modified: 04/12/2015
+// Description: Provides the implementation for the exception ServerException which is thrown if any error occurs
+//              during a server operation.
 // ====================================================================================================================
 
 // ====================================================================================================================
@@ -12,33 +13,21 @@
 // warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
 // details.
 //
-// You should have received a copy of the GNU General Public License along with this program; if not, write to the
-// Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+// You should have received a copy of the GNU General Public License along with this program; if not, write to the Free
+// Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 // ====================================================================================================================
 
-#ifndef DB_EXCEPTION_HPP_
-#define DB_EXCEPTION_HPP_
-
-#include "utils/exception.hpp"
+#include "server_exception.hpp"
 
 #include <string>
+#include <utility>
+
+using std::string;
 
 namespace lgeorgieff {
 namespace translate {
 namespace server {
-class DbException : public lgeorgieff::translate::utils::Exception {
- public:
-  DbException(const std::string&);
-  DbException(const DbException&) = default;
-  DbException(DbException&&) = default;
-
-  DbException& operator=(const DbException&) = default;
-  DbException& operator=(DbException&&) = default;
-
-  virtual ~DbException() = default;
-};  // DbException
+ServerException::ServerException(const string &what) : Exception{what} {}
 }  // server
 }  // translate
 }  // lgeorgieff
-
-#endif  // DB_EXCEPTION_HPP_

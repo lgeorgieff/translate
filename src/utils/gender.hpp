@@ -1,7 +1,8 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/05/2015
-// Description: Declares the exception DbException which is thrown if any error occurs during a data base operation.
+// Last modified: 04/10/2015
+// Description: Defines the data type Gender that is used in the data base to represent a gender value in a grammar
+//              and declares several helper functions for it.
 // ====================================================================================================================
 
 // ====================================================================================================================
@@ -16,29 +17,35 @@
 // Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 // ====================================================================================================================
 
-#ifndef DB_EXCEPTION_HPP_
-#define DB_EXCEPTION_HPP_
-
-#include "utils/exception.hpp"
+#ifndef GENDER_HPP_
+#define GENDER_HPP_
 
 #include <string>
 
 namespace lgeorgieff {
 namespace translate {
-namespace server {
-class DbException : public lgeorgieff::translate::utils::Exception {
- public:
-  DbException(const std::string&);
-  DbException(const DbException&) = default;
-  DbException(DbException&&) = default;
+namespace utils {
 
-  DbException& operator=(const DbException&) = default;
-  DbException& operator=(DbException&&) = default;
+enum class Gender : char { none = 1, m = 2, f = 4, n = 8 };
 
-  virtual ~DbException() = default;
-};  // DbException
-}  // server
-}  // translate
+std::string to_string(const Gender &) noexcept;
+
+std::string to_db_string(const Gender &) noexcept;
+
+template <typename T>
+T from_string(const std::string &);
+
+template <>
+Gender from_string(const std::string &);
+
+template <typename T>
+T from_db_string(const std::string &);
+
+template <>
+Gender from_db_string(const std::string &);
+
+}  // utils
+}  // translae
 }  // lgeorgieff
 
-#endif  // DB_EXCEPTION_HPP_
+#endif  // GENDER_HPP_

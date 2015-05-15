@@ -1,6 +1,6 @@
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 02/07/2015
+# Last modified: 05/05/2015
 # Description: Build configuration for the server part of translate.
 #######################################################################################################################
 
@@ -20,12 +20,22 @@
 ### project setup
 project(translate_server)
 
-### register all source files for the server part
-set(SERVER_SOURCE_FILES ../utils/exception.cpp db_exception.cpp connection_string.cpp main.cpp)
+### set all include paths
+include_directories("../")
 
-### set all C++ flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lpqxx -lpq")
+### register all source files for the server part
+set(SERVER_SOURCE_FILES ../utils/exception.cpp ../utils/json_exception.cpp db_exception.cpp server_exception.cpp
+                        ../utils/command_line_exception.cpp ../utils/helper.cpp ../utils/numerus.cpp
+                        ../utils/gender.cpp ../utils/word_class.cpp connection_string.cpp db_query.cpp json.cpp
+                        server.cpp server_main.cpp)
 
 ### create the server executable
 add_executable(server ${SERVER_SOURCE_FILES})
 set_target_properties(server PROPERTIES VERSION "${translate_VERSION_MAJOR}.${translate_VERSION_MINOR}")
+
+### set required libraries to link against
+target_link_libraries(server jsoncpp)
+target_link_libraries(server mongoose)
+target_link_libraries(server pthread)
+target_link_libraries(server pqxx)
+target_link_libraries(server pq)

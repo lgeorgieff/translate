@@ -1,7 +1,8 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/05/2015
-// Description: Declares the exception DbException which is thrown if any error occurs during a data base operation.
+// Last modified: 04/10/2015
+// Description: Defines the data type Numerus that is used in the data base to represent a numerus value in a grammar
+//              and declares several helper functions for it.
 // ====================================================================================================================
 
 // ====================================================================================================================
@@ -16,29 +17,35 @@
 // Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 // ====================================================================================================================
 
-#ifndef DB_EXCEPTION_HPP_
-#define DB_EXCEPTION_HPP_
-
-#include "utils/exception.hpp"
+#ifndef NUMERUS_HPP_
+#define NUMERUS_HPP_
 
 #include <string>
 
 namespace lgeorgieff {
 namespace translate {
-namespace server {
-class DbException : public lgeorgieff::translate::utils::Exception {
- public:
-  DbException(const std::string&);
-  DbException(const DbException&) = default;
-  DbException(DbException&&) = default;
+namespace utils {
 
-  DbException& operator=(const DbException&) = default;
-  DbException& operator=(DbException&&) = default;
+enum class Numerus : char { none = 1, sg = 2, pl = 4 };
 
-  virtual ~DbException() = default;
-};  // DbException
-}  // server
-}  // translate
+std::string to_string(const Numerus &) noexcept;
+
+std::string to_db_string(const Numerus &) noexcept;
+
+template <typename T>
+T from_string(const std::string &);
+
+template <>
+Numerus from_string(const std::string &);
+
+template <typename T>
+T from_db_string(const std::string &);
+
+template <>
+Numerus from_db_string(const std::string &);
+
+}  // utils
+}  // translae
 }  // lgeorgieff
 
-#endif  // DB_EXCEPTION_HPP_
+#endif  // NUMERUS_HPP_

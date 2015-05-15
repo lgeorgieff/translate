@@ -1,7 +1,7 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/05/2015
-// Description: Declares the exception DbException which is thrown if any error occurs during a data base operation.
+// Last modified: 02/22/2015
+// Description: Entry point for the utils unit tests.
 // ====================================================================================================================
 
 // ====================================================================================================================
@@ -16,29 +16,9 @@
 // Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 // ====================================================================================================================
 
-#ifndef DB_EXCEPTION_HPP_
-#define DB_EXCEPTION_HPP_
+#include "gtest/gtest.h"
 
-#include "utils/exception.hpp"
-
-#include <string>
-
-namespace lgeorgieff {
-namespace translate {
-namespace server {
-class DbException : public lgeorgieff::translate::utils::Exception {
- public:
-  DbException(const std::string&);
-  DbException(const DbException&) = default;
-  DbException(DbException&&) = default;
-
-  DbException& operator=(const DbException&) = default;
-  DbException& operator=(DbException&&) = default;
-
-  virtual ~DbException() = default;
-};  // DbException
-}  // server
-}  // translate
-}  // lgeorgieff
-
-#endif  // DB_EXCEPTION_HPP_
+int main(const int argc, const char **argv) {
+  testing::InitGoogleTest(const_cast<int *>(&argc), const_cast<char **>(argv));
+  return RUN_ALL_TESTS();
+}
