@@ -28,4 +28,5 @@
 *.app
 
 /bin
+/build
 /resources/dict.cc
