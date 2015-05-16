@@ -1,6 +1,6 @@
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 02/07/2015
+# Last modified: 05/16/2015
 # Description: Build configuration for the client part of translate.
 #######################################################################################################################
 
@@ -21,7 +21,8 @@
 project(translate_client)
 
 ### register all source files for the client part
-set(CLIENT_SOURCE_FILES ../utils/exception.cpp ../utils/command_line_exception.cpp command_line_parser.cpp main.cpp)
+set(CLIENT_SOURCE_FILES ../utils/exception.cpp ../utils/command_line_exception.cpp command_line_parser.cpp
+                        client_main.cpp)
 
 ### create the client executable
 add_executable(client ${CLIENT_SOURCE_FILES})
