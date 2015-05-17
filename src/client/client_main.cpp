@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 01/17/2015
+// Last modified: 05/17/2015
 // Description: The entry point for the entire application.
 // ====================================================================================================================
 
@@ -26,7 +26,7 @@ using std::cout;
 using std::endl;
 
 int main(const int argc, const char** argv) {
-  CommandLineParser cmdParser{argc, argv};
-
+  CommandLineParser cmd_parser{argc, argv};
+  if(cmd_parser.help()) cout << cmd_parser.usage() << endl << endl;
   return 0;
 }
