@@ -1,6 +1,6 @@
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 05/05/2015
+# Last modified: 05/17/2015
 # Description: Build unit tests for the utils part
 #######################################################################################################################
 
@@ -27,8 +27,9 @@ set(TEST_UTILS_SOURCE_FILES ../../utils/exception.cpp ../../utils/gender.cpp ../
                             ../../utils/word_class.cpp ../../utils/helper.cpp gender_unit_test.cpp
                             word_class_unit_test.cpp helper_unit_test.cpp numerus_unit_test.cpp test_main.cpp)
 
-### set all C++ flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lgtest -lgtest_main")
-
 ### create a static library
 add_executable(utils_test ${TEST_UTILS_SOURCE_FILES})
+
+### set required libraries to link against
+target_link_libraries(utils_test gtest)
+target_link_libraries(utils_test gtest_main)

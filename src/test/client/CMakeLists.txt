@@ -1,6 +1,6 @@
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 02/13/2015
+# Last modified: 05/17/2015
 # Description: Build unit tests for the client part.
 #######################################################################################################################
 
@@ -23,8 +23,11 @@ project(translate_test_client)
 set(TEST_CLIENT_SOURCE_FILES ../../utils/exception.cpp ../../utils/command_line_exception.cpp
 			     ../../client/command_line_parser.cpp command_line_parser_unit_test.cpp test_main.cpp)
 
-### set all C++ flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lgtest -lgtest_main -lpq -lpqxx")
-
 ### create a sttic library
 add_executable(client_test ${TEST_CLIENT_SOURCE_FILES})
+
+### set required libraries to link against
+target_link_libraries(client_test gtest)
+target_link_libraries(client_test gtest_main)
+target_link_libraries(client_test pq)
+target_link_libraries(client_test pqxx)

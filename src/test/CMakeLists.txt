@@ -1,6 +1,6 @@
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 05/15/2015
+# Last modified: 05/17/2015
 # Description: A dummy CMakeLists.txt for calling the corresponding sub-CMakeLists.txt of all tests.
 #######################################################################################################################
 
