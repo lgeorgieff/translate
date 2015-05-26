@@ -21,12 +21,10 @@
 #include <string>
 #include <utility>
 
-using std::string;
-
 namespace lgeorgieff {
 namespace translate {
 namespace utils {
-Exception::Exception(const string& what) : what_{what} {}
+Exception::Exception(const std::string& what) : what_{what} {}
 
 const char* Exception::what() const noexcept { return this->what_.c_str(); }
 }  // utils

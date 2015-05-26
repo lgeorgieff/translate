@@ -22,12 +22,10 @@
 #include <string>
 #include <utility>
 
-using std::string;
-
 namespace lgeorgieff {
 namespace translate {
 namespace utils {
-NotImplementedException::NotImplementedException(const string &what) : Exception{what} {}
+NotImplementedException::NotImplementedException(const std::string &what) : Exception{what} {}
 }  // utils
 }  // translate
 }  // lgeorgieff

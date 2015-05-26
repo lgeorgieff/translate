@@ -21,12 +21,10 @@
 #include <string>
 #include <utility>
 
-using std::string;
-
 namespace lgeorgieff {
 namespace translate {
 namespace utils {
-JsonException::JsonException(const string &what) : Exception{what} {}
+JsonException::JsonException(const std::string &what) : Exception{what} {}
 }  // utils
 }  // translate
 }  // lgeorgieff
