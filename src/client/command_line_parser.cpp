@@ -44,8 +44,8 @@ const std::string CommandLineParser::ALL_GENDERS_LONG{"--all-genders"};
 const std::string CommandLineParser::GENDER_ID_LONG{"--gender-id"};
 const std::string CommandLineParser::GENDER_NAME_LONG{"--gender-name"};
 const std::string CommandLineParser::ALL_NUMERI_LONG{"--all-numeri"};
-const std::string CommandLineParser::DEFAULT_IN_VALUE{"de"};
-const std::string CommandLineParser::DEFAULT_OUT_VALUE{"en"};
+const std::string CommandLineParser::DEFAULT_IN_VALUE{"DE"};
+const std::string CommandLineParser::DEFAULT_OUT_VALUE{"EN"};
 
 CommandLineParser::CommandLineParser(const int argc, const char **argv)
     : CommandLineParser{argc, argv, DEFAULT_IN_VALUE, DEFAULT_OUT_VALUE} {}
