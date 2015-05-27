@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/17/2015
+// Last modified: 05/27/2015
 // Description: Implements the command line parser interface which is adapted to the supported options of this program.
 // ====================================================================================================================
 
@@ -63,6 +63,7 @@ CommandLineParser::CommandLineParser(const int argc, const char **argv, const st
       word_class_name_{""},
       gender_id_{""},
       gender_name_{false},
+      has_phrase_{false},
       help_{false},
       all_languages_{false},
       all_word_classes_{false},
@@ -130,7 +131,8 @@ CommandLineParser::CommandLineParser(const int argc, const char **argv, const st
     } else if (ALL_NUMERI_LONG == argv[i]) {
       this->all_numeri_ = true;
     } else if (argc - 1 == i) {
-      phrase_ = argv[i];
+      this->phrase_ = argv[i];
+      this->has_phrase_ = true;
     } else {
       throw CommandLineException("The argument \"" + std::string{argv[i]} + "\" is not known!");
     }
@@ -145,6 +147,8 @@ std::string CommandLineParser::in() const noexcept { return this->in_; }
 std::string CommandLineParser::out() const noexcept { return this->out_; }
 
 std::string CommandLineParser::phrase() const noexcept { return this->phrase_; }
+
+bool CommandLineParser::has_phrase() const noexcept { return this->has_phrase_; }
 
 bool CommandLineParser::help() const noexcept { return this->help_; }
 

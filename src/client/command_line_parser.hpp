@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/17/2015
+// Last modified: 05/27/2015
 // Description: Declares the interface of the command line parser which is adapted to the supported options of this
 //              program.
 // ====================================================================================================================
@@ -81,6 +81,8 @@ class CommandLineParser {
   std::string out() const noexcept;
   // A getter for the text to be translated
   std::string phrase() const noexcept;
+  // A getter that indicates whether a phrase was set or not
+  bool has_phrase() const noexcept;
   // A getter that indicates whether the help switch is given or not
   bool help() const noexcept;
   // A getter that indicates whether all languages are requested or not
@@ -130,6 +132,7 @@ class CommandLineParser {
   std::string word_class_name_;
   std::string gender_id_;
   std::string gender_name_;
+  bool has_phrase_;
   bool help_;
   bool all_languages_;
   bool all_word_classes_;
