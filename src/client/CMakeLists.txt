@@ -1,6 +1,6 @@
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 05/16/2015
+# Last modified: 05/27/2015
 # Description: Build configuration for the client part of translate.
 #######################################################################################################################
 
@@ -20,10 +20,17 @@
 ### project setup
 project(translate_client)
 
+### set all include paths
+include_directories("../")
+
 ### register all source files for the client part
-set(CLIENT_SOURCE_FILES ../utils/exception.cpp ../utils/command_line_exception.cpp command_line_parser.cpp
+set(CLIENT_SOURCE_FILES ../utils/command_line_exception.cpp ../utils/exception.cpp ../utils/http_exception.cpp
+                        http_request.cpp http_get_request.cpp http_post_request.cpp command_line_parser.cpp
                         client_main.cpp)
 
 ### create the client executable
-add_executable(client ${CLIENT_SOURCE_FILES})
-set_target_properties(client PROPERTIES VERSION "${translate_VERSION_MAJOR}.${translate_VERSION_MINOR}")
+add_executable(trlt ${CLIENT_SOURCE_FILES})
+set_target_properties(trlt PROPERTIES VERSION "${translate_VERSION_MAJOR}.${translate_VERSION_MINOR}")
+
+### set required libraries to link against
+target_link_libraries(trlt curl)
