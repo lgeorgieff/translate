@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/26/2015
+// Last modified: 05/27/2015
 // Description: Implements the base class for an HTTP request to the translation service.
 // ====================================================================================================================
 
@@ -69,9 +69,9 @@ bool HttpRequest::operator==(const HttpRequest &other) {
 
 bool HttpRequest::operator!=(const HttpRequest &other) { return !(*this == other); }
 
-HttpRequest &HttpRequest::operator()() {
+std::string HttpRequest::operator()() {
   this->do_request();
-  return *this;
+  return this->http_result_;
 }
 
 std::string HttpRequest::http_result() const noexcept { return this->http_result_; }

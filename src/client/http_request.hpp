@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/26/2015
+// Last modified: 05/27/2015
 // Description: Declares the base class for an HTTP request to the translation service.
 // ====================================================================================================================
 
@@ -40,7 +40,7 @@ class HttpRequest {
   bool operator==(const HttpRequest&);
   bool operator!=(const HttpRequest&);
   // The () oeprator invokes the actual HTTP operation
-  HttpRequest& operator()();
+  std::string operator()();
 
   // A getter for the HTTP result as string value
   std::string http_result() const noexcept;
