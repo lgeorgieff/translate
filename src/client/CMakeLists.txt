@@ -1,6 +1,6 @@
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 05/27/2015
+# Last modified: 05/29/2015
 # Description: Build configuration for the client part of translate.
 #######################################################################################################################
 
@@ -34,3 +34,4 @@ set_target_properties(trlt PROPERTIES VERSION "${translate_VERSION_MAJOR}.${tran
 
 ### set required libraries to link against
 target_link_libraries(trlt curl)
+target_link_libraries(trlt jsoncpp)

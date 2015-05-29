@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/27/2015
+// Last modified: 05/29/2015
 // Description: The entry point for the entire application.
 // ====================================================================================================================
 
@@ -22,6 +22,8 @@
 #include "http_get_request.hpp"
 #include "http_post_request.hpp"
 
+#include "json/json.h"
+
 #include <iostream>
 
 using lgeorgieff::translate::CommandLineParser;
@@ -31,7 +33,23 @@ using lgeorgieff::translate::client::HttpGetRequest;
 using lgeorgieff::translate::client::HttpPostRequest;
 
 // TODO: implement reading of a configuration file => server url + defaults
-const std::string BASE_URL{"..."};
+const std::string BASE_URL{"localhost:8885/"};
+
+// Create a JSON string based on the corresponding command line arguments
+// that can be used for a post/translation request.
+std::string create_post_data(const CommandLineParser &cmd_parser) {
+  Json::Value result;
+  result["phrase"] = cmd_parser.phrase();
+  result["show_phrase"] = cmd_parser.show_phrase();
+  result["show_word_class"] = cmd_parser.show_word_class();
+  result["show_gender"] = cmd_parser.show_gender();
+  result["show_numerus"] = cmd_parser.show_numerus();
+  result["show_abbreviation"] = cmd_parser.show_abbreviation();
+  result["show_comment"] = cmd_parser.show_comment();
+  Json::StreamWriterBuilder json_writer;
+  json_writer.settings_["indentation"] = "";
+  return Json::writeString(json_writer, result);
+}
 
 int main(const int argc, const char** argv) {
   try {
@@ -81,15 +99,8 @@ int main(const int argc, const char** argv) {
       // TODO: handle JSON
       std::cout << request() << std::endl;
     } else if (cmd_parser.has_phrase()) {
-      // TODO: implement user options and JSON handling for these parameters
-      // std::string post_data{
-      //  "{\"phrase\": \"gehen\", \"word_class\": \"verb\", \"show_phrase\": true, \"show_word_class\": true, "
-      //  "\"show_gender\": true, \"show_numerus\": true, \"show_abbreviation\": true, \"show_comment\": true}"};
-      std::string post_data{
-          "{\"phrase\": \"" + cmd_parser.phrase() +
-          "\", \"show_phrase\": true, \"show_word_class\": true, "
-          "\"show_gender\": true, \"show_numerus\": true, \"show_abbreviation\": true, \"show_comment\": true}"};
-      HttpPostRequest request{BASE_URL + "translation/" + cmd_parser.in() + "/" + cmd_parser.out() + "/", post_data};
+      HttpPostRequest request{BASE_URL + "translation/" + cmd_parser.in() + "/" + cmd_parser.out() + "/",
+                              create_post_data(cmd_parser)};
       // TODO: handle JSON
       std::cout << request() << std::endl;
     } else {
