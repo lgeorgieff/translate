@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/27/2015
+// Last modified: 05/29/2015
 // Description: Declares the interface of the command line parser which is adapted to the supported options of this
 //              program.
 // ====================================================================================================================
@@ -55,10 +55,34 @@ class CommandLineParser {
   static const std::string GENDER_NAME_LONG;
   // The name of the option for getting all numeri
   static const std::string ALL_NUMERI_LONG;
-  // The default value language of the incomming text (origin)
+  // The name of the option for showing the phrase of a final result
+  static const std::string SHOW_PHRASE_LONG;
+  // The name of the option for showing the word class of a final result
+  static const std::string SHOW_WORD_CLASS_LONG;
+  // The name of the option for showing the gender of a final result
+  static const std::string SHOW_GENDER_LONG;
+  // The name of the option for showing the numerus of a final result
+  static const std::string SHOW_NUMERUS_LONG;
+  // The name of the option for showing the abbreviation of a final result
+  static const std::string SHOW_ABBREVIATION_LONG;
+  // The name of the option for showing the comment of a final result
+  static const std::string SHOW_COMMENT_LONG;
+  // The default language value of the incomming text (origin)
   static const std::string DEFAULT_IN_VALUE;
-  // The default value language of the outcomming text (result)
+  // The default language value of the outcomming text (result)
   static const std::string DEFAULT_OUT_VALUE;
+  // The default value whether the phrase of an result is printed or not
+  static const bool DEFAULT_SHOW_PHRASE;
+  // The default value whether the word class of an result is printed or not
+  static const bool DEFAULT_SHOW_WORD_CLASS;
+  // The default value whether the gender of an result is printed or not
+  static const bool DEFAULT_SHOW_GENDER;
+  // The default value whether the numerus of an result is printed or not
+  static const bool DEFAULT_SHOW_NUMERUS;
+  // The default value whether the abbreviation of an result is printed or not
+  static const bool DEFAULT_SHOW_ABBREVIATION;
+  // The default value whether the comment of an result is printed or not
+  static const bool DEFAULT_SHOW_COMMENT;
 
   // The constructor that takes the command line arguments from the main function and finally initializes all
   // internal values
@@ -117,6 +141,19 @@ class CommandLineParser {
   bool has_gender_name() const noexcept;
   // A getter for the gender name
   std::string gender_name() const noexcept;
+  // A getter indicating whether to show the phrase from the result or not
+  bool show_phrase() const noexcept;
+  // A getter indicating whether to show the word class from the result or not
+  bool show_word_class() const noexcept;
+  // A getter indicating whether to show the gender from the result or not
+  bool show_gender() const noexcept;
+  // A getter indicating whether to show the numerus from the result or not
+  bool show_numerus() const noexcept;
+  // A getter indicating whether to show the abbreviation from the result or not
+  bool show_abbreviation() const noexcept;
+  // A getter indicating whether to show the comment from the result or not
+  bool show_comment() const noexcept;
+  
   // Returns a string representing the usage corresponding to the CLI options
   std::string usage() const noexcept;
 
@@ -144,6 +181,12 @@ class CommandLineParser {
   bool has_word_class_name_;
   bool has_gender_id_;
   bool has_gender_name_;
+  bool show_phrase_;
+  bool show_word_class_;
+  bool show_gender_;
+  bool show_numerus_;
+  bool show_abbreviation_;
+  bool show_comment_;
 };  // CommandLineParser
 }  // translate
 }  // lgeorgieff

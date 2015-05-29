@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/27/2015
+// Last modified: 05/29/2015
 // Description: Implements the command line parser interface which is adapted to the supported options of this program.
 // ====================================================================================================================
 
@@ -44,8 +44,20 @@ const std::string CommandLineParser::ALL_GENDERS_LONG{"--all-genders"};
 const std::string CommandLineParser::GENDER_ID_LONG{"--gender-id"};
 const std::string CommandLineParser::GENDER_NAME_LONG{"--gender-name"};
 const std::string CommandLineParser::ALL_NUMERI_LONG{"--all-numeri"};
+const std::string CommandLineParser::SHOW_PHRASE_LONG{"--show-phrase"};
+const std::string CommandLineParser::SHOW_WORD_CLASS_LONG{"--show-word-class"};
+const std::string CommandLineParser::SHOW_GENDER_LONG{"--show-gender"};
+const std::string CommandLineParser::SHOW_NUMERUS_LONG{"--show-numerus"};
+const std::string CommandLineParser::SHOW_ABBREVIATION_LONG{"--show-abbreviation"};
+const std::string CommandLineParser::SHOW_COMMENT_LONG{"--show-comment"};
 const std::string CommandLineParser::DEFAULT_IN_VALUE{"DE"};
 const std::string CommandLineParser::DEFAULT_OUT_VALUE{"EN"};
+const bool CommandLineParser::DEFAULT_SHOW_PHRASE{true};
+const bool CommandLineParser::DEFAULT_SHOW_WORD_CLASS{false};
+const bool CommandLineParser::DEFAULT_SHOW_GENDER{false};
+const bool CommandLineParser::DEFAULT_SHOW_NUMERUS{false};
+const bool CommandLineParser::DEFAULT_SHOW_ABBREVIATION{false};
+const bool CommandLineParser::DEFAULT_SHOW_COMMENT{false};
 
 CommandLineParser::CommandLineParser(const int argc, const char **argv)
     : CommandLineParser{argc, argv, DEFAULT_IN_VALUE, DEFAULT_OUT_VALUE} {}
@@ -74,7 +86,13 @@ CommandLineParser::CommandLineParser(const int argc, const char **argv, const st
       has_word_class_id_{false},
       has_word_class_name_{false},
       has_gender_id_{false},
-      has_gender_name_{false} {
+      has_gender_name_{false},
+      show_phrase_{DEFAULT_SHOW_PHRASE},
+      show_word_class_{DEFAULT_SHOW_WORD_CLASS},
+      show_gender_{DEFAULT_SHOW_GENDER},
+      show_numerus_{DEFAULT_SHOW_NUMERUS},
+      show_abbreviation_{DEFAULT_SHOW_ABBREVIATION},
+      show_comment_{DEFAULT_SHOW_COMMENT} {
   bool in_found{false};
   bool out_found{false};
   if (argc < 1) throw CommandLineException("No command line arguments found!");
@@ -133,6 +151,18 @@ CommandLineParser::CommandLineParser(const int argc, const char **argv, const st
     } else if (argc - 1 == i) {
       this->phrase_ = argv[i];
       this->has_phrase_ = true;
+    } else if(SHOW_PHRASE_LONG == argv[i]) {
+      this->show_phrase_ = true;
+    } else if(SHOW_WORD_CLASS_LONG == argv[i]) {
+      this->show_word_class_ = true;;
+    } else if(SHOW_GENDER_LONG == argv[i]) {
+      this->show_gender_ = true;
+    } else if(SHOW_NUMERUS_LONG == argv[i]) {
+      this->show_numerus_ = true;
+    } else if(SHOW_ABBREVIATION_LONG == argv[i]) {
+      this->show_abbreviation_ = true;
+    } else if(SHOW_COMMENT_LONG == argv[i]) {
+      this->show_comment_ = true;
     } else {
       throw CommandLineException("The argument \"" + std::string{argv[i]} + "\" is not known!");
     }
@@ -154,28 +184,40 @@ bool CommandLineParser::help() const noexcept { return this->help_; }
 
 std::string CommandLineParser::usage() const noexcept {
   return "Usage of " + this->app_name_ + " [options] phrase\n" +
-         "Command line frontend for a RESTful translation service\n\n" + "Arguments:\n" + this->IN_NAME_SHORT + "|" +
-         this->IN_NAME_LONG + " <language ID>               language identifier for the source phrase,\n" +
-         "                                    default: \"" + this->DEFAULT_IN_VALUE + "\"\n" + this->OUT_NAME_SHORT +
-         "|" + this->OUT_NAME_LONG + " <language ID>              language identifier for the target phrase,\n" +
-         "                                    default: \"" + this->DEFAULT_OUT_VALUE + "\"\n" + this->HELP_NAME_SHORT +
-         "|" + this->HELP_NAME_LONG + "                           show this message\n" + this->ALL_LANGUAGES_LONG +
-         "                     show all languages that are available\n" + this->LANGUAGE_ID_LONG +
+         "Command line frontend for a RESTful translation service\n\n" + "Arguments:\n" + IN_NAME_SHORT + "|" +
+         IN_NAME_LONG + " <language ID>               language identifier for the source phrase,\n" +
+         "                                    default: \"" + DEFAULT_IN_VALUE + "\"\n" + OUT_NAME_SHORT + "|" +
+         OUT_NAME_LONG + " <language ID>              language identifier for the target phrase,\n" +
+         "                                    default: \"" + DEFAULT_OUT_VALUE + "\"\n" + HELP_NAME_SHORT + "|" +
+         HELP_NAME_LONG + "                           show this message\n" + ALL_LANGUAGES_LONG +
+         "                     show all languages that are available\n" + LANGUAGE_ID_LONG +
          " <language ID>         show the language name for the given\n" +
-         "                                    language ID\n" + this->LANGUAGE_NAME_LONG +
+         "                                    language ID\n" + LANGUAGE_NAME_LONG +
          " <language name>     show the language ID for the given language\n" +
-         "                                    name\n" + this->ALL_WORD_CLASSES_LONG +
-         "                  show all word classes that are available\n" + this->WORD_CLASS_ID_LONG +
+         "                                    name\n" + ALL_WORD_CLASSES_LONG +
+         "                  show all word classes that are available\n" + WORD_CLASS_ID_LONG +
          " <word class ID>     show the word class name for the given word\n" +
-         "                                    class ID\n" + this->WORD_CLASS_NAME_LONG +
+         "                                    class ID\n" + WORD_CLASS_NAME_LONG +
          " <word class name> show the word class ID for the given word\n" +
-         "                                    class name\n" + this->ALL_GENDERS_LONG +
-         "                       show all genders that are available\n" + this->GENDER_ID_LONG +
+         "                                    class name\n" + ALL_GENDERS_LONG +
+         "                       show all genders that are available\n" + GENDER_ID_LONG +
          " <gender ID>             show the gender name for the given gender\n" +
-         "                                    ID\n" + this->GENDER_NAME_LONG +
+         "                                    ID\n" + GENDER_NAME_LONG +
          " <gender name>         show the gender ID for the given gender\n" +
-         "                                    name\n" + this->ALL_NUMERI_LONG +
-         "                        show all numeri that are available";
+         "                                    name\n" + ALL_NUMERI_LONG +
+         "                        show all numeri that are available\n" +
+    SHOW_PHRASE_LONG + "                       show the phrase part of a translation\n" +
+    "                                    result (default)\n" +
+    SHOW_WORD_CLASS_LONG + "                   show the word class part of a translation\n" +
+    "                                    result\n" +
+    SHOW_GENDER_LONG + "                       show the gender part of a translation\n" +
+    "                                    result\n" +
+    SHOW_NUMERUS_LONG + "                      show the numerus part of a translation\n" +
+    "                                    result\n" +
+    SHOW_ABBREVIATION_LONG + "                 show the abbreviation part of a translation\n" +
+    "                                    result\n" +
+    SHOW_COMMENT_LONG + "                      show the comment part of a translation\n" +
+    "                                    result\n";
 }
 
 bool CommandLineParser::all_languages() const noexcept { return this->all_languages_; }
@@ -209,6 +251,18 @@ std::string CommandLineParser::gender_id() const noexcept { return this->gender_
 bool CommandLineParser::has_gender_name() const noexcept { return this->has_gender_name_; }
 
 std::string CommandLineParser::gender_name() const noexcept { return this->gender_name_; }
+
+bool CommandLineParser::show_phrase() const noexcept { return show_phrase_; }
+
+bool CommandLineParser::show_word_class() const noexcept { return show_word_class_; }
+
+bool CommandLineParser::show_gender() const noexcept { return show_gender_; }
+
+bool CommandLineParser::show_numerus() const noexcept { return show_numerus_; }
+
+bool CommandLineParser::show_abbreviation() const noexcept { return show_abbreviation_; }
+
+bool CommandLineParser::show_comment() const noexcept { return show_comment_; }
 
 }  // translate
 }  // lgeorgieff
