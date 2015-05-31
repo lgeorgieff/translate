@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 04/27/2015
+// Last modified: 05/31/2015
 // Description: Defines several helper functions for the entire project.
 // ====================================================================================================================
 
@@ -97,7 +97,7 @@ std::string get_last_path_from_url(const char *url, bool ignore_closing_separato
     if ('/' == *url && (ignore_closing_separator && *(url + 1) && '#' != *(url + 1) && '?' != *(url + 1))) {
       begin = url + 1;
     }
-    if('#' == *url || '?' == *url) {
+    if ('#' == *url || '?' == *url) {
       end = url;
       break;
     }
@@ -108,6 +108,11 @@ std::string get_last_path_from_url(const char *url, bool ignore_closing_separato
   return std::string{begin, end};
 }
 
+std::string to_upper_case(const std::string &str) {
+  std::string result{str};
+  std::transform(result.begin(), result.end(), result.begin(), toupper);
+  return result;
+}
 }  // utils
 }  // translate
 }  // lgeorgieff

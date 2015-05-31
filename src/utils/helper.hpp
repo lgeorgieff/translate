@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 04/27/2015
+// Last modified: 05/31/2015
 // Description: Declares several helper functions for the entire project.
 // ====================================================================================================================
 
@@ -43,7 +43,7 @@ void normalize_whitespace(std::string &);
 // an std::invalid_argument exception is thrown.
 size_t string_to_size_t(const std::string &);
 
-  // Returns true if the first c-string starts with the second c-string. Returns false otherwise.
+// Returns true if the first c-string starts with the second c-string. Returns false otherwise.
 bool cstring_starts_with(const char *, const char *);
 
 // Returns true if the first c-string ends with the second c-string. Returns false otherwise.
@@ -51,7 +51,10 @@ bool cstring_ends_with(const char *, const char *);
 
 // Returns the last path segment of the passed URL string, e.g. return "file" for the following URL
 // "http://localhost:1234/my/path/to/file#def?attr=12"
-  std::string get_last_path_from_url(const char *, bool=true);
+std::string get_last_path_from_url(const char *, bool = true);
+
+// Returns a copy of the passed string that contains each character in upper case format.
+std::string to_upper_case(const std::string &);
 }  // utils
 }  // translate
 }  // lgeorgieff

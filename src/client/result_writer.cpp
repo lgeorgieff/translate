@@ -18,26 +18,46 @@
 // ====================================================================================================================
 
 #include "result_writer.hpp"
+#include "utils/helper.hpp"
 
 #include "json/json.h"
 
 #include <utility>
+#include <map>
 
 namespace {
 Json::Value from_json_string(const std::string json_string) {
   Json::Reader reader;
   Json::Value root;
-  if(!reader.parse(json_string, root)) throw 1; // TODO: implement error handling
+  if (!reader.parse(json_string, root)) throw 1;  // TODO: implement error handling
   return root;
 }
 
-} // anonymous namespace
+void write_item_to(const std::string& data, size_t max_length, size_t tab_space, std::ostream* destination,
+                   bool is_last_item) {
+  size_t local_tab_space;
+  size_t local_max_length;
+  if (is_last_item) {
+    local_tab_space = local_max_length = 0;
+  } else {
+    local_tab_space = tab_space;
+    local_max_length = max_length;
+    ;
+  }
+  ssize_t padding;
+  if (local_max_length + local_tab_space < data.size())
+    padding = 0;
+  else
+    padding = local_max_length + local_tab_space - data.size();
+  *destination << data << std::string(padding < 0 ? 0 : padding, ' ');
+}
+}  // anonymous namespace
 
 namespace lgeorgieff {
 namespace translate {
 namespace client {
 
-const size_t ResultWriter::TAB_SPACE{3};
+const size_t ResultWriter::TAB_SPACE{4};
 
 ResultWriter::ResultWriter(std::ostream* destination) : destination_{destination} {}
 
@@ -45,9 +65,7 @@ ResultWriter::ResultWriter(const ResultWriter& other) : destination_{other.desti
 
 ResultWriter::ResultWriter(ResultWriter&& other) : destination_{std::move(other.destination_)} {}
 
-ResultWriter::~ResultWriter() {
-  this->destination_ = nullptr;
-}
+ResultWriter::~ResultWriter() { this->destination_ = nullptr; }
 
 ResultWriter& ResultWriter::operator=(const ResultWriter& other) {
   this->destination_ = other.destination_;
@@ -59,25 +77,62 @@ ResultWriter& ResultWriter::operator=(ResultWriter&& other) {
   return *this;
 }
 
-bool ResultWriter::operator==(const ResultWriter& other) {
-  return this->destination_ == other.destination_;
-}
+bool ResultWriter::operator==(const ResultWriter& other) { return this->destination_ == other.destination_; }
 
-bool ResultWriter::operator!=(const ResultWriter& other) {
-  return !(*this == other);
+bool ResultWriter::operator!=(const ResultWriter& other) { return !(*this == other); }
+
+void ResultWriter::write_json_array_string(const std::string& json_string,
+                                           const std::vector<std::string>& object_members, bool write_headers) {
+  Json::Value data{from_json_string(json_string)};
+  if (!data.isArray()) throw 1;  // TODO: implement error handling
+  // We just go through the data and check for completeness, validity and chek the max length of each member type.
+  // We don't write into the set ostream here until it is clear that all data is valid.
+  std::map<std::string, size_t> max_lengths;
+  for (const Json::Value& item : data) {
+    if (!item.isObject()) throw 1;  // TODO: implement error handling
+    for (const std::string member_name : object_members) {
+      if (!item.isMember(member_name) || !item[member_name].isString()) throw 1;  // TODO: implement error handling
+      if (max_lengths.end() == max_lengths.find(member_name) ||
+          max_lengths[member_name] < item[member_name].asString().size()) {
+        max_lengths[member_name] = item[member_name].asString().size();  // TODO: handle unicode string length
+      }
+    }
+  }
+
+  // Write the header line
+  if (write_headers) {
+    for (const std::string& member_name : object_members)
+      if (max_lengths[member_name] < member_name.size()) max_lengths[member_name] = member_name.size();
+
+    for (size_t member_pos{0}; member_pos != object_members.size(); ++member_pos) {
+      write_item_to(lgeorgieff::translate::utils::to_upper_case(object_members[member_pos]),
+                    max_lengths[object_members[member_pos]], TAB_SPACE, this->destination_,
+                    member_pos == object_members.size() - 1);
+    }
+    *(this->destination_) << std::endl;
+  }
+
+  // Write the data to its destination.
+  for (size_t array_pos{0}; array_pos != data.size(); ++array_pos) {
+    for (size_t member_pos{0}; member_pos != object_members.size(); ++member_pos) {
+      write_item_to(data[static_cast<int>(array_pos)][object_members[member_pos]].asString(),
+                    max_lengths[object_members[member_pos]], TAB_SPACE, this->destination_,
+                    member_pos == object_members.size() - 1);
+    }
+    *(this->destination_) << std::endl;
+  }
 }
 
 void ResultWriter::write_languages(const std::string& languages) {
-  Json::Value data{from_json_string(languages)};
-  if(!data.isArray()) throw 1; //TODO: implement error handling
-  for (const Json::Value& item : data) {
-    if (!item.isObject()) throw 1;  // TODO: implement error handling
-    if (!item.isMember("language") || !item["language"].isString()) throw 1;  // TODO: implement error handling
-    if (!item.isMember("id") || !item["id"].isString()) throw 1;  // TODO: implement error handling
+  this->write_json_array_string(languages, std::vector<std::string>{"id", "language"}, true);
+}
 
-    *(this->destination_) << item["id"].asString() << (std::string(TAB_SPACE, ' ')) << item["language"].asString()
-                          << std::endl;
-  }
+void ResultWriter::write_word_classes(const std::string& word_classes) {
+  this->write_json_array_string(word_classes, std::vector<std::string>{"id", "word_class"}, true);
+}
+
+void ResultWriter::write_genders(const std::string& genders) {
+  this->write_json_array_string(genders, std::vector<std::string>{"id", "gender", "description"}, true);
 }
 }  // client
 }  // translate

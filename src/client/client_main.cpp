@@ -66,12 +66,10 @@ int main(const int argc, const char** argv) {
       writer.write_languages(request());
     } else if (cmd_parser.all_word_classes()) {
       HttpGetRequest request{BASE_URL + "word_classes"};
-      // TODO: handle JSON
-      std::cout << request() << std::endl;
+      writer.write_word_classes(request());
     } else if (cmd_parser.all_genders()) {
       HttpGetRequest request{BASE_URL + "genders"};
-      // TODO: handle JSON
-      std::cout << request() << std::endl;
+      writer.write_genders(request());
     } else if (cmd_parser.all_numeri()) {
       HttpGetRequest request{BASE_URL + "numeri"};
       // TODO: handle JSON
