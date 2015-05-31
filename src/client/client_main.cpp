@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/29/2015
+// Last modified: 05/31/2015
 // Description: The entry point for the entire application.
 // ====================================================================================================================
 
@@ -21,8 +21,9 @@
 #include "command_line_parser.hpp"
 #include "http_get_request.hpp"
 #include "http_post_request.hpp"
+#include "result_writer.hpp"
 
-#include "json/json.h"
+#include <json/json.h>
 
 #include <iostream>
 
@@ -31,6 +32,7 @@ using lgeorgieff::translate::utils::CommandLineException;
 using lgeorgieff::translate::utils::HttpException;
 using lgeorgieff::translate::client::HttpGetRequest;
 using lgeorgieff::translate::client::HttpPostRequest;
+using lgeorgieff::translate::client::ResultWriter;
 
 // TODO: implement reading of a configuration file => server url + defaults
 const std::string BASE_URL{"localhost:8885/"};
@@ -54,14 +56,14 @@ std::string create_post_data(const CommandLineParser &cmd_parser) {
 int main(const int argc, const char** argv) {
   try {
     CommandLineParser cmd_parser{argc, argv};
+    ResultWriter writer{&std::cout};
     if (cmd_parser.help()) {
       std::cout << cmd_parser.usage() << std::endl
                 << std::endl;
       return 0;
     } else if (cmd_parser.all_languages()) {
       HttpGetRequest request{BASE_URL + "languages"};
-      // TODO: handle JSON
-      std::cout << request() << std::endl;
+      writer.write_languages(request());
     } else if (cmd_parser.all_word_classes()) {
       HttpGetRequest request{BASE_URL + "word_classes"};
       // TODO: handle JSON
