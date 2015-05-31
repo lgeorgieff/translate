@@ -27,10 +27,14 @@
 
 namespace {
 Json::Value from_json_string(const std::string json_string) {
-  Json::Reader reader;
-  Json::Value root;
-  if (!reader.parse(json_string, root)) throw 1;  // TODO: implement error handling
-  return root;
+  try {
+    Json::Reader reader;
+    Json::Value root;
+    if (!reader.parse(json_string, root)) throw 1;  // TODO: implement error handling
+    return root;
+  } catch(...) { // TODO: check exception type
+    throw 1; // TODO: implement error handling
+  }
 }
 
 void write_item_to(const std::string& data, size_t max_length, size_t tab_space, std::ostream* destination,
@@ -134,6 +138,40 @@ void ResultWriter::write_word_classes(const std::string& word_classes) {
 void ResultWriter::write_genders(const std::string& genders) {
   this->write_json_array_string(genders, std::vector<std::string>{"id", "gender", "description"}, true);
 }
+
+void ResultWriter::write_numeri(const std::string& numeri) {
+  Json::Value data{from_json_string(numeri)};
+  if (!data.isArray()) throw 1;  // TODO: implement error handling
+
+  *(this->destination_) << "NUMERUS" << std::endl;
+  for (const Json::Value numerus : data) *(this->destination_) << numerus.asString() << std::endl;
+}
+
+void ResultWriter::write_json_string_string(const std::string& json_string) {
+  Json::Value data{from_json_string(json_string)};
+  if (!data.isString()) throw 1;  // TODO: implement error handling
+  *(this->destination_) << data.asString() << std::endl;
+}
+
+void ResultWriter::write_language_id(const std::string& language_id) { this->write_json_string_string(language_id); }
+
+void ResultWriter::write_language_name(const std::string& language_name) {
+  this->write_json_string_string(language_name);
+}
+
+void ResultWriter::write_word_class_id(const std::string& word_class_id) {
+  this->write_json_string_string(word_class_id);
+}
+
+void ResultWriter::write_word_class_name(const std::string& word_class_name) {
+  this->write_json_string_string(word_class_name);
+}
+
+void ResultWriter::write_gender_id(const std::string& gender_id) { this->write_json_string_string(gender_id); }
+
+void ResultWriter::write_gender_name(const std::string& gender_name) { this->write_json_string_string(gender_name); }
+
+
 }  // client
 }  // translate
 }  // lgeorgieff

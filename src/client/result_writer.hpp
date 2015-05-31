@@ -53,12 +53,35 @@ class ResultWriter {
   // Writes a json string of the form [{"description": "...", "gender": "...", "gender" : "..."}] into the set ostream
   // in the form // <ID>   <GENDER>   <DESCRIPTION>
   void write_genders(const std::string&);
+  // Writes a json string of the form ["...", "..."] into the set ostream in the form
+  // <NUMERUS>
+  void write_numeri(const std::string&);
+  // Writes a json string of the form "..." into the set ostream in the form
+  // <LANGUAGE ID>
+  void write_language_id(const std::string&);
+  // Writes a json string of the form "..." into the set ostream in the form
+  // <LANGUAGE NAME>
+  void write_language_name(const std::string&);
+  // Writes a json string of the form "..." into the set ostream in the form
+  // <WORD CLASS ID>
+  void write_word_class_id(const std::string&);
+  // Writes a json string of the form "..." into the set ostream in the form
+  // <WORD CLASS NAME>
+  void write_word_class_name(const std::string&);
+  // Writes a json string of the form "..." into the set ostream in the form
+  // <GENDER ID>
+  void write_gender_id(const std::string&);
+  // Writes a json string of the form "..." into the set ostream in the form
+  // <GENDER NAME>
+  void write_gender_name(const std::string&);
 
  private:
-  // A generic method the writes the passed json string on screen. The json string must be an array of objects.
+  // A generic method that writes the passed json string on screen. The json string must be an array of objects.
   // Additionally the object must contain only string members.
   // The order of the printed object members depends on the order of the member names in the passed vector<string>.
   void write_json_array_string(const std::string&, const std::vector<std::string>&, bool = false);
+  // A generic method that writes the passed json string on screen. The json string must be a string value.
+  void write_json_string_string(const std::string&);
   std::ostream* destination_;
 };  // ResultWriter
 

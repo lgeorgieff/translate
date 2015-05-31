@@ -72,32 +72,25 @@ int main(const int argc, const char** argv) {
       writer.write_genders(request());
     } else if (cmd_parser.all_numeri()) {
       HttpGetRequest request{BASE_URL + "numeri"};
-      // TODO: handle JSON
-      std::cout << request() << std::endl;
+      writer.write_numeri(request());
     } else if (cmd_parser.has_language_id()) {
       HttpGetRequest request{BASE_URL + "/language/id/" + cmd_parser.language_id()};
-      // TODO: handle JSON
-      std::cout << request() << std::endl;
+      writer.write_language_name(request());
     } else if (cmd_parser.has_language_name()) {
       HttpGetRequest request{BASE_URL + "/language/name/" + cmd_parser.language_name()};
-      // TODO: handle JSON
-      std::cout << request() << std::endl;
+      writer.write_language_id(request());
     } else if (cmd_parser.has_word_class_id()) {
       HttpGetRequest request{BASE_URL + "/word_class/id/" + cmd_parser.word_class_id()};
-      // TODO: handle JSON
-      std::cout << request() << std::endl;
+      writer.write_word_class_name(request());
     } else if (cmd_parser.has_word_class_name()) {
       HttpGetRequest request{BASE_URL + "/word_class/name/" + cmd_parser.word_class_name()};
-      // TODO: handle JSON
-      std::cout << request() << std::endl;
+      writer.write_word_class_id(request());
     } else if (cmd_parser.has_gender_id()) {
       HttpGetRequest request{BASE_URL + "/gender/id/" + cmd_parser.gender_id()};
-      // TODO: handle JSON
-      std::cout << request() << std::endl;
+      writer.write_gender_name(request());
     } else if (cmd_parser.has_gender_name()) {
       HttpGetRequest request{BASE_URL + "/gender/name/" + cmd_parser.gender_name()};
-      // TODO: handle JSON
-      std::cout << request() << std::endl;
+      writer.write_gender_id(request());
     } else if (cmd_parser.has_phrase()) {
       HttpPostRequest request{BASE_URL + "translation/" + cmd_parser.in() + "/" + cmd_parser.out() + "/",
                               create_post_data(cmd_parser)};
