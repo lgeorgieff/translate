@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/29/2015
+// Last modified: 05/31/2015
 // Description: Implements the command line parser interface which is adapted to the supported options of this program.
 // ====================================================================================================================
 
@@ -95,7 +95,7 @@ CommandLineParser::CommandLineParser(const int argc, const char **argv, const st
       show_comment_{DEFAULT_SHOW_COMMENT} {
   bool in_found{false};
   bool out_found{false};
-  if (argc < 1) throw CommandLineException("No command line arguments found!");
+  if (argc < 1) throw CommandLineException{"No command line arguments found!"};
   this->app_name_ = argv[0];
   for (int i{1}; argc > i; ++i) {
     if (HELP_NAME_LONG == argv[i] || HELP_NAME_SHORT == argv[i]) {
@@ -104,48 +104,48 @@ CommandLineParser::CommandLineParser(const int argc, const char **argv, const st
       this->in_ = argv[++i];
       in_found = true;
     } else if (IN_NAME_LONG == argv[i] || IN_NAME_SHORT == argv[i]) {
-      throw CommandLineException("The value for \"" + std::string{argv[i]} + "\" is missing!");
+      throw CommandLineException{"The value for \"" + std::string{argv[i]} + "\" is missing!"};
     } else if ((OUT_NAME_LONG == argv[i] || OUT_NAME_SHORT == argv[i]) && argc - 1 != i) {
       this->out_ = argv[++i];
       out_found = true;
     } else if (OUT_NAME_LONG == argv[i] || OUT_NAME_SHORT == argv[i]) {
-      throw CommandLineException("The value for \"" + std::string{argv[i]} + "\" is missing!");
+      throw CommandLineException{"The value for \"" + std::string{argv[i]} + "\" is missing!"};
     } else if (ALL_LANGUAGES_LONG == argv[i]) {
       this->all_languages_ = true;
     } else if (LANGUAGE_ID_LONG == argv[i] && argc - 1 != i) {
       this->language_id_ = argv[++i];
       this->has_language_id_ = true;
     } else if (LANGUAGE_ID_LONG == argv[i]) {
-      throw CommandLineException("The value for \"" + std::string{argv[i]} + "\" is missing!");
+      throw CommandLineException{"The value for \"" + std::string{argv[i]} + "\" is missing!"};
     } else if (LANGUAGE_NAME_LONG == argv[i] && argc - 1 != i) {
       this->language_name_ = argv[++i];
       this->has_language_name_ = true;
     } else if (LANGUAGE_NAME_LONG == argv[i]) {
-      throw CommandLineException("The value for \"" + std::string{argv[i]} + "\" is missing!");
+      throw CommandLineException{"The value for \"" + std::string{argv[i]} + "\" is missing!"};
     } else if (ALL_WORD_CLASSES_LONG == argv[i]) {
       this->all_word_classes_ = true;
     } else if (WORD_CLASS_ID_LONG == argv[i] && argc - 1 != i) {
       this->word_class_id_ = argv[++i];
       this->has_word_class_id_ = true;
     } else if (WORD_CLASS_ID_LONG == argv[i]) {
-      throw CommandLineException("The value for \"" + std::string{argv[i]} + "\" is missing!");
+      throw CommandLineException{"The value for \"" + std::string{argv[i]} + "\" is missing!"};
     } else if (WORD_CLASS_NAME_LONG == argv[i] && argc - 1 != i) {
       this->word_class_name_ = argv[++i];
       this->has_word_class_name_ = true;
     } else if (WORD_CLASS_NAME_LONG == argv[i]) {
-      throw CommandLineException("The value for \"" + std::string{argv[i]} + "\" is missing!");
+      throw CommandLineException{"The value for \"" + std::string{argv[i]} + "\" is missing!"};
     } else if (ALL_GENDERS_LONG == argv[i]) {
       this->all_genders_ = true;
     } else if (GENDER_ID_LONG == argv[i] && argc - 1 != i) {
       this->gender_id_ = argv[++i];
       this->has_gender_id_ = true;
     } else if (GENDER_ID_LONG == argv[i]) {
-      throw CommandLineException("The value for \"" + std::string{argv[i]} + "\" is missing!");
+      throw CommandLineException{"The value for \"" + std::string{argv[i]} + "\" is missing!"};
     } else if (GENDER_NAME_LONG == argv[i] && argc - 1 != i) {
       this->gender_name_ = argv[++i];
       this->has_gender_name_ = true;
     } else if (GENDER_NAME_LONG == argv[i]) {
-      throw CommandLineException("The value for \"" + std::string{argv[i]} + "\" is missing!");
+      throw CommandLineException{"The value for \"" + std::string{argv[i]} + "\" is missing!"};
     } else if (ALL_NUMERI_LONG == argv[i]) {
       this->all_numeri_ = true;
     } else if (argc - 1 == i) {
@@ -164,9 +164,24 @@ CommandLineParser::CommandLineParser(const int argc, const char **argv, const st
     } else if(SHOW_COMMENT_LONG == argv[i]) {
       this->show_comment_ = true;
     } else {
-      throw CommandLineException("The argument \"" + std::string{argv[i]} + "\" is not known!");
+      throw CommandLineException{"The argument \"" + std::string{argv[i]} + "\" is not known!"};
     }
   }  // for (int i{1}; argc > i; ++i)
+
+  // check exclusive arguments (if --help|-h is not set)
+  short exclusive_arguments{0};
+  if (this->has_language_id_) ++exclusive_arguments;
+  if (this->has_language_name_) ++exclusive_arguments;
+  if (this->has_word_class_id_) ++exclusive_arguments;
+  if (this->has_word_class_name_) ++exclusive_arguments;
+  if (this->has_gender_id_) ++exclusive_arguments;
+  if (this->has_gender_name_) ++exclusive_arguments;
+  if (exclusive_arguments > 1) {
+    throw CommandLineException{"The arguments \"" + LANGUAGE_ID_LONG + "\", \"" + LANGUAGE_NAME_LONG + "\", \"" +
+                               WORD_CLASS_ID_LONG + "\", \"" + WORD_CLASS_NAME_LONG + "\", \"" + GENDER_ID_LONG +
+                               "\" and \"" + GENDER_NAME_LONG +
+                               "\" must be given exclusively, but found more than one occurrence!"};
+  }
 
   if (!in_found) this->in_ = default_in;
   if (!out_found) this->out_ = default_out;
