@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/31/2015
+// Last modified: 06/02/2015
 // Description: Implements the class ResultWriter which provides functionality that writes the translation results
 //              (json strings) into a stream in a pretty format.
 // ====================================================================================================================
@@ -24,6 +24,7 @@
 
 #include <utility>
 #include <map>
+#include <set>
 
 namespace {
 Json::Value from_json_string(const std::string json_string) {
@@ -32,8 +33,8 @@ Json::Value from_json_string(const std::string json_string) {
     Json::Value root;
     if (!reader.parse(json_string, root)) throw 1;  // TODO: implement error handling
     return root;
-  } catch(...) { // TODO: check exception type
-    throw 1; // TODO: implement error handling
+  } catch (...) {  // TODO: check exception type
+    throw 1;       // TODO: implement error handling
   }
 }
 
@@ -88,6 +89,7 @@ bool ResultWriter::operator!=(const ResultWriter& other) { return !(*this == oth
 void ResultWriter::write_json_array_string(const std::string& json_string,
                                            const std::vector<std::string>& object_members, bool write_headers) {
   Json::Value data{from_json_string(json_string)};
+  if (data.isNull()) return;
   if (!data.isArray()) throw 1;  // TODO: implement error handling
   // We just go through the data and check for completeness, validity and chek the max length of each member type.
   // We don't write into the set ostream here until it is clear that all data is valid.
@@ -141,6 +143,7 @@ void ResultWriter::write_genders(const std::string& genders) {
 
 void ResultWriter::write_numeri(const std::string& numeri) {
   Json::Value data{from_json_string(numeri)};
+  if (data.isNull()) return;
   if (!data.isArray()) throw 1;  // TODO: implement error handling
 
   *(this->destination_) << "NUMERUS" << std::endl;
@@ -149,6 +152,7 @@ void ResultWriter::write_numeri(const std::string& numeri) {
 
 void ResultWriter::write_json_string_string(const std::string& json_string) {
   Json::Value data{from_json_string(json_string)};
+  if (data.isNull()) return;
   if (!data.isString()) throw 1;  // TODO: implement error handling
   *(this->destination_) << data.asString() << std::endl;
 }
@@ -171,7 +175,97 @@ void ResultWriter::write_gender_id(const std::string& gender_id) { this->write_j
 
 void ResultWriter::write_gender_name(const std::string& gender_name) { this->write_json_string_string(gender_name); }
 
+void ResultWriter::write_translation(const std::string& translation) {
+  // Writes a json string of the form [{"phrase": "...", "word_class": "...", "gender": "...", "numerus": "...",
+  // "abbreviations": [ "..." ], "comments": [ "..." ] } ] into the set ostream in the form
+  // <PHRASE> {<WORD_CLASS>} {<GENDER>} {<NUMERUS>} <<ABREVIATION-1>, <...>, <ABBREVIATION-N>> [<COMMENT-1>] [<...>]
+  // [<COMMENT-N>]
+  // <PHRASE> {<WORD_CLASS>} {<GENDER>} {<NUMERUS>} <<ABREVIATION-1>, <...>, <ABBREVIATION-N>> [<COMMENT-1>] [<...>]
+  // [<COMMENT-N>]
+  Json::Value data{from_json_string(translation)};
+  if (data.isNull()) return;
+  if (!data.isArray()) throw 1;  // TODO: implement error handling
 
+  for (const Json::Value& item : data) {
+    if (item.isNull()) continue;
+    if (!item.isObject()) throw 1;  // TODO: implement error handling
+    std::string phrase;
+    if (item.isMember("phrase") && !item["phrase"].isNull()) {
+      if (!item["phrase"].isString()) throw 1;
+      phrase = item["phrase"].asString();
+    }
+    std::string word_class;
+    if (item.isMember("word_class") && !item["word_class"].isNull()) {
+      if (!item["word_class"].isString()) throw 1;  // TODO: implement error handling
+      word_class = item["word_class"].asString();
+    }
+    std::string gender;
+    if (item.isMember("gender") && !item["gender"].isNull()) {
+      if (!item["gender"].isString()) throw 1;  // TODO: implement error handling
+      gender = item["gender"].asString();
+    }
+    std::string numerus;
+    if (item.isMember("numerus") && !item["numerus"].isNull()) {
+      if (!item["numerus"].isString()) throw 1;  // TODO: implement error handling
+      numerus = item["numerus"].asString();
+    }
+    std::set<std::string> abbreviations;
+    if (item.isMember("abbreviations") && !item["abbreviations"].isNull()) {
+      if (!item["abbreviations"].isArray()) throw 1;  // TODO: implement error handling
+      for (const Json::Value& abbreviation : item["abbreviations"]) {
+        if (abbreviation.isNull()) continue;
+        if (!abbreviation.isString()) throw 1;  // TODO: implement error handling
+        abbreviations.insert(abbreviation.asString());
+      }
+    }
+    std::set<std::string> comments;
+    if (item.isMember("comments") && !item["comments"].isNull()) {
+      if (!item["comments"].isArray()) throw 1;  // TODO: implement error handling
+      for (const Json::Value& comment : item["comments"]) {
+        if (comment.isNull()) continue;
+        if (!comment.isString()) throw 1;  // TODO: implement error handling
+        comments.insert(comment.asString());
+      }
+    }
+
+    if (!phrase.empty()) {
+      *(this->destination_) << phrase;
+      if (!word_class.empty() || !gender.empty() || !numerus.empty() || !abbreviations.empty() || !comments.empty())
+        *(this->destination_) << " ";
+    }
+    if (!word_class.empty()) {
+      *(this->destination_) << "{" << word_class << "}";
+      if (!gender.empty() || !numerus.empty() || !abbreviations.empty() || !comments.empty())
+        *(this->destination_) << " ";
+    }
+    if (!gender.empty()) {
+      *(this->destination_) << "{" << gender << "}";
+      if (!numerus.empty() || !abbreviations.empty() || !comments.empty()) *(this->destination_) << " ";
+    }
+    if (!numerus.empty()) {
+      *(this->destination_) << "{" << numerus << "}";
+      if (!abbreviations.empty() || !comments.empty()) *(this->destination_) << " ";
+    }
+    if (!abbreviations.empty()) {
+      std::set<std::string>::const_iterator end_iter{abbreviations.cend()};
+      std::set<std::string>::const_iterator before_end_iter{--abbreviations.cend()};
+      for (std::set<std::string>::const_iterator iter{abbreviations.cbegin()}; iter != end_iter; ++iter) {
+        *(this->destination_) << "<" << *iter << ">";
+        if (iter != before_end_iter) *(this->destination_) << " ";
+      }
+      if (!comments.empty()) *(this->destination_) << " ";
+    }
+    if (!comments.empty()) {
+      std::set<std::string>::const_iterator end_iter{comments.cend()};
+      std::set<std::string>::const_iterator before_end_iter{--comments.cend()};
+      for (std::set<std::string>::const_iterator iter{comments.cbegin()}; iter != end_iter; ++iter) {
+        *(this->destination_) << "[" << *iter << "]";
+        if (iter != before_end_iter) *(this->destination_) << " ";
+      }
+    }
+    *(this->destination_) << std::endl;
+  }  // for (const Json::Value& item : data)
+}
 }  // client
 }  // translate
 }  // lgeorgieff

@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/31/2015
+// Last modified: 06/02/2015
 // Description: Defines the class ResultWriter which provides functionality that writes the translation results
 //              (json strings) into a stream in a pretty format.
 // ====================================================================================================================
@@ -74,6 +74,13 @@ class ResultWriter {
   // Writes a json string of the form "..." into the set ostream in the form
   // <GENDER NAME>
   void write_gender_name(const std::string&);
+  // Writes a json string of the form [{"phrase": "...", "word_class": "...", "gender": "...", "numerus": "...",
+  // "abbreviations": [ "..." ], "comments": [ "..." ] } ] into the set ostream in the form
+  // <PHRASE> {<WORD_CLASS>} {<GENDER>} {<NUMERUS>} <<ABREVIATION-1>, <...>, <ABBREVIATION-N>> [<COMMENT-1>] [<...>]
+  // [<COMMENT-N>]
+  // <PHRASE> {<WORD_CLASS>} {<GENDER>} {<NUMERUS>} <<ABREVIATION-1>, <...>, <ABBREVIATION-N>> [<COMMENT-1>] [<...>]
+  // [<COMMENT-N>]
+  void write_translation(const std::string&);
 
  private:
   // A generic method that writes the passed json string on screen. The json string must be an array of objects.

@@ -94,8 +94,7 @@ int main(const int argc, const char** argv) {
     } else if (cmd_parser.has_phrase()) {
       HttpPostRequest request{BASE_URL + "translation/" + cmd_parser.in() + "/" + cmd_parser.out() + "/",
                               create_post_data(cmd_parser)};
-      // TODO: handle JSON
-      std::cout << request() << std::endl;
+      writer.write_translation(request());
     } else {
       std::cerr << "Expected an argument representing a phrase to be translated!" << std::endl
                 << "Try \"" << *argv << " --help\" for more information" << std::endl;
