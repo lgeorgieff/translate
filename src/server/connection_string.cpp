@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/05/2015
+// Last modified: 05/15/2015
 // Description: The ConnectionString implementation which is an abstraction class for postgresql connection strings.
 // ====================================================================================================================
 
@@ -81,7 +81,10 @@ ConnectionString::ConnectionString()
       port_{-1},
       ssl_mode_{DEFAULT_SSLMODE},
       keep_alives_{DEFAULT_KEEPALIVES},
-      require_ssl_{DEFAULT_REQUIRESSL} {}
+      keep_alives_set_{false},
+      require_ssl_{DEFAULT_REQUIRESSL},
+      require_ssl_set_{false},
+      ssl_mode_set_{false} {}
 
 string ConnectionString::to_string() const noexcept {
   string result{};

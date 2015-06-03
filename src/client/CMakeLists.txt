@@ -1,7 +1,7 @@
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 05/17/2015
-# Description: Build unit tests for the server part.
+# Last modified: 06/03/2015
+# Description: Build configuration for the client part of translate.
 #######################################################################################################################
 
 
@@ -16,19 +16,22 @@
 # Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #######################################################################################################################
 
+
 ### project setup
-project(translate_test_server)
+project(translate_client)
 
 ### set all include paths
-include_directories("../../")
+include_directories("../")
 
-### register all source files
-set(TEST_SERVER_SOURCE_FILES ../../utils/exception.cpp ../../server/db_exception.cpp ../../server/connection_string.cpp
-			     ../../utils/helper.cpp connection_string_unit_test.cpp test_main.cpp)
+### register all source files for the client part
+set(CLIENT_SOURCE_FILES ../utils/command_line_exception.cpp ../utils/exception.cpp ../utils/http_exception.cpp
+                        ../utils/json_exception.cpp ../utils/helper.cpp http_request.cpp http_get_request.cpp
+                        http_post_request.cpp command_line_parser.cpp result_writer.cpp client_main.cpp)
 
-### create a static library
-add_executable(server_test ${TEST_SERVER_SOURCE_FILES})
+### create the client executable
+add_executable(trlt ${CLIENT_SOURCE_FILES})
+set_target_properties(trlt PROPERTIES VERSION "${translate_VERSION_MAJOR}.${translate_VERSION_MINOR}")
 
 ### set required libraries to link against
-target_link_libraries(server_test gtest)
-target_link_libraries(server_test gtest_main)
+target_link_libraries(trlt curl)
+target_link_libraries(trlt jsoncpp)

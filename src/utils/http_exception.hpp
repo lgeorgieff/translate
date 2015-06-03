@@ -1,7 +1,7 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 04/27/2015
-// Description: Defines the exception JsonException which is thrown if any JSON transformation occurs.
+// Last modified: 05/26/2015
+// Description: Declares the exception HttpException which is thrown if any HTTP error occurs.
 // ====================================================================================================================
 
 // ====================================================================================================================
@@ -16,15 +16,29 @@
 // Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 // ====================================================================================================================
 
-#include "json_exception.hpp"
+#ifndef HTTP_EXCEPTION_HPP_
+#define HTTP_EXCEPTION_HPP_
+
+#include "exception.hpp"
 
 #include <string>
-#include <utility>
 
 namespace lgeorgieff {
 namespace translate {
 namespace utils {
-JsonException::JsonException(const std::string &what) : Exception{what} {}
+class HttpException : public Exception {
+ public:
+  HttpException(const std::string&);
+  HttpException(const HttpException&) = default;
+  HttpException(HttpException&&) = default;
+
+  HttpException& operator=(const HttpException&) = default;
+  HttpException& operator=(HttpException&&) = default;
+
+  virtual ~HttpException() = default;
+};  // HttpException
 }  // utils
 }  // translate
 }  // lgeorgieff
+
+#endif  // HTTP_EXCEPTION_HPP_

@@ -1,7 +1,7 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 04/27/2015
-// Description: Defines the exception JsonException which is thrown if any JSON transformation occurs.
+// Last modified: 05/26/2015
+// Description: Declares a class for an HTTP POST request to the translation service.
 // ====================================================================================================================
 
 // ====================================================================================================================
@@ -12,19 +12,35 @@
 // warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
 // details.
 //
-// You should have received a copy of the GNU General Public License along with this program; if not, write to the
+// You should have received a copy of the GNU General Public License along with this program; if/ not, write to the
 // Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 // ====================================================================================================================
 
-#include "json_exception.hpp"
+#ifndef HTTP_POST_REQUEST_HPP_
+#define HTTP_POST_REQUEST_HPP_
+
+#include "http_request.hpp"
 
 #include <string>
-#include <utility>
 
 namespace lgeorgieff {
 namespace translate {
-namespace utils {
-JsonException::JsonException(const std::string &what) : Exception{what} {}
-}  // utils
+namespace client {
+class HttpPostRequest : public HttpRequest {
+ public:
+  // === Constructors and destructor ==================================================================================
+  // ctor takes the HTTP request URL and the POST data
+  HttpPostRequest(const std::string &, const std::string&);
+  virtual ~HttpPostRequest();
+
+ protected:
+  // The actual method that handles the curl HTTP request and must be implemented in each derived class from
+  // HttpRequest
+  void do_request();
+  std::string post_data_;
+};  // HttpPostRequest
+}  // client
 }  // translate
 }  // lgeorgieff
+
+#endif  // HTTP_POST_REQUEST_HPP_

@@ -1,7 +1,7 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 04/27/2015
-// Description: Defines the exception JsonException which is thrown if any JSON transformation occurs.
+// Last modified: 02/13/2015
+// Description: Entry point for the client unit tests.
 // ====================================================================================================================
 
 // ====================================================================================================================
@@ -16,15 +16,9 @@
 // Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 // ====================================================================================================================
 
-#include "json_exception.hpp"
+#include "gtest/gtest.h"
 
-#include <string>
-#include <utility>
-
-namespace lgeorgieff {
-namespace translate {
-namespace utils {
-JsonException::JsonException(const std::string &what) : Exception{what} {}
-}  // utils
-}  // translate
-}  // lgeorgieff
+int main(const int argc, const char **argv) {
+  testing::InitGoogleTest(const_cast<int *>(&argc), const_cast<char **>(argv));
+  return RUN_ALL_TESTS();
+}
