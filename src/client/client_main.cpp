@@ -99,11 +99,14 @@ int main(const int argc, const char **argv) {
       HttpPostRequest request{BASE_URL + "translation/" + cmd_parser.in() + "/" + cmd_parser.out() + "/",
                               create_post_data(cmd_parser)};
       request();
-      if (200 != request.status_code()) {
+      if (200 != request.status_code() && 404 != request.status_code()) {
         throw HttpException{"Could not process \"" + request.url() + "\", HTTP status code: " +
                             std::to_string(request.status_code())};
+      } else if(404 == request.status_code()) {
+        std::cout << std::endl;
+      } else {
+        writer.write_translation(request.result());
       }
-      writer.write_translation(request.result());
     } else {
       std::cerr << "Expected an argument representing a phrase to be translated!" << std::endl
                 << "Try \"" << *argv << " --help\" for more information" << std::endl;
