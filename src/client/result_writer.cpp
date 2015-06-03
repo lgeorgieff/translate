@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 06/03/2015
+// Last modified: 06/04/2015
 // Description: Implements the class ResultWriter which provides functionality that writes the translation results
 //              (json strings) into a stream in a pretty format.
 // ====================================================================================================================
@@ -174,9 +174,34 @@ void ResultWriter::write_word_class_name(const std::string& word_class_name) {
   this->write_json_string_string(word_class_name);
 }
 
-void ResultWriter::write_gender_id(const std::string& gender_id) { this->write_json_string_string(gender_id); }
+void ResultWriter::write_json_object_string(const std::string& json_string,
+                                            const std::vector<std::string>& member_names) {
+  Json::Value data{from_json_string(json_string)};
+  if (data.isNull()) return;
+  if (!data.isObject()) throw JsonException{"Cannot process the json data " + json_string + ". Expected a json object!"};
 
-void ResultWriter::write_gender_name(const std::string& gender_name) { this->write_json_string_string(gender_name); }
+  for(size_t i{0}; member_names.size() != i; ++i) {
+    if (!data.isMember(member_names[i])) {
+      throw JsonException{"Cannot process the json data " + json_string + ". Expected a the member \"" +
+                          member_names[i] + "\"!"};
+    }
+    if (!data[member_names[i]].isString()) {
+      throw JsonException{"Cannot process the json data " + json_string +
+                          ". Expected a json object containing only string members!"};
+    }
+    *(this->destination_) << member_names[i] << ": " << data[member_names[i]].asString();
+    if (member_names.size() - 1 > i) *(this->destination_) << ", ";
+    else *(this->destination_) << std::endl;
+  }
+}
+  
+void ResultWriter::write_gender_id(const std::string& gender_id) {
+  this->write_json_object_string(gender_id, {"id", "description"});
+}
+
+void ResultWriter::write_gender_name(const std::string& gender_name) {
+  this->write_json_object_string(gender_name, {"gender", "description"});
+}
 
 void ResultWriter::write_translation(const std::string& translation) {
   // Writes a json string of the form [{"phrase": "...", "word_class": "...", "gender": "...", "numerus": "...",

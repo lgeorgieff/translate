@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 06/02/2015
+// Last modified: 06/03/2015
 // Description: Defines the class ResultWriter which provides functionality that writes the translation results
 //              (json strings) into a stream in a pretty format.
 // ====================================================================================================================
@@ -89,6 +89,9 @@ class ResultWriter {
   void write_json_array_string(const std::string&, const std::vector<std::string>&, bool = false);
   // A generic method that writes the passed json string on screen. The json string must be a string value.
   void write_json_string_string(const std::string&);
+  // A generic method that writes the passed json string on screen. The json string must be an object value containing
+  // onyl string members.
+  void write_json_object_string(const std::string&, const std::vector<std::string>&);
   std::ostream* destination_;
 };  // ResultWriter
 
