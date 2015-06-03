@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/31/2015
+// Last modified: 06/03/2015
 // Description: The entry point for the entire application.
 // ====================================================================================================================
 
@@ -18,6 +18,7 @@
 
 #include "utils/command_line_exception.hpp"
 #include "utils/http_exception.hpp"
+#include "utils/json_exception.hpp"
 #include "command_line_parser.hpp"
 #include "http_get_request.hpp"
 #include "http_post_request.hpp"
@@ -30,6 +31,7 @@
 using lgeorgieff::translate::CommandLineParser;
 using lgeorgieff::translate::utils::CommandLineException;
 using lgeorgieff::translate::utils::HttpException;
+using lgeorgieff::translate::utils::JsonException;
 using lgeorgieff::translate::client::HttpGetRequest;
 using lgeorgieff::translate::client::HttpPostRequest;
 using lgeorgieff::translate::client::ResultWriter;
@@ -107,6 +109,9 @@ int main(const int argc, const char** argv) {
     return 1;
   } catch (HttpException &err) {
     std::cerr << "Could not contact the server: " << err.what() << std::endl;
+    return 2;
+  } catch (JsonException &err) {
+    std::cerr << "Could not process the server's response: " << err.what() << std::endl;
     return 2;
   }
 }
