@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/09/2015
+// Last modified: 06/03/2015
 // Description: Defines the RESTful server for the translation service.
 // ====================================================================================================================
 
@@ -33,8 +33,8 @@ namespace {
 // given error message to the connection structure.
 void handle_http_error(mg_connection *connection, int status_code, const std::string &message) {
   std::cerr << "HTTP " << status_code << ": " << message << std::endl;
-  mg_send_header(connection, "content-type", "application/json");
   mg_send_status(connection, status_code);
+  mg_send_header(connection, "content-type", "application/json");
   std::string json_string{lgeorgieff::translate::server::JSON::json_value_to_string(message)};
   mg_printf_data(connection, "%s", json_string.c_str());
 }
@@ -240,12 +240,13 @@ int Server::request_handler(mg_connection *connection, enum mg_event event) {
               std::string word_class{""};
               Json::Value extracted_word_class{user_options.get("word_class", "")};
               if (extracted_word_class.isString()) word_class = extracted_word_class.asString();
-              if (word_class.empty())
+              if (word_class.empty()) {
                 db_query->request_phrase(origin_phrase, get_origin_language_id_from_url(url),
                                          get_target_language_id_from_url(url));
-              else
+              } else {
                 db_query->request_phrase(origin_phrase, get_origin_language_id_from_url(url),
                                          get_target_language_id_from_url(url), word_class);
+              }
               if (db_query->empty()) {
                 std::string error_message{"No translation found for \"" + origin_phrase +
                                           (word_class.empty() ? "" : " (" + word_class + ")") + "\"!"};

@@ -55,7 +55,18 @@ std::string create_post_data(const CommandLineParser &cmd_parser) {
   return Json::writeString(json_writer, result);
 }
 
-int main(const int argc, const char** argv) {
+// A helper function that performs an HTTP get request and returns the reponse's string value.
+// In error case an HttpException is thrown.
+std::string process_request(const std::string &url) {
+  HttpGetRequest request{url};
+  request();
+  if (200 != request.http_return_code()) {
+    throw HttpException{"HTTP status code " + std::to_string(request.http_return_code()) + " for \"" + request.url() + "\"!"};
+  }
+  return request.http_result();
+}
+
+int main(const int argc, const char **argv) {
   try {
     CommandLineParser cmd_parser{argc, argv};
     ResultWriter writer{&std::cout};
@@ -64,51 +75,46 @@ int main(const int argc, const char** argv) {
                 << std::endl;
       return 0;
     } else if (cmd_parser.all_languages()) {
-      HttpGetRequest request{BASE_URL + "languages"};
-      writer.write_languages(request());
+      writer.write_languages(process_request(BASE_URL + "languages"));
     } else if (cmd_parser.all_word_classes()) {
-      HttpGetRequest request{BASE_URL + "word_classes"};
-      writer.write_word_classes(request());
+      writer.write_word_classes(process_request(BASE_URL + "word_classes"));
     } else if (cmd_parser.all_genders()) {
-      HttpGetRequest request{BASE_URL + "genders"};
-      writer.write_genders(request());
+      writer.write_genders(process_request(BASE_URL + "genders"));
     } else if (cmd_parser.all_numeri()) {
-      HttpGetRequest request{BASE_URL + "numeri"};
-      writer.write_numeri(request());
+      writer.write_numeri(process_request(BASE_URL + "numeri"));
     } else if (cmd_parser.has_language_id()) {
-      HttpGetRequest request{BASE_URL + "/language/id/" + cmd_parser.language_id()};
-      writer.write_language_name(request());
+      writer.write_language_name(process_request(BASE_URL + "/language/id/" + cmd_parser.language_id()));
     } else if (cmd_parser.has_language_name()) {
-      HttpGetRequest request{BASE_URL + "/language/name/" + cmd_parser.language_name()};
-      writer.write_language_id(request());
+      writer.write_language_id(process_request(BASE_URL + "/language/name/" + cmd_parser.language_name()));
     } else if (cmd_parser.has_word_class_id()) {
-      HttpGetRequest request{BASE_URL + "/word_class/id/" + cmd_parser.word_class_id()};
-      writer.write_word_class_name(request());
+      writer.write_word_class_name(process_request(BASE_URL + "/word_class/id/" + cmd_parser.word_class_id()));
     } else if (cmd_parser.has_word_class_name()) {
-      HttpGetRequest request{BASE_URL + "/word_class/name/" + cmd_parser.word_class_name()};
-      writer.write_word_class_id(request());
+      writer.write_word_class_id(process_request(BASE_URL + "/word_class/name/" + cmd_parser.word_class_name()));
     } else if (cmd_parser.has_gender_id()) {
-      HttpGetRequest request{BASE_URL + "/gender/id/" + cmd_parser.gender_id()};
-      writer.write_gender_name(request());
+      writer.write_gender_name(process_request(BASE_URL + "/gender/id/" + cmd_parser.gender_id()));
     } else if (cmd_parser.has_gender_name()) {
-      HttpGetRequest request{BASE_URL + "/gender/name/" + cmd_parser.gender_name()};
-      writer.write_gender_id(request());
+      writer.write_gender_id(process_request(BASE_URL + "/gender/name/" + cmd_parser.gender_name()));
     } else if (cmd_parser.has_phrase()) {
       HttpPostRequest request{BASE_URL + "translation/" + cmd_parser.in() + "/" + cmd_parser.out() + "/",
                               create_post_data(cmd_parser)};
-      writer.write_translation(request());
+      request();
+      if (200 != request.http_return_code()) {
+        throw HttpException{"Could not process \"" + request.url() + "\", HTTP status code: " +
+                            std::to_string(request.http_return_code())};
+      }
+      writer.write_translation(request.http_result());
     } else {
       std::cerr << "Expected an argument representing a phrase to be translated!" << std::endl
                 << "Try \"" << *argv << " --help\" for more information" << std::endl;
       return 1;
     }
     return 0;
-  } catch (CommandLineException& err) {
+  } catch (CommandLineException &err) {
     std::cerr << "Bad command line syntax: " << err.what() << std::endl
               << "Try \"" << *argv << " --help\" for more information" << std::endl;
     return 1;
   } catch (HttpException &err) {
-    std::cerr << "Could not contact the server: " << err.what() << std::endl;
+    std::cerr << "Could not process server request: " << err.what() << std::endl;
     return 2;
   } catch (JsonException &err) {
     std::cerr << "Could not process the server's response: " << err.what() << std::endl;

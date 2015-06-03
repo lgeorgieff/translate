@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/27/2015
+// Last modified: 06/03/2015
 // Description: Implements the base class for an HTTP request to the translation service.
 // ====================================================================================================================
 
@@ -30,13 +30,9 @@ size_t HttpRequest::curl_write_(void *ptr, size_t size, size_t nmemb, void *user
   return size * nmemb;
 }
 
-CURLcode HttpRequest::init_curl() {
-  return curl_global_init(CURL_GLOBAL_ALL);
-}
+CURLcode HttpRequest::init_curl() { return curl_global_init(CURL_GLOBAL_ALL); }
 
-void HttpRequest::cleanup_curl() {
-  curl_global_cleanup();
-}
+void HttpRequest::cleanup_curl() { curl_global_cleanup(); }
 
 HttpRequest::HttpRequest(const std::string &url) : request_url_{url}, http_result_{}, http_return_code_{-1} {}
 
@@ -44,7 +40,9 @@ HttpRequest::HttpRequest(const HttpRequest &other)
     : request_url_{other.request_url_}, http_result_{other.http_result_}, http_return_code_{other.http_return_code_} {}
 
 HttpRequest::HttpRequest(HttpRequest &&other)
-  : request_url_{std::move(other.request_url_)}, http_result_{std::move(other.http_result_)}, http_return_code_{std::move(other.http_return_code_)} {}
+    : request_url_{std::move(other.request_url_)},
+      http_result_{std::move(other.http_result_)},
+      http_return_code_{std::move(other.http_return_code_)} {}
 
 HttpRequest::~HttpRequest() {}
 
@@ -77,6 +75,8 @@ std::string HttpRequest::operator()() {
 std::string HttpRequest::http_result() const noexcept { return this->http_result_; }
 
 int HttpRequest::http_return_code() const noexcept { return this->http_return_code_; }
+
+std::string HttpRequest::url() const noexcept { return this->request_url_; }
 }  // client
 }  // translate
 }  // lgeorgieff

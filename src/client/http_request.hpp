@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/27/2015
+// Last modified: 06/03/2015
 // Description: Declares the base class for an HTTP request to the translation service.
 // ====================================================================================================================
 
@@ -47,6 +47,8 @@ class HttpRequest {
   // A getter for the HTTP status code.
   // If no HTTP request was completed so far, the return value is -1
   int http_return_code() const noexcept;
+  // A getter for the request URL
+  std::string url() const noexcept;
 
   // A helper for initializing curl
   static CURLcode init_curl();
