@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 02/01/2015
+// Last modified: 06/03/2015
 // Description: Declares the exception CommandLineException which is thrown if any error occurs on the command line
 //              during the execution of this program.
 // ====================================================================================================================
@@ -29,7 +29,7 @@ namespace translate {
 namespace utils {
 class CommandLineException : public Exception {
  public:
-  CommandLineException(const std::string&);
+  explicit CommandLineException(const std::string&);
   CommandLineException(const CommandLineException&) = default;
   CommandLineException(CommandLineException&&) = default;
 

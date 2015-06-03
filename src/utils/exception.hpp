@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 02/01/2015
+// Last modified: 06/03/2015
 // Description: Provides the declaration for a self-defined base exception class.
 // ====================================================================================================================
 
@@ -27,7 +27,7 @@ namespace translate {
 namespace utils {
 class Exception : public std::exception {
  public:
-  Exception(const std::string&);
+  explicit Exception(const std::string&);
   Exception(const Exception&) = default;
   Exception(Exception&&) = default;
 

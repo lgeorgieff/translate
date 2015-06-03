@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 03/03/2015
+// Last modified: 06/03/2015
 // Description: Declares the exception NotImplementedException which is thrown if any invoked functionality is not
 //              implemented.
 // ====================================================================================================================
@@ -29,7 +29,7 @@ namespace translate {
 namespace utils {
 class NotImplementedException : public Exception {
  public:
-  NotImplementedException(const std::string&);
+  explicit NotImplementedException(const std::string&);
   NotImplementedException(const NotImplementedException&) = default;
   NotImplementedException(NotImplementedException&&) = default;
 

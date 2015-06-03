@@ -65,7 +65,7 @@ class Server {
  public:
   // Instantiates an instance of this class with a connection string to the translation data base, an address and a
   // port the running server will be bound to
-  Server(const ConnectionString &, std::string = "0.0.0.0", size_t = 8885);
+  explicit Server(const ConnectionString &, const std::string & = "0.0.0.0", size_t = 8885);
   // Starts the server.
   void listen();
 

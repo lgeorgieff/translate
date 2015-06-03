@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/05/2015
+// Last modified: 06/03/2015
 // Description: Declares the exception ServerException which is thrown if any error occurs during a server operation.
 // ====================================================================================================================
 
@@ -28,7 +28,7 @@ namespace translate {
 namespace server {
 class ServerException : public lgeorgieff::translate::utils::Exception {
  public:
-  ServerException(const std::string&);
+  explicit ServerException(const std::string&);
   ServerException(const ServerException&) = default;
   ServerException(ServerException&&) = default;
 

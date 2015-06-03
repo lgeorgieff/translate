@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/26/2015
+// Last modified: 06/03/2015
 // Description: Declares a class for an HTTP GET request to the translation service.
 // ====================================================================================================================
 
@@ -29,7 +29,7 @@ namespace client {
 class HttpGetRequest : public HttpRequest {
  public:
   // === Constructors and destructor ==================================================================================
-  HttpGetRequest(const std::string &);
+  explicit HttpGetRequest(const std::string &);
   virtual ~HttpGetRequest();
 
  protected:

@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/05/2015
+// Last modified: 06/03/2015
 // Description: Declares the exception DbException which is thrown if any error occurs during a data base operation.
 // ====================================================================================================================
 
@@ -28,7 +28,7 @@ namespace translate {
 namespace server {
 class DbException : public lgeorgieff::translate::utils::Exception {
  public:
-  DbException(const std::string&);
+  explicit DbException(const std::string&);
   DbException(const DbException&) = default;
   DbException(DbException&&) = default;
 

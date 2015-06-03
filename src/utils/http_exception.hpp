@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/26/2015
+// Last modified: 06/03/2015
 // Description: Declares the exception HttpException which is thrown if any HTTP error occurs.
 // ====================================================================================================================
 
@@ -28,7 +28,7 @@ namespace translate {
 namespace utils {
 class HttpException : public Exception {
  public:
-  HttpException(const std::string&);
+  explicit HttpException(const std::string&);
   HttpException(const HttpException&) = default;
   HttpException(HttpException&&) = default;
 

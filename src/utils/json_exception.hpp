@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 04/27/2015
+// Last modified: 06/03/2015
 // Description: Declares the exception JsonException which is thrown if any JSON transformation occurs.
 // ====================================================================================================================
 
@@ -28,7 +28,7 @@ namespace translate {
 namespace utils {
 class JsonException : public Exception {
  public:
-  JsonException(const std::string&);
+  explicit JsonException(const std::string&);
   JsonException(const JsonException&) = default;
   JsonException(JsonException&&) = default;
 

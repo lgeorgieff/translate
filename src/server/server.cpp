@@ -68,7 +68,7 @@ const char *Server::URL_GENDER_NAME_PREFIX{"/gender/name/"};
 const char *Server::URL_NUMERI{"/numeri/"};
 const char *Server::URL_TRANSLATION_PREFIX{"/translation/"};
 
-Server::Server(const ConnectionString &db_connection_string, std::string service_address, size_t service_port)
+Server::Server(const ConnectionString &db_connection_string, const std::string &service_address, size_t service_port)
     : connection_address__{service_address + ":" + std::to_string(service_port)},
       db_query__{db_connection_string},
       server__{mg_create_server(&db_query__, Server::request_handler)} {

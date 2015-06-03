@@ -31,7 +31,7 @@ class HttpRequest {
  public:
   // === Constructors, destructor, operators ==========================================================================
   // The base constructor that takes the HTTP request's URL
-  HttpRequest(const std::string&);
+  explicit HttpRequest(const std::string&);
   HttpRequest(const HttpRequest&);
   HttpRequest(HttpRequest&&);
   virtual ~HttpRequest();
