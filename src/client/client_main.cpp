@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 06/03/2015
+// Last modified: 06/04/2015
 // Description: The entry point for the entire application.
 // ====================================================================================================================
 
@@ -60,10 +60,11 @@ std::string create_post_data(const CommandLineParser &cmd_parser) {
 std::string process_request(const std::string &url) {
   HttpGetRequest request{url};
   request();
-  if (200 != request.http_return_code()) {
-    throw HttpException{"HTTP status code " + std::to_string(request.http_return_code()) + " for \"" + request.url() + "\"!"};
+  if (200 != request.status_code()) {
+    throw HttpException{"HTTP status code " + std::to_string(request.status_code()) + " for \"" + request.url() +
+                        "\"!"};
   }
-  return request.http_result();
+  return request.result();
 }
 
 int main(const int argc, const char **argv) {
@@ -98,11 +99,11 @@ int main(const int argc, const char **argv) {
       HttpPostRequest request{BASE_URL + "translation/" + cmd_parser.in() + "/" + cmd_parser.out() + "/",
                               create_post_data(cmd_parser)};
       request();
-      if (200 != request.http_return_code()) {
+      if (200 != request.status_code()) {
         throw HttpException{"Could not process \"" + request.url() + "\", HTTP status code: " +
-                            std::to_string(request.http_return_code())};
+                            std::to_string(request.status_code())};
       }
-      writer.write_translation(request.http_result());
+      writer.write_translation(request.result());
     } else {
       std::cerr << "Expected an argument representing a phrase to be translated!" << std::endl
                 << "Try \"" << *argv << " --help\" for more information" << std::endl;

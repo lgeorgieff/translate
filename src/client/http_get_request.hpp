@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 06/03/2015
+// Last modified: 06/04/2015
 // Description: Declares a class for an HTTP GET request to the translation service.
 // ====================================================================================================================
 
@@ -32,10 +32,9 @@ class HttpGetRequest : public HttpRequest {
   explicit HttpGetRequest(const std::string &);
   virtual ~HttpGetRequest();
 
- protected:
   // The actual method that handles the curl HTTP request and must be implemented in each derived class from
   // HttpRequest
-  void do_request();
+  std::string operator()();
 };  // HttpGetRequest
 }  // client
 }  // translate

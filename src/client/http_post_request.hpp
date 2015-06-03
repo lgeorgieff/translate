@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/26/2015
+// Last modified: 06/04/2015
 // Description: Declares a class for an HTTP POST request to the translation service.
 // ====================================================================================================================
 
@@ -33,10 +33,11 @@ class HttpPostRequest : public HttpRequest {
   HttpPostRequest(const std::string &, const std::string&);
   virtual ~HttpPostRequest();
 
- protected:
   // The actual method that handles the curl HTTP request and must be implemented in each derived class from
   // HttpRequest
-  void do_request();
+  std::string operator()();
+
+ protected:
   std::string post_data_;
 };  // HttpPostRequest
 }  // client

@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/26/2015
+// Last modified: 06/04/2015
 // Description: Implements a class for an HTTP GET request to the translation service.
 // ====================================================================================================================
 
@@ -27,9 +27,9 @@ using lgeorgieff::translate::utils::HttpException;
 
 HttpGetRequest::HttpGetRequest(const std::string &url) : HttpRequest{url} {}
 
-void HttpGetRequest::do_request() {
+std::string HttpGetRequest::operator()() {
   CURL *curl_handle = curl_easy_init();
-  curl_easy_setopt(curl_handle, CURLOPT_URL, this->request_url_.c_str());
+  curl_easy_setopt(curl_handle, CURLOPT_URL, this->url_.c_str());
   curl_easy_setopt(curl_handle, CURLOPT_FOLLOWLOCATION, 1L);
   curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, &curl_write_);
   curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, this);
@@ -40,13 +40,14 @@ void HttpGetRequest::do_request() {
                         curl_easy_strerror(curl_code) + ")"};
   }
 
-  curl_code = curl_easy_getinfo(curl_handle, CURLINFO_RESPONSE_CODE, &this->http_return_code_);
+  curl_code = curl_easy_getinfo(curl_handle, CURLINFO_RESPONSE_CODE, &this->status_code_);
   if (CURLE_OK != curl_code) {
     throw HttpException{"Failed to complete HTTP GET request: curl code " + std::to_string(curl_code) + " (" +
                         curl_easy_strerror(curl_code) + ")"};
   }
 
   curl_easy_cleanup(curl_handle);
+  return this->result_;
 }
 
 HttpGetRequest::~HttpGetRequest() {}

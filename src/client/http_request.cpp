@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 06/03/2015
+// Last modified: 06/04/2015
 // Description: Implements the base class for an HTTP request to the translation service.
 // ====================================================================================================================
 
@@ -26,7 +26,7 @@ namespace client {
 
 size_t HttpRequest::curl_write_(void *ptr, size_t size, size_t nmemb, void *user_data) {
   HttpRequest *http_request(static_cast<HttpRequest *>(user_data));
-  http_request->http_result_.append((char *)ptr, size * nmemb);
+  http_request->result_.append((char *)ptr, size * nmemb);
   return size * nmemb;
 }
 
@@ -34,49 +34,44 @@ CURLcode HttpRequest::init_curl() { return curl_global_init(CURL_GLOBAL_ALL); }
 
 void HttpRequest::cleanup_curl() { curl_global_cleanup(); }
 
-HttpRequest::HttpRequest(const std::string &url) : request_url_{url}, http_result_{}, http_return_code_{-1} {}
+HttpRequest::HttpRequest(const std::string &url) : url_{url}, result_{}, status_code_{-1} {}
 
 HttpRequest::HttpRequest(const HttpRequest &other)
-    : request_url_{other.request_url_}, http_result_{other.http_result_}, http_return_code_{other.http_return_code_} {}
+    : url_{other.url_}, result_{other.result_}, status_code_{other.status_code_} {}
 
 HttpRequest::HttpRequest(HttpRequest &&other)
-    : request_url_{std::move(other.request_url_)},
-      http_result_{std::move(other.http_result_)},
-      http_return_code_{std::move(other.http_return_code_)} {}
+    : url_{std::move(other.url_)},
+      result_{std::move(other.result_)},
+      status_code_{std::move(other.status_code_)} {}
 
 HttpRequest::~HttpRequest() {}
 
 HttpRequest &HttpRequest::operator=(const HttpRequest &other) {
-  this->request_url_ = other.request_url_;
-  this->http_result_ = other.http_result_;
-  this->http_return_code_ = other.http_return_code_;
+  this->url_ = other.url_;
+  this->result_ = other.result_;
+  this->status_code_ = other.status_code_;
   return *this;
 }
 
 HttpRequest &HttpRequest::operator=(HttpRequest &&other) {
-  this->request_url_ = std::move(other.request_url_);
-  this->http_result_ = std::move(other.http_result_);
-  this->http_return_code_ = std::move(other.http_return_code_);
+  this->url_ = std::move(other.url_);
+  this->result_ = std::move(other.result_);
+  this->status_code_ = std::move(other.status_code_);
   return *this;
 }
 
 bool HttpRequest::operator==(const HttpRequest &other) {
-  return this->request_url_ == other.request_url_ && this->http_result_ == other.http_result_ &&
-         this->http_return_code_ == other.http_return_code_;
+  return this->url_ == other.url_ && this->result_ == other.result_ &&
+         this->status_code_ == other.status_code_;
 }
 
 bool HttpRequest::operator!=(const HttpRequest &other) { return !(*this == other); }
 
-std::string HttpRequest::operator()() {
-  this->do_request();
-  return this->http_result_;
-}
+std::string HttpRequest::result() const noexcept { return this->result_; }
 
-std::string HttpRequest::http_result() const noexcept { return this->http_result_; }
+int HttpRequest::status_code() const noexcept { return this->status_code_; }
 
-int HttpRequest::http_return_code() const noexcept { return this->http_return_code_; }
-
-std::string HttpRequest::url() const noexcept { return this->request_url_; }
+std::string HttpRequest::url() const noexcept { return this->url_; }
 }  // client
 }  // translate
 }  // lgeorgieff
