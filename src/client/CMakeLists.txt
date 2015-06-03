@@ -1,6 +1,6 @@
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 05/31/2015
+# Last modified: 06/03/2015
 # Description: Build configuration for the client part of translate.
 #######################################################################################################################
 
@@ -25,8 +25,8 @@ include_directories("../")
 
 ### register all source files for the client part
 set(CLIENT_SOURCE_FILES ../utils/command_line_exception.cpp ../utils/exception.cpp ../utils/http_exception.cpp
-                        ../utils/helper.cpp http_request.cpp http_get_request.cpp http_post_request.cpp
-                        command_line_parser.cpp result_writer.cpp client_main.cpp)
+                        ../utils/json_exception.cpp ../utils/helper.cpp http_request.cpp http_get_request.cpp
+                        http_post_request.cpp command_line_parser.cpp result_writer.cpp client_main.cpp)
 
 ### create the client executable
 add_executable(trlt ${CLIENT_SOURCE_FILES})
