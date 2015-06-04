@@ -102,9 +102,7 @@ int main(const int argc, const char **argv) {
       if (200 != request.status_code() && 404 != request.status_code()) {
         throw HttpException{"Could not process \"" + request.url() + "\", HTTP status code: " +
                             std::to_string(request.status_code())};
-      } else if(404 == request.status_code()) {
-        std::cout << std::endl;
-      } else {
+      } else if (404 != request.status_code()) {
         writer.write_translation(request.result());
       }
     } else {
