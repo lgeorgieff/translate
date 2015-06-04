@@ -68,8 +68,9 @@ std::string process_request(const std::string &url) {
 }
 
 int main(const int argc, const char **argv) {
+  CommandLineParser cmd_parser{};
   try {
-    CommandLineParser cmd_parser{argc, argv};
+    cmd_parser(argc, argv);
     ResultWriter writer{&std::cout};
     if (cmd_parser.help()) {
       std::cout << cmd_parser.usage() << std::endl

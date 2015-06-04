@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/31/2015
+// Last modified: 06/04/2015
 // Description: Implements the command line parser interface which is adapted to the supported options of this program.
 // ====================================================================================================================
 
@@ -59,13 +59,12 @@ const bool CommandLineParser::DEFAULT_SHOW_NUMERUS{false};
 const bool CommandLineParser::DEFAULT_SHOW_ABBREVIATION{false};
 const bool CommandLineParser::DEFAULT_SHOW_COMMENT{false};
 
-CommandLineParser::CommandLineParser(const int argc, const char **argv)
-    : CommandLineParser{argc, argv, DEFAULT_IN_VALUE, DEFAULT_OUT_VALUE} {}
+CommandLineParser::CommandLineParser() : CommandLineParser{DEFAULT_IN_VALUE, DEFAULT_OUT_VALUE} {}
 
-CommandLineParser::CommandLineParser(const int argc, const char **argv, const std::string &default_in,
-                                     const std::string &default_out)
+CommandLineParser::CommandLineParser(const std::string &default_in, const std::string &default_out)
     : app_name_{""},
-      usage_{""},
+      default_in_{default_in},
+      default_out_{default_out},
       in_{""},
       out_{""},
       phrase_{""},
@@ -74,7 +73,7 @@ CommandLineParser::CommandLineParser(const int argc, const char **argv, const st
       word_class_id_{""},
       word_class_name_{""},
       gender_id_{""},
-      gender_name_{false},
+      gender_name_{""},
       has_phrase_{false},
       help_{false},
       all_languages_{false},
@@ -92,7 +91,9 @@ CommandLineParser::CommandLineParser(const int argc, const char **argv, const st
       show_gender_{DEFAULT_SHOW_GENDER},
       show_numerus_{DEFAULT_SHOW_NUMERUS},
       show_abbreviation_{DEFAULT_SHOW_ABBREVIATION},
-      show_comment_{DEFAULT_SHOW_COMMENT} {
+      show_comment_{DEFAULT_SHOW_COMMENT} {}
+
+CommandLineParser &CommandLineParser::operator()(const int argc, const char **argv) {
   bool in_found{false};
   bool out_found{false};
   if (argc < 1) throw CommandLineException{"No command line arguments found!"};
@@ -151,17 +152,17 @@ CommandLineParser::CommandLineParser(const int argc, const char **argv, const st
     } else if (argc - 1 == i) {
       this->phrase_ = argv[i];
       this->has_phrase_ = true;
-    } else if(SHOW_PHRASE_LONG == argv[i]) {
+    } else if (SHOW_PHRASE_LONG == argv[i]) {
       this->show_phrase_ = true;
-    } else if(SHOW_WORD_CLASS_LONG == argv[i]) {
-      this->show_word_class_ = true;;
-    } else if(SHOW_GENDER_LONG == argv[i]) {
+    } else if (SHOW_WORD_CLASS_LONG == argv[i]) {
+      this->show_word_class_ = true;
+    } else if (SHOW_GENDER_LONG == argv[i]) {
       this->show_gender_ = true;
-    } else if(SHOW_NUMERUS_LONG == argv[i]) {
+    } else if (SHOW_NUMERUS_LONG == argv[i]) {
       this->show_numerus_ = true;
-    } else if(SHOW_ABBREVIATION_LONG == argv[i]) {
+    } else if (SHOW_ABBREVIATION_LONG == argv[i]) {
       this->show_abbreviation_ = true;
-    } else if(SHOW_COMMENT_LONG == argv[i]) {
+    } else if (SHOW_COMMENT_LONG == argv[i]) {
       this->show_comment_ = true;
     } else {
       throw CommandLineException{"The argument \"" + std::string{argv[i]} + "\" is not known!"};
@@ -183,9 +184,11 @@ CommandLineParser::CommandLineParser(const int argc, const char **argv, const st
                                "\" must be given exclusively, but found more than one occurrence!"};
   }
 
-  if (!in_found) this->in_ = default_in;
-  if (!out_found) this->out_ = default_out;
-}  // CommandLineParser::CommandLineParser
+  if (!in_found) this->in_ = this->default_in_;
+  if (!out_found) this->out_ = this->default_out_;
+
+  return *this;
+}  // operator()
 
 std::string CommandLineParser::in() const noexcept { return this->in_; }
 
@@ -201,9 +204,9 @@ std::string CommandLineParser::usage() const noexcept {
   return "Usage of " + this->app_name_ + " [options] phrase\n" +
          "Command line frontend for a RESTful translation service\n\n" + "Arguments:\n" + IN_NAME_SHORT + "|" +
          IN_NAME_LONG + " <language ID>               language identifier for the source phrase,\n" +
-         "                                    default: \"" + DEFAULT_IN_VALUE + "\"\n" + OUT_NAME_SHORT + "|" +
+         "                                    default: \"" + this->default_in_ + "\"\n" + OUT_NAME_SHORT + "|" +
          OUT_NAME_LONG + " <language ID>              language identifier for the target phrase,\n" +
-         "                                    default: \"" + DEFAULT_OUT_VALUE + "\"\n" + HELP_NAME_SHORT + "|" +
+         "                                    default: \"" + this->default_out_ + "\"\n" + HELP_NAME_SHORT + "|" +
          HELP_NAME_LONG + "                           show this message\n" + ALL_LANGUAGES_LONG +
          "                     show all languages that are available\n" + LANGUAGE_ID_LONG +
          " <language ID>         show the language name for the given\n" +
@@ -220,19 +223,19 @@ std::string CommandLineParser::usage() const noexcept {
          "                                    ID\n" + GENDER_NAME_LONG +
          " <gender name>         show the gender ID for the given gender\n" +
          "                                    name\n" + ALL_NUMERI_LONG +
-         "                        show all numeri that are available\n" +
-    SHOW_PHRASE_LONG + "                       show the phrase part of a translation\n" +
-    "                                    result (default)\n" +
-    SHOW_WORD_CLASS_LONG + "                   show the word class part of a translation\n" +
-    "                                    result\n" +
-    SHOW_GENDER_LONG + "                       show the gender part of a translation\n" +
-    "                                    result\n" +
-    SHOW_NUMERUS_LONG + "                      show the numerus part of a translation\n" +
-    "                                    result\n" +
-    SHOW_ABBREVIATION_LONG + "                 show the abbreviation part of a translation\n" +
-    "                                    result\n" +
-    SHOW_COMMENT_LONG + "                      show the comment part of a translation\n" +
-    "                                    result\n";
+         "                        show all numeri that are available\n" + SHOW_PHRASE_LONG +
+         "                       show the phrase part of a translation\n" +
+         "                                    result (default)\n" + SHOW_WORD_CLASS_LONG +
+         "                   show the word class part of a translation\n" +
+         "                                    result\n" + SHOW_GENDER_LONG +
+         "                       show the gender part of a translation\n" +
+         "                                    result\n" + SHOW_NUMERUS_LONG +
+         "                      show the numerus part of a translation\n" +
+         "                                    result\n" + SHOW_ABBREVIATION_LONG +
+         "                 show the abbreviation part of a translation\n" +
+         "                                    result\n" + SHOW_COMMENT_LONG +
+         "                      show the comment part of a translation\n" +
+         "                                    result\n";
 }
 
 bool CommandLineParser::all_languages() const noexcept { return this->all_languages_; }

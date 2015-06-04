@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/29/2015
+// Last modified: 06/04/2015
 // Description: Declares the interface of the command line parser which is adapted to the supported options of this
 //              program.
 // ====================================================================================================================
@@ -84,12 +84,13 @@ class CommandLineParser {
   // The default value whether the comment of an result is printed or not
   static const bool DEFAULT_SHOW_COMMENT;
 
-  // The constructor that takes the command line arguments from the main function and finally initializes all
-  // internal values
-  CommandLineParser(const int, const char**);
+  // The default costructor that initializes all members with default values, i.e.
+  // some members are initilized by their default constructor and some are initilized by using the DEFAULT_...
+  // constants of this class.
+  CommandLineParser();
   // The constructor that takes the command line arguments from the main function and particular default
   // values for DEFAULT_IN_VALUE and DEFAULT_OUT_VALUE and finally initializes all internal values
-  CommandLineParser(const int, const char**, const std::string&, const std::string&);
+  CommandLineParser(const std::string&, const std::string&);
   CommandLineParser(const CommandLineParser&) = default;
   CommandLineParser(CommandLineParser&&) = default;
 
@@ -98,6 +99,10 @@ class CommandLineParser {
 
   // The destructor
   ~CommandLineParser() = default;
+
+  // Parses the actual data and sets all internal members to the corresponding values.
+  // In error case a CommandLineException is thrown
+  CommandLineParser& operator()(const int, const char**);
 
   // A getter for the laguage of the incoming text (origin)
   std::string in() const noexcept;
@@ -153,13 +158,14 @@ class CommandLineParser {
   bool show_abbreviation() const noexcept;
   // A getter indicating whether to show the comment from the result or not
   bool show_comment() const noexcept;
-  
+
   // Returns a string representing the usage corresponding to the CLI options
   std::string usage() const noexcept;
 
  private:
   std::string app_name_;
-  std::string usage_;
+  std::string default_in_;
+  std::string default_out_;
   std::string in_;
   std::string out_;
   std::string phrase_;
