@@ -34,7 +34,7 @@ class HttpGetRequest : public HttpRequest {
 
   // The actual method that handles the curl HTTP request and must be implemented in each derived class from
   // HttpRequest
-  std::string operator()();
+  std::string operator()() override;
 };  // HttpGetRequest
 }  // client
 }  // translate
