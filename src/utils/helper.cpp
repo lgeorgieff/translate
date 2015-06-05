@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 06/05/2015
+// Last modified: 06/06/2015
 // Description: Defines several helper functions for the entire project.
 // ====================================================================================================================
 
@@ -122,7 +122,7 @@ std::vector<std::string> split_string(const std::string &source, char delimiter,
     if ((*item_end == delimiter || item_end == source_end) && item_end > item_begin) {
       std::string new_value{item_begin, item_end};
       if (trim_result) trim(new_value);
-      result.push_back(new_value);
+      if (!new_value.empty()) result.push_back(new_value);
       item_begin = item_end;
       ++item_begin;
     }
@@ -133,13 +133,13 @@ std::vector<std::string> split_string(const std::string &source, char delimiter,
 void parse_accept_header_item(const std::string &accept_item, std::string &accept_type, std::string &accept_subtype) {
   std::string::const_iterator iter_accept_type{accept_item.cbegin()};
   std::string::const_iterator iter_end{accept_item.cend()};
-  for (; iter_accept_type <= iter_end && *iter_accept_type != '/'; ++iter_accept_type)
+  for (; iter_accept_type < iter_end && *iter_accept_type != '/'; ++iter_accept_type)
     ;
   accept_type = std::string{accept_item.cbegin(), iter_accept_type++};
   trim(accept_type);
 
   std::string::const_iterator iter_accept_subtype{iter_accept_type};
-  for (; iter_accept_subtype <= iter_end && *iter_accept_subtype != ';'; ++iter_accept_subtype)
+  for (; iter_accept_subtype < iter_end && *iter_accept_subtype != ';'; ++iter_accept_subtype)
     ;
   if (iter_accept_subtype != iter_accept_type) {
     accept_subtype = std::string{iter_accept_type, iter_accept_subtype};
@@ -152,16 +152,17 @@ bool check_accept_header(const std::string &accept_header, const std::string &ex
   parse_accept_header_item(expected, expected_type, expected_subtype);
   if (expected_type.empty()) expected_type = "*";
   if (expected_type.empty()) expected_subtype = "*";
+  if (expected_type == "*" && expected_subtype == "*") return true;
   for (const std::string &accept_item : split_string(accept_header, ',')) {
     std::string accept_type, accept_subtype;
     parse_accept_header_item(accept_item, accept_type, accept_subtype);
     if (accept_type == "*" && accept_subtype == "*")
       return true;
-    else if (accept_type == expected_type && accept_subtype == "*")
+    else if (accept_type == expected_type && (accept_subtype == "*" || expected_subtype == "*"))
       return true;
     else if (accept_type == expected_type && accept_subtype == expected_subtype)
       return true;
-  }  // for (const std::string &accept_item : split_string(accept_header, ','))
+  }
   return false;
 }
 }  // utils
