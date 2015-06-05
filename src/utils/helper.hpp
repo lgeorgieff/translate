@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/31/2015
+// Last modified: 06/05/2015
 // Description: Declares several helper functions for the entire project.
 // ====================================================================================================================
 
@@ -20,6 +20,7 @@
 #define HELPER_HPP_
 
 #include <string>
+#include <vector>
 
 namespace lgeorgieff {
 namespace translate {
@@ -55,6 +56,20 @@ std::string get_last_path_from_url(const char *, bool = true);
 
 // Returns a copy of the passed string that contains each character in upper case format.
 std::string to_upper_case(const std::string &);
+
+// Returns a vector of strings that are generated from the original string value which is split by the passed delimiter
+// character. If the bool value is set to true the split values are trimmed for white space characters in the beginning
+// and in the end.
+std::vector<std::string> split_string(const std::string &, char, bool = false);
+
+// Parses one item from the accept header field and sets the type and subtype string references to the corresponding
+// values.
+void parse_accept_header_item(const std::string &, std::string &, std::string &);
+
+// Returns true if the passed accept header string contains the specified accept type.
+// This function takes also placeholders like "*" into account.
+// see: http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.1
+bool check_accept_header(const std::string &, const std::string & = "application/json");
 }  // utils
 }  // translate
 }  // lgeorgieff
