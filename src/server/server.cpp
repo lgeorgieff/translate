@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 06/03/2015
+// Last modified: 06/06/2015
 // Description: Defines the RESTful server for the translation service.
 // ====================================================================================================================
 
@@ -44,6 +44,11 @@ void handle_http_error(mg_connection *connection, int status_code, const std::st
 void send_json_data(mg_connection *connection, const std::string &json_string) {
   mg_send_header(connection, "content-type", "application/json");
   mg_printf_data(connection, "%s", json_string.c_str());
+}
+
+// A helper function that checks the given connection for the accept header value.
+bool check_accept_header(mg_connection *connection, const std::string &expected = "application/json") {
+  return lgeorgieff::translate::utils::check_accept_header(mg_get_header(connection, "accept"), expected);
 }
 }  // anonymous namespace
 
@@ -125,146 +130,156 @@ int Server::request_handler(mg_connection *connection, enum mg_event event) {
         strncat(url, "/", 1);
       }
       if (!strcmp(connection->request_method, "GET")) {
-        try {
-          if (!strcmp(url, URL_LANGUAGES)) {
-            db_query->request_all_languages();
-            string json{JSON::all_languages_to_json(*db_query)};
-            send_json_data(connection, json);
-          } else if (cstring_starts_with(url, URL_LANGUAGE_ID_PREFIX)) {
-            db_query->request_language_by_id(get_last_path_from_url(url));
-            if (db_query->empty()) {
-              std::string error_message{"Language ID \"" + get_last_path_from_url(url) + "\" not found!"};
-              handle_http_error(connection, 404, error_message);
-            } else {
-              string json{JSON::language_name_to_json(*db_query)};
+        if (!check_accept_header(connection)) {
+          std::string error_message{"Only the content-type \"application/json\" is supported!"};
+          handle_http_error(connection, 406, error_message);
+        } else {
+          try {
+            if (!strcmp(url, URL_LANGUAGES)) {
+              db_query->request_all_languages();
+              string json{JSON::all_languages_to_json(*db_query)};
               send_json_data(connection, json);
-            }
-          } else if (cstring_starts_with(url, URL_LANGUAGE_NAME_PREFIX)) {
-            db_query->request_language_by_name(get_last_path_from_url(url));
-            if (db_query->empty()) {
-              std::string error_message{"Language name \"" + get_last_path_from_url(url) + "\" not found!"};
-              handle_http_error(connection, 404, error_message);
-            } else {
-              string json{JSON::language_id_to_json(*db_query)};
+            } else if (cstring_starts_with(url, URL_LANGUAGE_ID_PREFIX)) {
+              db_query->request_language_by_id(get_last_path_from_url(url));
+              if (db_query->empty()) {
+                std::string error_message{"Language ID \"" + get_last_path_from_url(url) + "\" not found!"};
+                handle_http_error(connection, 404, error_message);
+              } else {
+                string json{JSON::language_name_to_json(*db_query)};
+                send_json_data(connection, json);
+              }
+            } else if (cstring_starts_with(url, URL_LANGUAGE_NAME_PREFIX)) {
+              db_query->request_language_by_name(get_last_path_from_url(url));
+              if (db_query->empty()) {
+                std::string error_message{"Language name \"" + get_last_path_from_url(url) + "\" not found!"};
+                handle_http_error(connection, 404, error_message);
+              } else {
+                string json{JSON::language_id_to_json(*db_query)};
+                send_json_data(connection, json);
+              }
+            } else if (!strcmp(url, URL_WORD_CLASSES)) {
+              db_query->request_all_word_classes();
+              string json{JSON::all_word_classes_to_json(*db_query)};
               send_json_data(connection, json);
-            }
-          } else if (!strcmp(url, URL_WORD_CLASSES)) {
-            db_query->request_all_word_classes();
-            string json{JSON::all_word_classes_to_json(*db_query)};
-            send_json_data(connection, json);
-          } else if (cstring_starts_with(url, URL_WORD_CLASS_ID_PREFIX)) {
-            db_query->request_word_class_by_id(get_last_path_from_url(url));
-            if (db_query->empty()) {
-              std::string error_message{"Word class ID \"" + get_last_path_from_url(url) + "\" not found!"};
-              handle_http_error(connection, 404, error_message);
-            } else {
-              string json{JSON::word_class_name_to_json(*db_query)};
+            } else if (cstring_starts_with(url, URL_WORD_CLASS_ID_PREFIX)) {
+              db_query->request_word_class_by_id(get_last_path_from_url(url));
+              if (db_query->empty()) {
+                std::string error_message{"Word class ID \"" + get_last_path_from_url(url) + "\" not found!"};
+                handle_http_error(connection, 404, error_message);
+              } else {
+                string json{JSON::word_class_name_to_json(*db_query)};
+                send_json_data(connection, json);
+              }
+            } else if (cstring_starts_with(url, URL_WORD_CLASS_NAME_PREFIX)) {
+              db_query->request_word_class_by_name(get_last_path_from_url(url));
+              if (db_query->empty()) {
+                std::string error_message{"Word class name \"" + get_last_path_from_url(url) + "\" not found!"};
+                handle_http_error(connection, 404, error_message);
+              } else {
+                string json{JSON::word_class_id_to_json(*db_query)};
+                send_json_data(connection, json);
+              }
+            } else if (!strcmp(url, URL_GENDERS)) {
+              db_query->request_all_genders();
+              string json{JSON::all_genders_to_json(*db_query)};
               send_json_data(connection, json);
-            }
-          } else if (cstring_starts_with(url, URL_WORD_CLASS_NAME_PREFIX)) {
-            db_query->request_word_class_by_name(get_last_path_from_url(url));
-            if (db_query->empty()) {
-              std::string error_message{"Word class name \"" + get_last_path_from_url(url) + "\" not found!"};
-              handle_http_error(connection, 404, error_message);
-            } else {
-              string json{JSON::word_class_id_to_json(*db_query)};
+            } else if (cstring_starts_with(url, URL_GENDER_ID_PREFIX)) {
+              db_query->request_gender_by_id(get_last_path_from_url(url));
+              if (db_query->empty()) {
+                std::string error_message{"Gender ID \"" + get_last_path_from_url(url) + "\" not found!"};
+                handle_http_error(connection, 404, error_message);
+              } else {
+                string json{JSON::gender_name_to_json(*db_query)};
+                send_json_data(connection, json);
+              }
+            } else if (cstring_starts_with(url, URL_GENDER_NAME_PREFIX)) {
+              db_query->request_gender_by_name(get_last_path_from_url(url));
+              if (db_query->empty()) {
+                std::string error_message{"Gender name \"" + get_last_path_from_url(url) + "\" not found!"};
+                handle_http_error(connection, 404, error_message);
+              } else {
+                string json{JSON::gender_id_to_json(*db_query)};
+                send_json_data(connection, json);
+              }
+            } else if (!strcmp(url, URL_NUMERI)) {
+              db_query->request_all_numeri();
+              string json{JSON::all_numeri_to_json(*db_query)};
               send_json_data(connection, json);
-            }
-          } else if (!strcmp(url, URL_GENDERS)) {
-            db_query->request_all_genders();
-            string json{JSON::all_genders_to_json(*db_query)};
-            send_json_data(connection, json);
-          } else if (cstring_starts_with(url, URL_GENDER_ID_PREFIX)) {
-            db_query->request_gender_by_id(get_last_path_from_url(url));
-            if (db_query->empty()) {
-              std::string error_message{"Gender ID \"" + get_last_path_from_url(url) + "\" not found!"};
-              handle_http_error(connection, 404, error_message);
             } else {
-              string json{JSON::gender_name_to_json(*db_query)};
-              send_json_data(connection, json);
+              // 400 => Bad Request (Bad URL)
+              std::string error_message{"Bad Request: called GET on \"" + std::string{url} + "\"!"};
+              handle_http_error(connection, 400, error_message);
             }
-          } else if (cstring_starts_with(url, URL_GENDER_NAME_PREFIX)) {
-            db_query->request_gender_by_name(get_last_path_from_url(url));
-            if (db_query->empty()) {
-              std::string error_message{"Gender name \"" + get_last_path_from_url(url) + "\" not found!"};
-              handle_http_error(connection, 404, error_message);
-            } else {
-              string json{JSON::gender_id_to_json(*db_query)};
-              send_json_data(connection, json);
-            }
-          } else if (!strcmp(url, URL_NUMERI)) {
-            db_query->request_all_numeri();
-            string json{JSON::all_numeri_to_json(*db_query)};
-            send_json_data(connection, json);
-          } else {
-            // 400 => Bad Request (Bad URL)
-            std::string error_message{"Bad Request: called GET on \"" + std::string{url} + "\"!"};
-            handle_http_error(connection, 400, error_message);
+          } catch (Exception &err) {
+            // Internal Server Error
+            std::string error_message{std::string{"Internal server error: "} + err.what()};
+            handle_http_error(connection, 500, error_message);
           }
-        } catch (Exception &err) {
-          // Internal Server Error
-          std::string error_message{std::string{"Internal server error: "} + err.what()};
-          handle_http_error(connection, 500, error_message);
         }
       } else if (!strcmp(connection->request_method, "POST")) {
-        try {
-          if (cstring_starts_with(connection->uri, URL_TRANSLATION_PREFIX)) {
-            char *post_content = new char[connection->content_len + 1];
-            strncpy(post_content, connection->content, connection->content_len);
-            post_content[connection->content_len] = '\0';
-            Json::CharReaderBuilder json_reader_factory;
-            Json::CharReader *json_reader(json_reader_factory.newCharReader());
-            Json::Value user_options;
-            std::string errors;
-            if (!json_reader->parse(post_content, post_content + strlen(post_content), &user_options, &errors)) {
-              // 400 => Bad Request (Bad URL)
-              std::string error_message{"Bad Request: Malformed POST content:\n" + errors};
-              handle_http_error(connection, 400, error_message);
-            } else {
-              std::string origin_phrase{""};
-              if (user_options.isObject()) {
-                Json::Value extracted_phrase{user_options.get("phrase", "")};
-                if (!extracted_phrase.isString()) {
-                  handle_http_error(connection, 400,
-                                    "Expected a JSON object with at least the string member \"phrase\"!");
+        if (!check_accept_header(connection)) {
+          std::string error_message{"Only the content-type \"application/json\" is supported!"};
+          handle_http_error(connection, 406, error_message);
+        } else {
+          try {
+            if (cstring_starts_with(connection->uri, URL_TRANSLATION_PREFIX)) {
+              char *post_content = new char[connection->content_len + 1];
+              strncpy(post_content, connection->content, connection->content_len);
+              post_content[connection->content_len] = '\0';
+              Json::CharReaderBuilder json_reader_factory;
+              Json::CharReader *json_reader(json_reader_factory.newCharReader());
+              Json::Value user_options;
+              std::string errors;
+              if (!json_reader->parse(post_content, post_content + strlen(post_content), &user_options, &errors)) {
+                // 400 => Bad Request (Bad URL)
+                std::string error_message{"Bad Request: Malformed POST content:\n" + errors};
+                handle_http_error(connection, 400, error_message);
+              } else {
+                std::string origin_phrase{""};
+                if (user_options.isObject()) {
+                  Json::Value extracted_phrase{user_options.get("phrase", "")};
+                  if (!extracted_phrase.isString()) {
+                    handle_http_error(connection, 400,
+                                      "Expected a JSON object with at least the string member \"phrase\"!");
+                    delete[] url;
+                    return MG_TRUE;
+                  }
+                  origin_phrase = extracted_phrase.asString();
+                }
+                if (origin_phrase.empty()) {
+                  handle_http_error(connection, 400, "Phrase for translation must not be empty!");
                   delete[] url;
                   return MG_TRUE;
                 }
-                origin_phrase = extracted_phrase.asString();
+                std::string word_class{""};
+                Json::Value extracted_word_class{user_options.get("word_class", "")};
+                if (extracted_word_class.isString()) word_class = extracted_word_class.asString();
+                if (word_class.empty()) {
+                  db_query->request_phrase(origin_phrase, get_origin_language_id_from_url(url),
+                                           get_target_language_id_from_url(url));
+                } else {
+                  db_query->request_phrase(origin_phrase, get_origin_language_id_from_url(url),
+                                           get_target_language_id_from_url(url), word_class);
+                }
+                if (db_query->empty()) {
+                  std::string error_message{"No translation found for \"" + origin_phrase +
+                                            (word_class.empty() ? "" : " (" + word_class + ")") + "\"!"};
+                  handle_http_error(connection, 404, error_message);
+                } else {
+                  string json{JSON::phrase_to_json(*db_query, user_options)};
+                  send_json_data(connection, json);
+                }
               }
-              if (origin_phrase.empty()) {
-                handle_http_error(connection, 400, "Phrase for translation must not be empty!");
-                delete[] url;
-                return MG_TRUE;
-              }
-              std::string word_class{""};
-              Json::Value extracted_word_class{user_options.get("word_class", "")};
-              if (extracted_word_class.isString()) word_class = extracted_word_class.asString();
-              if (word_class.empty()) {
-                db_query->request_phrase(origin_phrase, get_origin_language_id_from_url(url),
-                                         get_target_language_id_from_url(url));
-              } else {
-                db_query->request_phrase(origin_phrase, get_origin_language_id_from_url(url),
-                                         get_target_language_id_from_url(url), word_class);
-              }
-              if (db_query->empty()) {
-                std::string error_message{"No translation found for \"" + origin_phrase +
-                                          (word_class.empty() ? "" : " (" + word_class + ")") + "\"!"};
-                handle_http_error(connection, 404, error_message);
-              } else {
-                string json{JSON::phrase_to_json(*db_query, user_options)};
-                send_json_data(connection, json);
-              }
+            } else {
+              // 400 => Bad Request (Bad URL)
+              std::string error_message{"Bad Request: called POST on \"" + std::string{url} + "\"!"};
+              handle_http_error(connection, 400, error_message);
             }
-          } else {
-            // 400 => Bad Request (Bad URL)
-            std::string error_message{"Bad Request: called POST on \"" + std::string{url} + "\"!"};
-            handle_http_error(connection, 400, error_message);
+          } catch (Exception &err) {
+            // Internal Server Error
+            std::string error_message{std::string{"Internal server error: "} + err.what()};
+            handle_http_error(connection, 500, error_message);
           }
-        } catch (Exception &err) {
-          // Internal Server Error
-          std::string error_message{std::string{"Internal server error: "} + err.what()};
-          handle_http_error(connection, 500, error_message);
         }
       } else {
         // 400 => Bad Request (Bad method)

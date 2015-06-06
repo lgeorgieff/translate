@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 06/04/2015
+// Last modified: 06/06/2015
 // Description: Declares the base class for an HTTP request to the translation service.
 // ====================================================================================================================
 
@@ -29,9 +29,11 @@ namespace translate {
 namespace client {
 class HttpRequest {
  public:
+  static const std::string DEFAULT_ACCEPT_HEADER;
+
   // === Constructors, destructor, operators ==========================================================================
-  // The base constructor that takes the HTTP request's URL
-  explicit HttpRequest(const std::string&);
+  // The base constructor that takes the HTTP request's URL and optionally the accept header.
+  explicit HttpRequest(const std::string&, const std::string& = DEFAULT_ACCEPT_HEADER);
   HttpRequest(const HttpRequest&);
   HttpRequest(HttpRequest&&);
   virtual ~HttpRequest();
@@ -50,6 +52,8 @@ class HttpRequest {
   int status_code() const noexcept;
   // A getter for the request URL
   std::string url() const noexcept;
+  // A getter for the accept header
+  std::string accept_header() const noexcept;
 
   // A helper for initializing curl
   static CURLcode init_curl();
@@ -59,6 +63,7 @@ class HttpRequest {
  protected:
   std::string url_;
   std::string result_;
+  std::string accept_header_;
   int status_code_;
   // The callback function that is called by curl during the HTTP request
   static size_t curl_write_(void*, size_t, size_t, void*);

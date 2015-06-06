@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 06/04/2015
+// Last modified: 06/06/2015
 // Description: Implements the base class for an HTTP request to the translation service.
 // ====================================================================================================================
 
@@ -24,6 +24,8 @@ namespace lgeorgieff {
 namespace translate {
 namespace client {
 
+const std::string HttpRequest::DEFAULT_ACCEPT_HEADER{"application/json"};
+
 size_t HttpRequest::curl_write_(void *ptr, size_t size, size_t nmemb, void *user_data) {
   HttpRequest *http_request(static_cast<HttpRequest *>(user_data));
   http_request->result_.append((char *)ptr, size * nmemb);
@@ -34,14 +36,19 @@ CURLcode HttpRequest::init_curl() { return curl_global_init(CURL_GLOBAL_ALL); }
 
 void HttpRequest::cleanup_curl() { curl_global_cleanup(); }
 
-HttpRequest::HttpRequest(const std::string &url) : url_{url}, result_{}, status_code_{-1} {}
+HttpRequest::HttpRequest(const std::string &url, const std::string &accept_header)
+    : url_{url}, result_{}, accept_header_{accept_header}, status_code_{-1} {}
 
 HttpRequest::HttpRequest(const HttpRequest &other)
-    : url_{other.url_}, result_{other.result_}, status_code_{other.status_code_} {}
+    : url_{other.url_},
+      result_{other.result_},
+      accept_header_{other.accept_header_},
+      status_code_{other.status_code_} {}
 
 HttpRequest::HttpRequest(HttpRequest &&other)
     : url_{std::move(other.url_)},
       result_{std::move(other.result_)},
+      accept_header_{std::move(other.accept_header_)},
       status_code_{std::move(other.status_code_)} {}
 
 HttpRequest::~HttpRequest() {}
@@ -49,6 +56,7 @@ HttpRequest::~HttpRequest() {}
 HttpRequest &HttpRequest::operator=(const HttpRequest &other) {
   this->url_ = other.url_;
   this->result_ = other.result_;
+  this->accept_header_ = other.accept_header_;
   this->status_code_ = other.status_code_;
   return *this;
 }
@@ -56,13 +64,14 @@ HttpRequest &HttpRequest::operator=(const HttpRequest &other) {
 HttpRequest &HttpRequest::operator=(HttpRequest &&other) {
   this->url_ = std::move(other.url_);
   this->result_ = std::move(other.result_);
+  this->accept_header_ = std::move(other.accept_header_);
   this->status_code_ = std::move(other.status_code_);
   return *this;
 }
 
 bool HttpRequest::operator==(const HttpRequest &other) {
-  return this->url_ == other.url_ && this->result_ == other.result_ &&
-         this->status_code_ == other.status_code_;
+  return this->url_ == other.url_ && this->result_ == other.result_ && this->status_code_ == other.status_code_ &&
+         this->accept_header_ == other.accept_header_;
 }
 
 bool HttpRequest::operator!=(const HttpRequest &other) { return !(*this == other); }
@@ -72,6 +81,8 @@ std::string HttpRequest::result() const noexcept { return this->result_; }
 int HttpRequest::status_code() const noexcept { return this->status_code_; }
 
 std::string HttpRequest::url() const noexcept { return this->url_; }
+
+std::string HttpRequest::accept_header() const noexcept { return this->accept_header_; }
 }  // client
 }  // translate
 }  // lgeorgieff

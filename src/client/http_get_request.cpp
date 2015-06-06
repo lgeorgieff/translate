@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 06/04/2015
+// Last modified: 06/06/2015
 // Description: Implements a class for an HTTP GET request to the translation service.
 // ====================================================================================================================
 
@@ -33,6 +33,11 @@ std::string HttpGetRequest::operator()() {
   curl_easy_setopt(curl_handle, CURLOPT_FOLLOWLOCATION, 1L);
   curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, &curl_write_);
   curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, this);
+
+  struct curl_slist *headers = nullptr;
+  std::string accept_header{"Accept: " + this->accept_header_};
+  headers = curl_slist_append(headers, accept_header.c_str());
+  curl_easy_setopt(curl_handle, CURLOPT_HTTPHEADER, headers);
 
   CURLcode curl_code{curl_easy_perform(curl_handle)};
   if (CURLE_OK != curl_code) {
