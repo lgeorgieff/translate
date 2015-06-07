@@ -20,9 +20,6 @@
 ### project setup
 project(translate_client)
 
-### set all include paths
-include_directories("../")
-
 ### register all source files for the client part
 set(CLIENT_SOURCE_FILES ../utils/command_line_exception.cpp ../utils/exception.cpp ../utils/http_exception.cpp
                         ../utils/json_exception.cpp ../utils/helper.cpp http_request.cpp http_get_request.cpp

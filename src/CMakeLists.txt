@@ -1,6 +1,6 @@
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 05/15/2015
+# Last modified: 06/07/2015
 # Description: Main CMakeLists.txt file for building this project. The actual modules are built by calling
 #              CMakeLists.txt of the corresponding sub-directories.
 #              Common options:
@@ -71,6 +71,9 @@ elseif(NOT ${CPP14})
 endif()
 
 message(STATUS "C++ flags: ${CMAKE_CXX_FLAGS}")
+
+### set all include paths
+include_directories("${CMAKE_SOURCE_DIR}")
 
 ### register sub-modules
 add_subdirectory(server)

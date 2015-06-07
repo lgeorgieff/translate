@@ -1,6 +1,6 @@
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 05/17/2015
+# Last modified: 06/07/2015
 # Description: Build unit tests for the client part.
 #######################################################################################################################
 
@@ -21,7 +21,9 @@ project(translate_test_client)
 
 ### register all source files
 set(TEST_CLIENT_SOURCE_FILES ../../utils/exception.cpp ../../utils/command_line_exception.cpp
-			     ../../client/command_line_parser.cpp command_line_parser_unit_test.cpp test_main.cpp)
+			     ../../utils/json_exception.cpp ../../client/command_line_parser.cpp
+                             ../../client/configuration_reader.cpp command_line_parser_unit_test.cpp
+                             configuration_reader_unit_test.cpp test_main.cpp)
 
 ### create a sttic library
 add_executable(client_test ${TEST_CLIENT_SOURCE_FILES})
@@ -31,3 +33,4 @@ target_link_libraries(client_test gtest)
 target_link_libraries(client_test gtest_main)
 target_link_libraries(client_test pq)
 target_link_libraries(client_test pqxx)
+target_link_libraries(client_test jsoncpp)

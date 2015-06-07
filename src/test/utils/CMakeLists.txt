@@ -1,6 +1,6 @@
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 05/17/2015
+# Last modified: 06/07/2015
 # Description: Build unit tests for the utils part
 #######################################################################################################################
 
@@ -18,9 +18,6 @@
 
 ### project setup
 project(translate_test_utils)
-
-### set all include paths
-include_directories("../../")
 
 ### register all source files
 set(TEST_UTILS_SOURCE_FILES ../../utils/exception.cpp ../../utils/gender.cpp ../../utils/numerus.cpp

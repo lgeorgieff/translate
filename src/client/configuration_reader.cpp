@@ -36,7 +36,7 @@ void process_json_value(const Json::Value &json_object, const std::string &membe
       throw lgeorgieff::translate::utils::JsonException{
           "Cannot process the json data " + json_object[member_name].toStyledString() + ". Expected a boolean value!"};
     }
-    destination = json_object["service_port"].asBool();
+    destination = json_object[member_name].asBool();
   }
 }
 }
