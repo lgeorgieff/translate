@@ -85,6 +85,8 @@ class ConfigurationReader {
   bool show_numerus() const noexcept;
   bool show_abbreviation() const noexcept;
   bool show_comment() const noexcept;
+  // Returns true if the configuration files was read and parsed successfully.
+  bool available() const noexcept;
 
  private:
   std::string read_file_();
@@ -98,6 +100,7 @@ class ConfigurationReader {
   bool show_numerus_;
   bool show_abbreviation_;
   bool show_comment_;
+  bool available_;
 };
 
 }  // client

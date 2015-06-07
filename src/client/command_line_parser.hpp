@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 06/04/2015
+// Last modified: 06/07/2015
 // Description: Declares the interface of the command line parser which is adapted to the supported options of this
 //              program.
 // ====================================================================================================================
@@ -148,16 +148,28 @@ class CommandLineParser {
   std::string gender_name() const noexcept;
   // A getter indicating whether to show the phrase from the result or not
   bool show_phrase() const noexcept;
+  // A getter indicating whether to show_phrase was set by the user or not
+  bool has_show_phrase() const noexcept;
   // A getter indicating whether to show the word class from the result or not
   bool show_word_class() const noexcept;
+  // A getter indicating whether to show_word_class was set by the user or not
+  bool has_show_word_class() const noexcept;
   // A getter indicating whether to show the gender from the result or not
   bool show_gender() const noexcept;
+  // A getter indicating whether to show_gender was set by the user or not
+  bool has_show_gender() const noexcept;
   // A getter indicating whether to show the numerus from the result or not
   bool show_numerus() const noexcept;
+  // A getter indicating whether to show_numerus was set by the user or not
+  bool has_show_numerus() const noexcept;
   // A getter indicating whether to show the abbreviation from the result or not
   bool show_abbreviation() const noexcept;
+  // A getter indicating whether to show_abbreviation was set by the user or not
+  bool has_show_abbreviation() const noexcept;
   // A getter indicating whether to show the comment from the result or not
   bool show_comment() const noexcept;
+  // A getter indicating whether to show_comment was set by the user or not
+  bool has_show_comment() const noexcept;
 
   // Returns a string representing the usage corresponding to the CLI options
   std::string usage() const noexcept;
@@ -188,11 +200,17 @@ class CommandLineParser {
   bool has_gender_id_;
   bool has_gender_name_;
   bool show_phrase_;
+  bool has_show_phrase_;
   bool show_word_class_;
+  bool has_show_word_class_;
   bool show_gender_;
+  bool has_show_gender_;
   bool show_numerus_;
+  bool has_show_numerus_;
   bool show_abbreviation_;
+  bool has_show_abbreviation_;
   bool show_comment_;
+  bool has_show_comment_;
 };  // CommandLineParser
 }  // translate
 }  // lgeorgieff

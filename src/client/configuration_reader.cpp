@@ -66,7 +66,8 @@ ConfigurationReader::ConfigurationReader(const std::string &configuration_file_p
       show_gender_{SHOW_GENDER_DEFAULT},
       show_numerus_{SHOW_NUMERUS_DEFAULT},
       show_abbreviation_{SHOW_ABBREVIATON_DEFAULT},
-      show_comment_{SHOW_COMMENT_DEFAULT} {}
+      show_comment_{SHOW_COMMENT_DEFAULT},
+      available_{} {}
 
 ConfigurationReader &ConfigurationReader::operator()() {
   std::string json_string{this->read_file_()};
@@ -99,6 +100,7 @@ ConfigurationReader &ConfigurationReader::operator()() {
   process_json_value(json, "show_abbreviation", this->show_abbreviation_);
   process_json_value(json, "show_comment", this->show_comment_);
 
+  this->available_ = true;
   return *this;
 }
 
@@ -120,9 +122,11 @@ bool ConfigurationReader::show_abbreviation() const noexcept { return this->show
 
 bool ConfigurationReader::show_comment() const noexcept { return this->show_comment_; }
 
+bool ConfigurationReader::available() const noexcept { return this->available_; }
+
 std::string ConfigurationReader::read_file_() {
   std::ifstream in{this->config_file_path_, std::ifstream::in};
-  if (in){
+  if (in) {
     return std::string{std::istreambuf_iterator<char>{in}, std::istreambuf_iterator<char>{}};
   } else {
     throw Exception{"Cannot read the file \"" + this->config_file_path_ + "\"! Errno: " + std::to_string(errno)};

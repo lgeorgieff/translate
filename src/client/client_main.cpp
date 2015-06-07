@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 06/04/2015
+// Last modified: 06/07/2015
 // Description: The entry point for the entire application.
 // ====================================================================================================================
 
@@ -23,33 +23,40 @@
 #include "http_get_request.hpp"
 #include "http_post_request.hpp"
 #include "result_writer.hpp"
-
+#include "configuration_reader.hpp"
 #include <json/json.h>
 
 #include <iostream>
 
 using lgeorgieff::translate::CommandLineParser;
 using lgeorgieff::translate::utils::CommandLineException;
+using lgeorgieff::translate::utils::Exception;
 using lgeorgieff::translate::utils::HttpException;
 using lgeorgieff::translate::utils::JsonException;
 using lgeorgieff::translate::client::HttpGetRequest;
 using lgeorgieff::translate::client::HttpPostRequest;
 using lgeorgieff::translate::client::ResultWriter;
-
-// TODO: implement reading of a configuration file => server url + defaults
-const std::string BASE_URL{"localhost:8885/"};
+using lgeorgieff::translate::client::ConfigurationReader;
 
 // Create a JSON string based on the corresponding command line arguments
 // that can be used for a post/translation request.
-std::string create_post_data(const CommandLineParser &cmd_parser) {
+std::string create_post_data(const CommandLineParser &cmd_parser, const ConfigurationReader &config_reader) {
   Json::Value result;
   result["phrase"] = cmd_parser.phrase();
-  result["show_phrase"] = cmd_parser.show_phrase();
-  result["show_word_class"] = cmd_parser.show_word_class();
-  result["show_gender"] = cmd_parser.show_gender();
-  result["show_numerus"] = cmd_parser.show_numerus();
-  result["show_abbreviation"] = cmd_parser.show_abbreviation();
-  result["show_comment"] = cmd_parser.show_comment();
+  result["show_phrase"] = cmd_parser.has_show_phrase() || !config_reader.available() ? cmd_parser.show_phrase()
+                                                                                     : config_reader.show_phrase();
+  result["show_word_class"] = cmd_parser.has_show_word_class() || !config_reader.available()
+                                  ? cmd_parser.show_word_class()
+                                  : config_reader.show_word_class();
+  result["show_gender"] = cmd_parser.has_show_gender() || !config_reader.available() ? cmd_parser.show_gender()
+                                                                                     : config_reader.show_gender();
+  result["show_numerus"] = cmd_parser.has_show_numerus() || !config_reader.available() ? cmd_parser.show_numerus()
+                                                                                       : config_reader.show_numerus();
+  result["show_abbreviation"] = cmd_parser.has_show_abbreviation() || !config_reader.available()
+                                    ? cmd_parser.show_abbreviation()
+                                    : config_reader.show_abbreviation();
+  result["show_comment"] = cmd_parser.has_show_comment() || !config_reader.available() ? cmd_parser.show_comment()
+                                                                                       : config_reader.show_comment();
   Json::StreamWriterBuilder json_writer;
   json_writer.settings_["indentation"] = "";
   return Json::writeString(json_writer, result);
@@ -69,36 +76,50 @@ std::string process_request(const std::string &url) {
 
 int main(const int argc, const char **argv) {
   CommandLineParser cmd_parser{};
+  ConfigurationReader config_reader{"configuration.json"};
+  std::string base_url{"localhost:8885/"};
   try {
     cmd_parser(argc, argv);
+
+    if (!cmd_parser.help()) {
+      try {
+        config_reader();
+        base_url = config_reader.service_address() + ":" + std::to_string(config_reader.service_port()) + "/";
+      } catch (const JsonException &err) {
+        std::cerr << "Could not process configuration file: " << err.what() << std::endl;
+      } catch (const Exception &err) {
+        std::cerr << "Could not process configuration file: " << err.what() << std::endl;
+      }
+    }
+
     ResultWriter writer{&std::cout};
     if (cmd_parser.help()) {
       std::cout << cmd_parser.usage() << std::endl
                 << std::endl;
       return 0;
     } else if (cmd_parser.all_languages()) {
-      writer.write_languages(process_request(BASE_URL + "languages"));
+      writer.write_languages(process_request(base_url + "languages"));
     } else if (cmd_parser.all_word_classes()) {
-      writer.write_word_classes(process_request(BASE_URL + "word_classes"));
+      writer.write_word_classes(process_request(base_url + "word_classes"));
     } else if (cmd_parser.all_genders()) {
-      writer.write_genders(process_request(BASE_URL + "genders"));
+      writer.write_genders(process_request(base_url + "genders"));
     } else if (cmd_parser.all_numeri()) {
-      writer.write_numeri(process_request(BASE_URL + "numeri"));
+      writer.write_numeri(process_request(base_url + "numeri"));
     } else if (cmd_parser.has_language_id()) {
-      writer.write_language_name(process_request(BASE_URL + "/language/id/" + cmd_parser.language_id()));
+      writer.write_language_name(process_request(base_url + "language/id/" + cmd_parser.language_id()));
     } else if (cmd_parser.has_language_name()) {
-      writer.write_language_id(process_request(BASE_URL + "/language/name/" + cmd_parser.language_name()));
+      writer.write_language_id(process_request(base_url + "language/name/" + cmd_parser.language_name()));
     } else if (cmd_parser.has_word_class_id()) {
-      writer.write_word_class_name(process_request(BASE_URL + "/word_class/id/" + cmd_parser.word_class_id()));
+      writer.write_word_class_name(process_request(base_url + "word_class/id/" + cmd_parser.word_class_id()));
     } else if (cmd_parser.has_word_class_name()) {
-      writer.write_word_class_id(process_request(BASE_URL + "/word_class/name/" + cmd_parser.word_class_name()));
+      writer.write_word_class_id(process_request(base_url + "word_class/name/" + cmd_parser.word_class_name()));
     } else if (cmd_parser.has_gender_id()) {
-      writer.write_gender_name(process_request(BASE_URL + "/gender/id/" + cmd_parser.gender_id()));
+      writer.write_gender_name(process_request(base_url + "gender/id/" + cmd_parser.gender_id()));
     } else if (cmd_parser.has_gender_name()) {
-      writer.write_gender_id(process_request(BASE_URL + "/gender/name/" + cmd_parser.gender_name()));
+      writer.write_gender_id(process_request(base_url + "gender/name/" + cmd_parser.gender_name()));
     } else if (cmd_parser.has_phrase()) {
-      HttpPostRequest request{BASE_URL + "translation/" + cmd_parser.in() + "/" + cmd_parser.out() + "/",
-                              create_post_data(cmd_parser)};
+      HttpPostRequest request{base_url + "translation/" + cmd_parser.in() + "/" + cmd_parser.out() + "/",
+                              create_post_data(cmd_parser, config_reader)};
       request();
       if (200 != request.status_code() && 404 != request.status_code()) {
         throw HttpException{"Could not process \"" + request.url() + "\", HTTP status code: " +

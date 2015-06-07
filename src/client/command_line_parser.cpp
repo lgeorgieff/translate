@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 06/04/2015
+// Last modified: 06/07/2015
 // Description: Implements the command line parser interface which is adapted to the supported options of this program.
 // ====================================================================================================================
 
@@ -74,24 +74,30 @@ CommandLineParser::CommandLineParser(const std::string &default_in, const std::s
       word_class_name_{""},
       gender_id_{""},
       gender_name_{""},
-      has_phrase_{false},
-      help_{false},
-      all_languages_{false},
-      all_word_classes_{false},
-      all_genders_{false},
-      all_numeri_{false},
-      has_language_id_{false},
-      has_language_name_{false},
-      has_word_class_id_{false},
-      has_word_class_name_{false},
-      has_gender_id_{false},
-      has_gender_name_{false},
+      has_phrase_{},
+      help_{},
+      all_languages_{},
+      all_word_classes_{},
+      all_genders_{},
+      all_numeri_{},
+      has_language_id_{},
+      has_language_name_{},
+      has_word_class_id_{},
+      has_word_class_name_{},
+      has_gender_id_{},
+      has_gender_name_{},
       show_phrase_{DEFAULT_SHOW_PHRASE},
+      has_show_phrase_{},
       show_word_class_{DEFAULT_SHOW_WORD_CLASS},
+      has_show_word_class_{},
       show_gender_{DEFAULT_SHOW_GENDER},
+      has_show_gender_{},
       show_numerus_{DEFAULT_SHOW_NUMERUS},
+      has_show_numerus_{},
       show_abbreviation_{DEFAULT_SHOW_ABBREVIATION},
-      show_comment_{DEFAULT_SHOW_COMMENT} {}
+      has_show_abbreviation_{},
+      show_comment_{DEFAULT_SHOW_COMMENT},
+      has_show_comment_{} {}
 
 CommandLineParser &CommandLineParser::operator()(const int argc, const char **argv) {
   bool in_found{false};
@@ -154,16 +160,22 @@ CommandLineParser &CommandLineParser::operator()(const int argc, const char **ar
       this->has_phrase_ = true;
     } else if (SHOW_PHRASE_LONG == argv[i]) {
       this->show_phrase_ = true;
+      this->has_show_phrase_ = true;
     } else if (SHOW_WORD_CLASS_LONG == argv[i]) {
       this->show_word_class_ = true;
+      this->has_show_word_class_ = true;
     } else if (SHOW_GENDER_LONG == argv[i]) {
       this->show_gender_ = true;
+      this->has_show_gender_ = true;
     } else if (SHOW_NUMERUS_LONG == argv[i]) {
       this->show_numerus_ = true;
+      this->has_show_numerus_ = true;
     } else if (SHOW_ABBREVIATION_LONG == argv[i]) {
       this->show_abbreviation_ = true;
+      this->has_show_abbreviation_ = true;
     } else if (SHOW_COMMENT_LONG == argv[i]) {
       this->show_comment_ = true;
+      this->has_show_comment_ = true;
     } else {
       throw CommandLineException{"The argument \"" + std::string{argv[i]} + "\" is not known!"};
     }
@@ -270,17 +282,29 @@ bool CommandLineParser::has_gender_name() const noexcept { return this->has_gend
 
 std::string CommandLineParser::gender_name() const noexcept { return this->gender_name_; }
 
-bool CommandLineParser::show_phrase() const noexcept { return show_phrase_; }
+bool CommandLineParser::show_phrase() const noexcept { return this->show_phrase_; }
 
-bool CommandLineParser::show_word_class() const noexcept { return show_word_class_; }
+bool CommandLineParser::has_show_phrase() const noexcept { return this->has_show_phrase_; }
 
-bool CommandLineParser::show_gender() const noexcept { return show_gender_; }
+bool CommandLineParser::show_word_class() const noexcept { return this->show_word_class_; }
 
-bool CommandLineParser::show_numerus() const noexcept { return show_numerus_; }
+bool CommandLineParser::has_show_word_class() const noexcept { return this->has_show_word_class_; }
 
-bool CommandLineParser::show_abbreviation() const noexcept { return show_abbreviation_; }
+bool CommandLineParser::show_gender() const noexcept { return this->show_gender_; }
 
-bool CommandLineParser::show_comment() const noexcept { return show_comment_; }
+bool CommandLineParser::has_show_gender() const noexcept { return this->has_show_gender_; }
+
+bool CommandLineParser::show_numerus() const noexcept { return this->show_numerus_; }
+
+bool CommandLineParser::has_show_numerus() const noexcept { return this->has_show_numerus_; }
+
+bool CommandLineParser::show_abbreviation() const noexcept { return this->show_abbreviation_; }
+
+bool CommandLineParser::has_show_abbreviation() const noexcept { return this->has_show_abbreviation_; }
+
+bool CommandLineParser::show_comment() const noexcept { return this->show_comment_; }
+
+bool CommandLineParser::has_show_comment() const noexcept { return this->has_show_comment_; }
 
 }  // translate
 }  // lgeorgieff
