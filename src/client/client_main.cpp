@@ -24,9 +24,13 @@
 #include "http_post_request.hpp"
 #include "result_writer.hpp"
 #include "configuration_reader.hpp"
+
 #include <json/json.h>
 
 #include <iostream>
+#include <unistd.h>
+#include <sys/types.h>
+#include <pwd.h>
 
 using lgeorgieff::translate::CommandLineParser;
 using lgeorgieff::translate::utils::CommandLineException;
@@ -75,8 +79,15 @@ std::string process_request(const std::string &url) {
 }
 
 int main(const int argc, const char **argv) {
-  CommandLineParser cmd_parser{};
-  ConfigurationReader config_reader{"configuration.json"};
+  CommandLineParser cmd_parser;
+  std::string config_path{"configuration.json"};
+  try {
+    struct passwd *pw = getpwuid(getuid());
+    config_path = std::string{pw->pw_dir} + "/.trlt/configuration.json";
+  } catch (...) {
+  }  // try-catch get confguration file path
+
+  ConfigurationReader config_reader{config_path};
   std::string base_url{"localhost:8885/"};
   try {
     cmd_parser(argc, argv);
@@ -90,7 +101,7 @@ int main(const int argc, const char **argv) {
       } catch (const Exception &err) {
         std::cerr << "Could not process configuration file: " << err.what() << std::endl;
       }
-    }
+    }  // try-catch configuration reader
 
     ResultWriter writer{&std::cout};
     if (cmd_parser.help()) {
@@ -143,5 +154,5 @@ int main(const int argc, const char **argv) {
   } catch (JsonException &err) {
     std::cerr << "Could not process the server's response: " << err.what() << std::endl;
     return 2;
-  }
+  }  // try-catch command line parser
 }
