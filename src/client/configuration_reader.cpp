@@ -55,6 +55,7 @@ const bool ConfigurationReader::SHOW_WORD_CLASS_DEFAULT{};
 const bool ConfigurationReader::SHOW_GENDER_DEFAULT{};
 const bool ConfigurationReader::SHOW_NUMERUS_DEFAULT{};
 const bool ConfigurationReader::SHOW_ABBREVIATON_DEFAULT{};
+const bool ConfigurationReader::SHOW_COMMENT_DEFAULT{};
 
 ConfigurationReader::ConfigurationReader(const std::string &configuration_file_path)
     : config_file_path_{configuration_file_path},
