@@ -1,0 +1,10 @@
+{
+   "service_address" : "localhost",
+   "service_port" : 8885,
+   "show_phrase" : true,
+   "show_word_class" : false,
+   "show_gender" : false,
+   "show_numerus" : false,
+   "show_abbreviation" : false,
+   "show_comment" : false
+}
