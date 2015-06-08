@@ -254,16 +254,17 @@ int Server::request_handler(mg_connection *connection, enum mg_event event) {
                 std::string word_class{""};
                 Json::Value extracted_word_class{user_options.get("word_class", "")};
                 if (extracted_word_class.isString()) word_class = extracted_word_class.asString();
+                std::string origin_language_id{get_origin_language_id_from_url(url)};
+                std::string target_language_id{get_target_language_id_from_url(url)};
                 if (word_class.empty()) {
-                  db_query->request_phrase(origin_phrase, get_origin_language_id_from_url(url),
-                                           get_target_language_id_from_url(url));
+                  db_query->request_phrase(origin_phrase, target_language_id, target_language_id);
                 } else {
-                  db_query->request_phrase(origin_phrase, get_origin_language_id_from_url(url),
-                                           get_target_language_id_from_url(url), word_class);
+                  db_query->request_phrase(origin_phrase, origin_language_id, target_language_id, word_class);
                 }
                 if (db_query->empty()) {
                   std::string error_message{"No translation found for \"" + origin_phrase +
-                                            (word_class.empty() ? "" : " (" + word_class + ")") + "\"!"};
+                                            (word_class.empty() ? "" : " (" + word_class + ")") + "\" (" +
+                                            origin_language_id + " => " + target_language_id + ")!"};
                   handle_http_error(connection, 404, error_message);
                 } else {
                   string json{JSON::phrase_to_json(*db_query, user_options)};
