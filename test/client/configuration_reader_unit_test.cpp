@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 06/07/2015
+// Last modified: 06/08/2015
 // Description: Unit test for the ConfigurationReader class
 // ====================================================================================================================
 
@@ -18,9 +18,9 @@
 
 #include "gtest/gtest.h"
 
-#include "../../client/configuration_reader.hpp"
-#include "../../utils/exception.hpp"
-#include "../../utils/json_exception.hpp"
+#include "client/configuration_reader.hpp"
+#include "utils/exception.hpp"
+#include "utils/json_exception.hpp"
 
 #include <cstddef>
 #include <string>

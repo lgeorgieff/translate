@@ -1,6 +1,6 @@
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 06/07/2015
+# Last modified: 06/08/2015
 # Description: Build unit tests for the utils part
 #######################################################################################################################
 
@@ -20,8 +20,8 @@
 project(translate_test_utils)
 
 ### register all source files
-set(TEST_UTILS_SOURCE_FILES ../../utils/exception.cpp ../../utils/gender.cpp ../../utils/numerus.cpp
-                            ../../utils/word_class.cpp ../../utils/helper.cpp gender_unit_test.cpp
+set(TEST_UTILS_SOURCE_FILES ../../src/utils/exception.cpp ../../src/utils/gender.cpp ../../src/utils/numerus.cpp
+                            ../../src/utils/word_class.cpp ../../src/utils/helper.cpp gender_unit_test.cpp
                             word_class_unit_test.cpp helper_unit_test.cpp numerus_unit_test.cpp test_main.cpp)
 
 ### create a static library

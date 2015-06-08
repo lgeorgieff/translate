@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 06/04/2015
+// Last modified: 06/08/2015
 // Description: Unit test for the command_line_parser class
 // ====================================================================================================================
 
@@ -18,8 +18,8 @@
 
 #include "gtest/gtest.h"
 
-#include "../../client/command_line_parser.hpp"
-#include "../../utils/command_line_exception.hpp"
+#include "client/command_line_parser.hpp"
+#include "utils/command_line_exception.hpp"
 
 #include <cstddef>
 #include <string>
