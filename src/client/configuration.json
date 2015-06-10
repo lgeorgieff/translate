@@ -6,5 +6,7 @@
    "show_gender" : false,
    "show_numerus" : false,
    "show_abbreviation" : false,
-   "show_comment" : false
+   "show_comment" : false,
+   "language_in" : "DE",
+   "language_out" : "EN"
 }

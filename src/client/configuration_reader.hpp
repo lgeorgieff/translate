@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 06/07/2015
+// Last modified: 06/10/2015
 // Description: Declares the interface of the configuration reader for the client. It reads a json string from the
 //              specified file and offers some getters for the parsed data.
 // ====================================================================================================================
@@ -28,7 +28,9 @@
 //    "show_gender" : <BOOLEAN>,
 //    "show_numerus" : <BOOLEAN>,
 //    "show_abbreviation" : <BOOLEAN>,
-//    "show_comment" : <BOOLEAN>
+//    "show_comment" : <BOOLEAN>,
+//    "language_in": <STRING>,
+//    "language_out": <STRING>
 // }
 //
 // If one of the presented values is not defined, the following default value will be used for the particular
@@ -41,6 +43,8 @@
 //  *show_numerus: false
 //  *show_abbreviation: false
 //  *show_comment: false
+//  *language_in: "DE"
+//  *language_out: "EN"
 // ====================================================================================================================
 
 #ifndef CONFIGURATION_READER_HPP_
@@ -56,6 +60,8 @@ namespace client {
 class ConfigurationReader {
  public:
   static const std::string SERVICE_ADDRESS_DEFAULT;
+  static const std::string LANGUAGE_IN_DEFAULT;
+  static const std::string LANGUAGE_OUT_DEFAULT;
   static const size_t SERVICE_PORT_DEFAULT;
   static const bool SHOW_PHRASE_DEFAULT;
   static const bool SHOW_WORD_CLASS_DEFAULT;
@@ -78,6 +84,8 @@ class ConfigurationReader {
   std::string configuration_file_path() const noexcept;
   std::string config_file_path() const noexcept;
   std::string service_address() const noexcept;
+  std::string language_in() const noexcept;
+  std::string language_out() const noexcept;
   size_t service_port() const noexcept;
   bool show_phrase() const noexcept;
   bool show_word_class() const noexcept;
@@ -93,6 +101,8 @@ class ConfigurationReader {
 
   std::string config_file_path_;
   std::string service_address_;
+  std::string language_in_;
+  std::string language_out_;
   size_t service_port_;
   bool show_phrase_;
   bool show_word_class_;

@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 06/07/2015
+// Last modified: 06/10/2015
 // Description: Declares the interface of the command line parser which is adapted to the supported options of this
 //              program.
 // ====================================================================================================================
@@ -170,6 +170,10 @@ class CommandLineParser {
   bool show_comment() const noexcept;
   // A getter indicating whether to show_comment was set by the user or not
   bool has_show_comment() const noexcept;
+  // A getter indicating whether the user specified a language id for in (origin)
+  bool has_in() const noexcept;
+  // A getter indicating whether the user specified a language id for out (target)
+  bool has_out() const noexcept;
 
   // Returns a string representing the usage corresponding to the CLI options
   std::string usage() const noexcept;
@@ -211,6 +215,8 @@ class CommandLineParser {
   bool has_show_abbreviation_;
   bool show_comment_;
   bool has_show_comment_;
+  bool has_in_;
+  bool has_out_;
 };  // CommandLineParser
 }  // translate
 }  // lgeorgieff

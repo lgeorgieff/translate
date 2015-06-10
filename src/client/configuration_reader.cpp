@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 06/07/2015
+// Last modified: 06/10/2015
 // Description: Implements the class ConfigurationReader which reads the configuration for the client. It reads a json
 //              string from the specified file and offers some getters for the parsed data.
 // ====================================================================================================================
@@ -30,13 +30,25 @@
 namespace {
 // Tries to read the boolean member with member_name from json_object and finally the parsed boolean value is written
 // into the destination.
-void process_json_value(const Json::Value &json_object, const std::string &member_name, bool &destination) {
+void process_json_bool_value(const Json::Value &json_object, const std::string &member_name, bool &destination) {
   if (json_object.isMember(member_name)) {
     if (!json_object[member_name].isBool()) {
       throw lgeorgieff::translate::utils::JsonException{
           "Cannot process the json data " + json_object[member_name].toStyledString() + ". Expected a boolean value!"};
     }
     destination = json_object[member_name].asBool();
+  }
+}
+
+// Tries to read the stirng member with member_name from json_object and finally the parsed string value is written
+// into the destination.
+void process_json_string_value(const Json::Value &json_object, const std::string &member_name, std::string &destination) {
+  if (json_object.isMember(member_name)) {
+    if (!json_object[member_name].isString()) {
+      throw lgeorgieff::translate::utils::JsonException{
+          "Cannot process the json data " + json_object[member_name].toStyledString() + ". Expected a string value!"};
+    }
+    destination = json_object[member_name].asString();
   }
 }
 }
@@ -49,6 +61,8 @@ using lgeorgieff::translate::utils::JsonException;
 using lgeorgieff::translate::utils::Exception;
 
 const std::string ConfigurationReader::SERVICE_ADDRESS_DEFAULT{"localhost"};
+const std::string ConfigurationReader::LANGUAGE_IN_DEFAULT{"DE"};
+const std::string ConfigurationReader::LANGUAGE_OUT_DEFAULT{"EN"};
 const size_t ConfigurationReader::SERVICE_PORT_DEFAULT{8885};
 const bool ConfigurationReader::SHOW_PHRASE_DEFAULT{true};
 const bool ConfigurationReader::SHOW_WORD_CLASS_DEFAULT{};
@@ -79,13 +93,10 @@ ConfigurationReader &ConfigurationReader::operator()() {
   if (!json.isObject())
     throw JsonException{"Cannot process the json data " + json_string + ". Expected a json object!"};
 
-  if (json.isMember("service_address")) {
-    if (!json["service_address"].isString()) {
-      throw JsonException{"Cannot process the json data " + json["service_address"].toStyledString() +
-                          ". Expected a json string!"};
-    }
-    this->service_address_ = json["service_address"].asString();
-  }
+  process_json_string_value(json, "service_address", this->service_address_);
+  process_json_string_value(json, "language_in", this->language_in_);
+  process_json_string_value(json, "language_out", this->language_out_);
+
   if (json.isMember("service_port")) {
     if (!json["service_port"].isUInt()) {
       throw JsonException{"Cannot process the json data " + json["service_port"].toStyledString() +
@@ -93,12 +104,12 @@ ConfigurationReader &ConfigurationReader::operator()() {
     }
     this->service_port_ = json["service_port"].asUInt();
   }
-  process_json_value(json, "show_phrase", this->show_phrase_);
-  process_json_value(json, "show_word_class", this->show_word_class_);
-  process_json_value(json, "show_gender", this->show_gender_);
-  process_json_value(json, "show_numerus", this->show_numerus_);
-  process_json_value(json, "show_abbreviation", this->show_abbreviation_);
-  process_json_value(json, "show_comment", this->show_comment_);
+  process_json_bool_value(json, "show_phrase", this->show_phrase_);
+  process_json_bool_value(json, "show_word_class", this->show_word_class_);
+  process_json_bool_value(json, "show_gender", this->show_gender_);
+  process_json_bool_value(json, "show_numerus", this->show_numerus_);
+  process_json_bool_value(json, "show_abbreviation", this->show_abbreviation_);
+  process_json_bool_value(json, "show_comment", this->show_comment_);
 
   this->available_ = true;
   return *this;
@@ -123,6 +134,10 @@ bool ConfigurationReader::show_abbreviation() const noexcept { return this->show
 bool ConfigurationReader::show_comment() const noexcept { return this->show_comment_; }
 
 bool ConfigurationReader::available() const noexcept { return this->available_; }
+
+std::string ConfigurationReader::language_in() const noexcept { return this->language_in_; }
+
+std::string ConfigurationReader::language_out() const noexcept { return this->language_out_; }
 
 std::string ConfigurationReader::read_file_() {
   std::ifstream in{this->config_file_path_, std::ifstream::in};

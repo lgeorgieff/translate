@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 06/07/2015
+// Last modified: 06/10/2015
 // Description: Implements the command line parser interface which is adapted to the supported options of this program.
 // ====================================================================================================================
 
@@ -97,11 +97,11 @@ CommandLineParser::CommandLineParser(const std::string &default_in, const std::s
       show_abbreviation_{DEFAULT_SHOW_ABBREVIATION},
       has_show_abbreviation_{},
       show_comment_{DEFAULT_SHOW_COMMENT},
-      has_show_comment_{} {}
+      has_show_comment_{},
+      has_in_{},
+      has_out_{} {}
 
 CommandLineParser &CommandLineParser::operator()(const int argc, const char **argv) {
-  bool in_found{false};
-  bool out_found{false};
   if (argc < 1) throw CommandLineException{"No command line arguments found!"};
   this->app_name_ = argv[0];
   for (int i{1}; argc > i; ++i) {
@@ -109,12 +109,12 @@ CommandLineParser &CommandLineParser::operator()(const int argc, const char **ar
       this->help_ = true;
     } else if ((IN_NAME_LONG == argv[i] || IN_NAME_SHORT == argv[i]) && argc - 1 != i) {
       this->in_ = argv[++i];
-      in_found = true;
+      this->has_in_ = true;
     } else if (IN_NAME_LONG == argv[i] || IN_NAME_SHORT == argv[i]) {
       throw CommandLineException{"The value for \"" + std::string{argv[i]} + "\" is missing!"};
     } else if ((OUT_NAME_LONG == argv[i] || OUT_NAME_SHORT == argv[i]) && argc - 1 != i) {
       this->out_ = argv[++i];
-      out_found = true;
+      this->has_out_ = true;
     } else if (OUT_NAME_LONG == argv[i] || OUT_NAME_SHORT == argv[i]) {
       throw CommandLineException{"The value for \"" + std::string{argv[i]} + "\" is missing!"};
     } else if (ALL_LANGUAGES_LONG == argv[i]) {
@@ -196,8 +196,8 @@ CommandLineParser &CommandLineParser::operator()(const int argc, const char **ar
                                "\" must be given exclusively, but found more than one occurrence!"};
   }
 
-  if (!in_found) this->in_ = this->default_in_;
-  if (!out_found) this->out_ = this->default_out_;
+  if (!this->has_in_) this->in_ = this->default_in_;
+  if (!this->has_out_) this->out_ = this->default_out_;
 
   return *this;
 }  // operator()
@@ -305,6 +305,10 @@ bool CommandLineParser::has_show_abbreviation() const noexcept { return this->ha
 bool CommandLineParser::show_comment() const noexcept { return this->show_comment_; }
 
 bool CommandLineParser::has_show_comment() const noexcept { return this->has_show_comment_; }
+
+bool CommandLineParser::has_in() const noexcept { return this->has_in_; }
+
+bool CommandLineParser::has_out() const noexcept { return this->has_out_; }
 
 }  // translate
 }  // lgeorgieff

@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 06/07/2015
+// Last modified: 06/10/2015
 // Description: The entry point for the entire application.
 // ====================================================================================================================
 
@@ -129,7 +129,9 @@ int main(const int argc, const char **argv) {
     } else if (cmd_parser.has_gender_name()) {
       writer.write_gender_id(process_request(base_url + "gender/name/" + cmd_parser.gender_name()));
     } else if (cmd_parser.has_phrase()) {
-      HttpPostRequest request{base_url + "translation/" + cmd_parser.in() + "/" + cmd_parser.out() + "/",
+      std::string language_in{cmd_parser.has_in() ? cmd_parser.in() : config_reader.language_in()};
+      std::string language_out{cmd_parser.has_out() ? cmd_parser.out() : config_reader.language_out()};
+      HttpPostRequest request{base_url + "translation/" + language_in + "/" + language_out + "/",
                               create_post_data(cmd_parser, config_reader)};
       request();
       if (200 != request.status_code() && 404 != request.status_code()) {
