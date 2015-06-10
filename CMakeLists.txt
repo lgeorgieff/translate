@@ -33,7 +33,7 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 project(translate)
 set(translate_VERSION_MAJOR 0)
-set(translate_VERSION_MINOR 1)
+set(translate_VERSION_MINOR 9)
 
 ### set output folders
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/lib)
