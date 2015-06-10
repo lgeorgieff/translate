@@ -32,4 +32,4 @@ To build it run:
  1. `./trlt.service -P 8885 -L localhost`
  1. #open a new terminal
  1. `cd <translate roo folder>/bin/`
- 2. `./trlt Hallo` # will search for the english translation of the German "Hallo"
+ 2. `./trlt Hallo` # will search for the English translation of the German word "Hallo"
