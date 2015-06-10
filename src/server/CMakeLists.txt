@@ -1,6 +1,6 @@
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 06/07/2015
+# Last modified: 06/10/2015
 # Description: Build configuration for the server part of translate.
 #######################################################################################################################
 
@@ -27,12 +27,12 @@ set(SERVER_SOURCE_FILES ../utils/exception.cpp ../utils/json_exception.cpp db_ex
                         server.cpp server_main.cpp)
 
 ### create the server executable
-add_executable(server ${SERVER_SOURCE_FILES})
-set_target_properties(server PROPERTIES VERSION "${translate_VERSION_MAJOR}.${translate_VERSION_MINOR}")
+add_executable(trlt.service ${SERVER_SOURCE_FILES})
+set_target_properties(trlt.service PROPERTIES VERSION "${translate_VERSION_MAJOR}.${translate_VERSION_MINOR}")
 
 ### set required libraries to link against
-target_link_libraries(server jsoncpp)
-target_link_libraries(server mongoose)
-target_link_libraries(server pthread)
-target_link_libraries(server pqxx)
-target_link_libraries(server pq)
+target_link_libraries(trlt.service jsoncpp)
+target_link_libraries(trlt.service mongoose)
+target_link_libraries(trlt.service pthread)
+target_link_libraries(trlt.service pqxx)
+target_link_libraries(trlt.service pq)
