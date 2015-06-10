@@ -47,3 +47,8 @@ Unfortunately, it is not allowed to share the languge data from [dict.cc](http:/
    1. # the need for defining a temporary directory is given since some language files are pretty huge (> 2.0 GB) and tmpfs is not big enough
    1. # if your database user and database name is not translate you can use the -p option for specifying different values
    1. # it will take a while to populate the databse with all language files
+
+# Configuration
+The trlt client uses a configuration file. Thus you need to copy the file <translate root folder>/src/client/configuration.json to /home/<user home>/.trlt/configuration.json.
+
+This file contains a json string with some default values, such as the service address and some options. You can modify it to set some individual values and change the default behavior of the frontend.
