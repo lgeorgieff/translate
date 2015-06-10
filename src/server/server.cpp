@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 06/06/2015
+// Last modified: 06/10/2015
 // Description: Defines the RESTful server for the translation service.
 // ====================================================================================================================
 
@@ -257,7 +257,7 @@ int Server::request_handler(mg_connection *connection, enum mg_event event) {
                 std::string origin_language_id{get_origin_language_id_from_url(url)};
                 std::string target_language_id{get_target_language_id_from_url(url)};
                 if (word_class.empty()) {
-                  db_query->request_phrase(origin_phrase, target_language_id, target_language_id);
+                  db_query->request_phrase(origin_phrase, origin_language_id, target_language_id);
                 } else {
                   db_query->request_phrase(origin_phrase, origin_language_id, target_language_id, word_class);
                 }
