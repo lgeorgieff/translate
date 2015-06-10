@@ -7,6 +7,9 @@ The language material is originally taken from http://www.dict.cc/. Unfortunatel
 
 A final remark: this is just a hobby project to play a little bit around with C++ and Unix. Please don't expect to get entire sentences translated! What you will get is an easy- and fast-to-use command line translator for single words.
 
+# License
+This project is open source under the [GNU GENERAL PUBLIC LICENSE Version 2 (GPL v2)](LICENSE.md). Feel free to use this and contribute to this project!
+
 # Building translate
 For building translate you need:
 * git
