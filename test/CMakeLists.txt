@@ -1,6 +1,6 @@
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 05/17/2015
+# Last modified: 06/10/2015
 # Description: A dummy CMakeLists.txt for calling the corresponding sub-CMakeLists.txt of all tests.
 #######################################################################################################################
 
@@ -18,7 +18,7 @@
 
 
 ### set output folders for all tests
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/../bin/test)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/test)
 
 ### register all sub-modules
 add_subdirectory(server)
