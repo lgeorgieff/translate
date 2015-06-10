@@ -32,4 +32,18 @@ To build it run:
  1. `./trlt.service -P 8885 -L localhost`
  1. #open a new terminal
  1. `cd <translate roo folder>/bin/`
- 2. `./trlt Hallo` # will search for the English translation of the German word "Hallo"
+ 1. `./trlt Hallo` # will search for the English translation of the German word "Hallo"
+
+You will get an empty result for the previous example, since you need to create and fill the data bsae with languge data before you can use it.
+
+# Get Language Data
+Unfortunatelly, it is not allowed to share the languge data from [dict.cc](http://www.dict.cc/) directly within the source code. This is why we need a separate step to download it.
+ 1. Visit the [dict.cc](http://www1.dict.cc/translation_file_request.php?l=e) web page
+ 1. Download all language resources you need (you will get an email containing a download link)
+ 1. Create the database user translate and the database translate
+ 1. `cd <translate root folder>/src/scripts`
+ 1. `./process_language_resources.sh -Z <folder path containing downloaded language resources> -d <folder for resulting files>` # This script will unzip and rename all language resources
+ 1. `./populate_db.sh -d <the folder with the results from the previous step> -t <temporary directory>`
+   1. # the need for defining a temporary directory is given since some language files are pretty huge (> 2.0 GB) and tmpfs is not big enough
+   1. # if your database user and database name is not translate you can use the -p option for specifying different values
+   1. # it will take a while to populate the databse with all language files
