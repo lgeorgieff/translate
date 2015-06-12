@@ -3,75 +3,382 @@
   <head>
     <meta charset="UTF-8">
     <title>trlt.service</title>
+
+    <style>
+      body {
+      width: 1024px;
+      margin-left: auto;
+      margin-right: auto;
+      }
+
+      .content {
+      border-color: #8ac007;
+      border-style: solid;
+      border-radius: 0px 0px 25px 25px;
+      padding: 2em 1em 1em 1em;
+      }
+
+      .method_api {
+      border-style: solid;
+      padding: 1em;
+      margin-bottom: 1em;
+      }
+
+      h1 {
+      border-radius: 25px 25px 0px 0px;
+      text-align: center;
+      background-color: #8ac007;
+      padding-top: 0.5em;
+      padding-bottom: 0.5em;
+      margin-bottom: 0em;
+      }
+
+      div.method_api table  {
+      width: 100%;
+      }      
+      
+      div.method_api table tr td:first-child {
+      width: 22%;
+      }
+
+      tt {
+      font-size:1.15em;
+      }
+    </style>
   </head>
   <body>
     <h1>trlt.service RESTful API</h1>
+    
+    <div class="content">
+      <div class="method_api">
+        <table>
+          <tr>
+            <td>URL</td>
+            <td>http://localhost:8885/languages/</td>
+          </tr>
+          <tr>
+            <td>HTTP Method</td>
+            <td>GET</td>
+          </tr>
+          <tr>
+            <td>HTTP Accept Header</td>
+            <td>application/json</td>
+          </tr>
+          <tr>
+            <td>HTTP Answer</td>
+            <td><tt>[{"language": "&lt;language name&gt;", "id": "&lt;language id&gt;"}]</tt></td>
+          </tr>
+          <tr>
+            <td>HTTP Error</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Description</td>
+            <td>Returns a list of all language IDs and language names that are available in the service.</td>
+          </tr>
+        </table>
+      </div>
 
-    HTTP URL: /languages/<br/>
-    HTTP Method: GET<br/>
-    HTTP Accept Header: application/json<br/>
-    HTTP Answer: <br/>
-    HTTP Error:<br/>
-<br/>
-    HTTP URL: /language/id/&lt;id&gt;/<br/>
-    HTTP Method: GET<br/>
-    HTTP Accept Header: application/json<br/>
-    HTTP Answer: <br/>
-    HTTP Error:<br/>
-<br/>
-    HTTP URL: /language/name/&lt;name&gt;/<br/>
-    HTTP Method: GET<br/>
-    HTTP Accept Header: application/json<br/>
-    HTTP Answer: <br/>
-    HTTP Error:<br/>
-<br/>
-    HTTP URL: /word_classes/<br/>
-    HTTP Method: GET<br/>
-    HTTP Accept Header: application/json<br/>
-    HTTP Answer: <br/>
-    HTTP Error:<br/>
-<br/>
-    HTTP URL: /word_class/id/&lt;id&gt;/<br/>
-    HTTP Method: <br/>
-    HTTP Accept Header: application/json<br/>
-    HTTP Answer: GET<br/>
-    HTTP Error:<br/>
-<br/>
-    HTTP URL: /word_class/id/&lt;name&gt;/<br/>
-    HTTP Method: GET<br/>
-    HTTP Accept Header: application/json<br/>
-    HTTP Answer: <br/>
-    HTTP Error:<br/>
-<br/>
-    HTTP URL: /genders/<br/>
-    HTTP Method: GET<br/>
-    HTTP Accept Header: application/json<br/>
-    HTTP Answer: <br/>
-    HTTP Error:<br/>
-<br/>
-    HTTP URL: /gender/id/&lt;id&gt;/<br/>
-    HTTP Method: GET<br/>
-    HTTP Accept Header: application/json<br/>
-    HTTP Answer: <br/>
-    HTTP Error:<br/>
-<br/>
-    HTTP URL: /gender/id/&lt;name&gt;/<br/>
-    HTTP Method: GET<br/>
-    HTTP Accept Header: application/json<br/>
-    HTTP Answer: <br/>
-    HTTP Error:<br/>
-<br/>
-    HTTP URL: /numeri/<br/>
-    HTTP Method: GET<br/>
-    HTTP Accept Header: application/json<br/>
-    HTTP Answer: <br/>
-    HTTP Error:<br/>
-<br/>
-    HTTP URL: /translation/&lt;in&gt;/&lt;out&gt;/<br/>
-    HTTP Method: POST<br/>
-    HTTP Accept Header: application/json<br/>
-    HTTP POST Data: <br/>
-    HTTP Answer: <br/>
-    HTTP Error: <br/>
+      <div class="method_api">
+        <table>
+          <tr>
+            <td>URL</td>
+            <td>http://localhost:8885/language/id/&lt;id&gt;/</td>
+          </tr>
+          <tr>
+            <td>HTTP Method</td>
+            <td>GET</td>
+          </tr>
+          <tr>
+            <td>HTTP Accept Header</td>
+            <td>application/json</td>
+          </tr>
+          <tr>
+            <td>HTTP Answer</td>
+            <td><tt>"&lt;language name&gt;"</tt></td>
+          </tr>
+          <tr>
+            <td>HTTP Error</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Description</td>
+            <td>Returns a the name of the language that is referenced by the given language ID.</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="method_api">
+        <table>
+          <tr>
+            <td>URL</td>
+            <td>http://localhost:8885/language/name/&lt;name&gt;/</td>
+          </tr>
+          <tr>
+            <td>HTTP Method</td>
+            <td>GET</td>
+          </tr>
+          <tr>
+            <td>HTTP Accept Header</td>
+            <td>application/json</td>
+          </tr>
+          <tr>
+            <td>HTTP Answer</td>
+            <td><tt>"&lt;language id&gt;"</tt></td>
+          </tr>
+          <tr>
+            <td>HTTP Error</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Description</td>
+            <td>Returns a the ID of the language that is referenced by the given language name.</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="method_api">
+        <table>
+          <tr>
+            <td>URL</td>
+            <td>http://localhost:8885/word_classes/</td>
+          </tr>
+          <tr>
+            <td>HTTP Method</td>
+            <td>GET</td>
+          </tr>
+          <tr>
+            <td>HTTP Accept Header</td>
+            <td>application/json</td>
+          </tr>
+          <tr>
+            <td>HTTP Answer</td>
+            <td><tt>[{"word_class": "&lt;word class name&gt;", "id" : "&lt;word class id&gt;"}]</tt></td>
+          </tr>
+          <tr>
+            <td>HTTP Error</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Description</td>
+            <td>Returns a list of all word class IDs and word class names that are available in the service.</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="method_api">
+        <table>
+          <tr>
+            <td>URL</td>
+            <td>http://localhost:8885/word_class/id/&lt;id&gt;/</td>
+          </tr>
+          <tr>
+            <td>HTTP Method</td>
+            <td>GET</td>
+          </tr>
+          <tr>
+            <td>HTTP Accept Header</td>
+            <td>application/json</td>
+          </tr>
+          <tr>
+            <td>HTTP Answer</td>
+            <td><tt>"&lt;word class name&gt;"</tt></td>
+          </tr>
+          <tr>
+            <td>HTTP Error</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Description</td>
+            <td>Returns a the name of the word class that is referenced by the given word class ID.</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="method_api">
+        <table>
+          <tr>
+            <td>URL</td>
+            <td>http://localhost:8885/word_class/id/&lt;name&gt;/</td>
+          </tr>
+          <tr>
+            <td>HTTP Method</td>
+            <td>GET</td>
+          </tr>
+          <tr>
+            <td>HTTP Accept Header</td>
+            <td>application/json</td>
+          </tr>
+          <tr>
+            <td>HTTP Answer</td>
+            <td><tt>"&lt;word class id&gt;"</tt></td>
+          </tr>
+          <tr>
+            <td>HTTP Error</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Description</td>
+            <td>Returns a the ID of the word class that is referenced by the given word class name.</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="method_api">
+        <table>
+          <tr>
+            <td>URL</td>
+            <td>http://localhost:8885/genders/</td>
+          </tr>
+          <tr>
+            <td>HTTP Method</td>
+            <td>GET</td>
+          </tr>
+          <tr>
+            <td>HTTP Accept Header</td>
+            <td>application/json</td>
+          </tr>
+          <tr>
+            <td>HTTP Answer</td>
+            <td><tt>[{"gender": "&lt;gender name&gt;", "id": "&lt;gender id&gt;", "description": "&lt;gender description&gt;"}]</tt></td>
+          </tr>
+          <tr>
+            <td>HTTP Error</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Description</td>
+            <td>Returns a list of all gender IDs, gender descriptions and gender names that are available in the service.</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="method_api">
+        <table>
+          <tr>
+            <td>URL</td>
+            <td>http://localhost:8885/gender/id/&lt;id&gt;/</td>
+          </tr>
+          <tr>
+            <td>HTTP Method</td>
+            <td>GET</td>
+          </tr>
+          <tr>
+            <td>HTTP Accept Header</td>
+            <td>application/json</td>
+          </tr>
+          <tr>
+            <td>HTTP Answer</td>
+            <td><tt>{"gender" : "&lt;gender name&gt;", "description": "&lt;gender description&gt;"}</tt></td>
+          </tr>
+          <tr>
+            <td>HTTP Error</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Description</td>
+            <td>Returns a the name and description of the gender that is referenced by the given gender ID.</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="method_api">
+        <table>
+          <tr>
+            <td>URL</td>
+            <td>http://localhost:8885/gender/id/&lt;name&gt;/</td>
+          </tr>
+          <tr>
+            <td>HTTP Method</td>
+            <td>GET</td>
+          </tr>
+          <tr>
+            <td>HTTP Accept Header</td>
+            <td>application/json</td>
+          </tr>
+          <tr>
+            <td>HTTP Answer</td>
+            <td><tt>{"id" : "&lt;gender id&gt;", "description": "&lt;gender description&gt;"}</tt></td>
+          </tr>
+          <tr>
+            <td>HTTP Error</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Description</td>
+            <td>Returns a the ID and description of the gender that is referenced by the given gender name.</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="method_api">
+        <table>
+          <tr>
+            <td>URL</td>
+            <td>http://localhost:8885/numeri/</td>
+          </tr>
+          <tr>
+            <td>HTTP Method</td>
+            <td>GET</td>
+          </tr>
+          <tr>
+            <td>HTTP Accept Header</td>
+            <td>application/json</td>
+          </tr>
+          <tr>
+            <td>HTTP Answer</td>
+            <td><tt>["numerus-id", "numerus-id"]</tt></td>
+          </tr>
+          <tr>
+            <td>HTTP Error</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Description</td>
+            <td>Returns a list of all numerus IDs available in the service.</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="method_api">
+        <table>
+          <tr>
+            <td>URL</td>
+            <td>http://localhost:8885/translation/&lt;in&gt;/&lt;out&gt;/</td>
+          </tr>
+          <tr>
+            <td>HTTP Method</td>
+            <td>POST</td>
+          </tr>
+          <tr>
+            <td>HTTP Accept Header</td>
+            <td>application/json</td>
+          </tr>
+          <tr>
+            <td>POST Data</td>
+            <td><tt>{"phrase": "&lt;phrase origin&gt;", "word_class": "&lt;word class id&gt;", "show_phrase": &lt;bool&gt;, "show_word_class": &lt;bool&gt;,
+    "show_gender": &lt;bool&gt;, "show_numerus": &lt;bool&gt;, "show_abbreviation": bool, "show_comment": &lt;bool&gt;}</tt></td>
+          </tr>
+          <tr>
+            <td>HTTP Answer</td>
+            <td><tt>[{"origin_phrase": "&lt;phrase origin language&gt;", "origin_word_class": "&lt;word class origin language&gt;",
+         "origin_gender": "&lt;gender origin language&gt;", "origin_numerus": "&lt;numerus&gt;": "&lt;numerus origin language&gt;",
+         "origin_comment": "&lt;comment origin language&gt;", "origin_abbreviation": "&lt;abbreviation origin language&gt;",
+         "translations":
+           ["target_phrase": "&lt;phrase target language&gt;", "target_word_class": "&lt;word class target language&gt;",
+            "target_gender": "&lt;gender target language&gt;", "target_numerus": "&lt;numerus&gt;": "&lt;numerus target language&gt;",
+            "target_comment": "&lt;comment target language&gt;", "target_abbreviation": "&lt;abbreviation target language&gt;"]}]</tt></td>
+          </tr>
+          <tr>
+            <td>HTTP Error</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Description</td>
+            <td>Returns a list of translation objects. Each translation object may contain the fields: target_phrase, target_word_class, target_gender, target_numerus, target_comment and target_abbreviation depending on the settings in the POST content.</td>
+          </tr>
+        </table>
+      </div>
+    </div>
   </body>
 </html>
