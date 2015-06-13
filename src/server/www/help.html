@@ -15,13 +15,16 @@
       border-color: #8ac007;
       border-style: solid;
       border-radius: 0px 0px 25px 25px;
+      background-color: #8ac007;
       padding: 2em 1em 1em 1em;
       }
 
       .method_api {
-      border-style: solid;
-      padding: 1em;
-      margin-bottom: 1em;
+      border-style: inset;
+      border-color: #668800;
+      background-color: white;
+      padding: 0.5em;
+      margin-bottom: 1.5em;
       }
 
       h1 {
@@ -35,10 +38,18 @@
 
       div.method_api table  {
       width: 100%;
+      border-collapse: separate;
+      border-spacing: 0em 0.15em;
       }      
       
       div.method_api table tr td:first-child {
       width: 22%;
+      }
+
+      div.method_api table tr:not(:last-child) td {
+      border-bottom-style: solid;
+      border-bottom-width: 1px;
+      border-bottom-color: grey;
       }
 
       tt {
