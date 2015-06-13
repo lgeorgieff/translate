@@ -33,7 +33,7 @@
       background-color: #8ac007;
       padding-top: 0.5em;
       padding-bottom: 0.5em;
-      margin-bottom: 0em;
+      margin-bottom: 0em;;
       }
 
       div.method_api table  {
@@ -54,6 +54,12 @@
 
       tt {
       font-size:1.15em;
+      }
+
+      span.hint {
+      text-decoration: underline;
+      color: orange;
+      cursor: help;
       }
     </style>
   </head>
@@ -94,7 +100,7 @@
         <table>
           <tr>
             <td>URL</td>
-            <td>http://localhost:8885/language/id/&lt;id&gt;/</td>
+            <td>http://localhost:8885/language/id/<span class="hint" title="The ID of the language whose name is searched.">&lt;id&gt;</span>/</td>
           </tr>
           <tr>
             <td>HTTP Method</td>
@@ -123,7 +129,7 @@
         <table>
           <tr>
             <td>URL</td>
-            <td>http://localhost:8885/language/name/&lt;name&gt;/</td>
+            <td>http://localhost:8885/language/name/<span class="hint" title="The name of the language whose ID is searched.">&lt;name&gt;</span>/</td>
           </tr>
           <tr>
             <td>HTTP Method</td>
@@ -181,7 +187,7 @@
         <table>
           <tr>
             <td>URL</td>
-            <td>http://localhost:8885/word_class/id/&lt;id&gt;/</td>
+            <td>http://localhost:8885/word_class/id/<span class="hint" title="The ID of the word class whose name is searched.">&lt;id&gt;</span>/</td>
           </tr>
           <tr>
             <td>HTTP Method</td>
@@ -210,7 +216,7 @@
         <table>
           <tr>
             <td>URL</td>
-            <td>http://localhost:8885/word_class/id/&lt;name&gt;/</td>
+            <td>http://localhost:8885/word_class/name/<span class="hint" title="The name of the word class whose ID is searched.">&lt;name&gt;</span>/</td>
           </tr>
           <tr>
             <td>HTTP Method</td>
@@ -268,7 +274,7 @@
         <table>
           <tr>
             <td>URL</td>
-            <td>http://localhost:8885/gender/id/&lt;id&gt;/</td>
+            <td>http://localhost:8885/gender/id/<span class="hint" title="The ID of the gender whose name and description is searched.">&lt;id&gt;</span>/</td>
           </tr>
           <tr>
             <td>HTTP Method</td>
@@ -297,7 +303,7 @@
         <table>
           <tr>
             <td>URL</td>
-            <td>http://localhost:8885/gender/id/&lt;name&gt;/</td>
+            <td>http://localhost:8885/gender/id/<span class="hint" title="The name of the gender whose ID and description is searched.">&lt;name&gt;</span>/</td>
           </tr>
           <tr>
             <td>HTTP Method</td>
@@ -355,7 +361,7 @@
         <table>
           <tr>
             <td>URL</td>
-            <td>http://localhost:8885/translation/&lt;in&gt;/&lt;out&gt;/</td>
+            <td>http://localhost:8885/translation/<span class="hint" title="The ID of the language that is used as source language for the translation.">&lt;in&gt;</span>/<span class="hint" title="The ID of the language that is used as target language for the translation.">&lt;out&gt;</span>/</td>
           </tr>
           <tr>
             <td>HTTP Method</td>
