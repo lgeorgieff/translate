@@ -173,8 +173,9 @@ bool check_accept_header(const std::string &accept_header, const std::string &ex
 std::string get_exe_path() {
   const size_t PATH_MAX{1024};
   char result[PATH_MAX];
-  if (readlink("/proc/self/exe", result, PATH_MAX) == -1) throw Exception{"Cannot read from /proc/"};
-  std::string str_result{result};
+  ssize_t result_length{readlink("/proc/self/exe", result, PATH_MAX)};
+  if (result_length == -1) throw Exception{"Cannot read from /proc/"};
+  std::string str_result(result, result_length);
   size_t last_pos{str_result.find_last_of("/")};
   return str_result.substr(0, last_pos + 1);
 }
