@@ -1,4 +1,23 @@
-<!DOCTYPE html>
+<!Doctype html>
+
+<!-- =============================================================================================================== -->
+<!-- Copyright (C) 2015  Lukas Georgieff                                                                             -->
+<!-- Last modified: 06/14/2015                                                                                       -->
+<!-- Description: HTML page that contains documentation for the RESTful API of trlt.service                          -->
+<!-- =============================================================================================================== -->
+
+<!-- =============================================================================================================== -->
+<!-- This program is free software; you can redistribute it and/or modify it under the terms of the GNU General      -->
+<!-- Public License as published by the Free Software Foundation in version 2.                                       -->
+<!--                                                                                                                 -->
+<!-- This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the      -->
+<!-- implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for -->
+<!-- more details.                                                                                                   -->
+<!--                                                                                                                 -->
+<!-- You should have received a copy of the GNU General Public License along with this program; if not, write to the -->
+<!-- Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.                    -->
+<!-- =============================================================================================================== -->
+
 <html>
   <head>
     <meta charset="UTF-8">
@@ -21,10 +40,13 @@
       }
 
       .method_api {
-      border-style: inset;
-      border-color: #aac007;
+      border-style: solid;
+      border-width: 1px;
+      border-color: grey;
       background-color: white;
       padding: 0.5em;
+      margin-left: 1em;
+      margin-right: 1em;
       margin-bottom: 1.5em;
       }
 
@@ -62,12 +84,59 @@
       color: #FF8C00;
       cursor: help;
       }
+
+      ul.http_error li {
+      list-style-type: square;
+      }
+      
+      ul.http_error li > span:first-child {
+      color: red;
+      }
+
+      span.keyword {
+      font-family: monospace;
+      }
     </style>
   </head>
   <body>
     <h1>trlt.service RESTful API</h1>
-    
+
     <div class="content">
+      <div class="method_api">
+        <table>
+          <tr>
+            <td>URL</td>
+            <td>http://localhost:8885/trlt/help/</td>
+          </tr>
+          <tr>
+            <td>HTTP Method</td>
+            <td>GET</td>
+          </tr>
+          <tr>
+            <td>HTTP Accept Header</td>
+            <td>text/html</td>
+          </tr>
+          <tr>
+            <td>HTTP Answer</td>
+            <td>HTML data</td>
+          </tr>
+          <tr>
+            <td>HTTP Error</td>
+            <td>
+              <ul class="http_error">
+                <li><span>400</span> If HTTP method is not a <span class="keyword">GET</span></li>
+                <li><span>406</span> If <span class="keyword">accept</span> header is not <span class="keyword">text/html</span></li>
+                <li><span>500</span> If an internal server error occurs</li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>Description</td>
+            <td>Returns this HTML page.</td>
+          </tr>
+        </table>
+      </div>
+
       <div class="method_api">
         <table>
           <tr>
@@ -88,7 +157,13 @@
           </tr>
           <tr>
             <td>HTTP Error</td>
-            <td></td>
+            <td>
+              <ul class="http_error">
+                <li><span>400</span> If HTTP method is not a <span class="keyword">GET</span></li>
+                <li><span>406</span> If <span class="keyword">accept</span> header is not <span class="keyword">application/json</span></li>
+                <li><span>500</span> If an internal server error occurs</li>
+              </ul>
+            </td>
           </tr>
           <tr>
             <td>Description</td>
@@ -117,7 +192,14 @@
           </tr>
           <tr>
             <td>HTTP Error</td>
-            <td></td>
+            <td>
+              <ul class="http_error">
+                <li><span>400</span> If HTTP method is not a <span class="keyword">GET</span></li>
+                <li><span>404</span> If <span class="keyword">language ID</span> does not exist</li>
+                <li><span>406</span> If <span class="keyword">accept</span> header is not <span class="keyword">application/json</span></li>
+                <li><span>500</span> If an internal server error occurs</li>
+              </ul>
+            </td>
           </tr>
           <tr>
             <td>Description</td>
@@ -146,7 +228,14 @@
           </tr>
           <tr>
             <td>HTTP Error</td>
-            <td></td>
+            <td>
+              <ul class="http_error">
+                <li><span>400</span> If HTTP method is not a <span class="keyword">GET</span></li>
+                <li><span>404</span> If <span class="keyword">language name</span> does not exist</li>
+                <li><span>406</span> If <span class="keyword">accept</span> header is not <span class="keyword">application/json</span></li>
+                <li><span>500</span> If an internal server error occurs</li>
+              </ul>
+            </td>
           </tr>
           <tr>
             <td>Description</td>
@@ -175,7 +264,13 @@
           </tr>
           <tr>
             <td>HTTP Error</td>
-            <td></td>
+            <td>
+              <ul class="http_error">
+                <li><span>400</span> If HTTP method is not a <span class="keyword">GET</span></li>
+                <li><span>406</span> If <span class="keyword">accept</span> header is not <span class="keyword">application/json</span></li>
+                <li><span>500</span> If an internal server error occurs</li>
+              </ul>
+            </td>
           </tr>
           <tr>
             <td>Description</td>
@@ -204,7 +299,14 @@
           </tr>
           <tr>
             <td>HTTP Error</td>
-            <td></td>
+            <td>
+              <ul class="http_error">
+                <li><span>400</span> If HTTP method is not a <span class="keyword">GET</span></li>
+                <li><span>404</span> If <span class="keyword">word class ID</span> does not exist</li>
+                <li><span>406</span> If <span class="keyword">accept</span> header is not <span class="keyword">application/json</span></li>
+                <li><span>500</span> If an internal server error occurs</li>
+              </ul>
+            </td>
           </tr>
           <tr>
             <td>Description</td>
@@ -233,7 +335,14 @@
           </tr>
           <tr>
             <td>HTTP Error</td>
-            <td></td>
+            <td>
+              <ul class="http_error">
+                <li><span>400</span> If HTTP method is not a <span class="keyword">GET</span></li>
+                <li><span>404</span> If <span class="keyword">word class name</span> does not exist</li>
+                <li><span>406</span> If <span class="keyword">accept</span> header is not <span class="keyword">application/json</span></li>
+                <li><span>500</span> If an internal server error occurs</li>
+              </ul>
+            </td>
           </tr>
           <tr>
             <td>Description</td>
@@ -262,7 +371,13 @@
           </tr>
           <tr>
             <td>HTTP Error</td>
-            <td></td>
+            <td>
+              <ul class="http_error">
+                <li><span>400</span> If HTTP method is not a <span class="keyword">GET</span></li>
+                <li><span>406</span> If <span class="keyword">accept</span> header is not <span class="keyword">application/json</span></li>
+                <li><span>500</span> If an internal server error occurs</li>
+              </ul>
+            </td>
           </tr>
           <tr>
             <td>Description</td>
@@ -291,7 +406,14 @@
           </tr>
           <tr>
             <td>HTTP Error</td>
-            <td></td>
+            <td>
+              <ul class="http_error">
+                <li><span>400</span> If HTTP method is not a <span class="keyword">GET</span></li>
+                <li><span>404</span> If <span class="keyword">gender ID</span> does not exist</li>
+                <li><span>406</span> If <span class="keyword">accept</span> header is not <span class="keyword">application/json</span></li>
+                <li><span>500</span> If an internal server error occurs</li>
+              </ul>
+            </td>
           </tr>
           <tr>
             <td>Description</td>
@@ -304,7 +426,7 @@
         <table>
           <tr>
             <td>URL</td>
-            <td>http://localhost:8885/trlt/gender/id/<span class="hint" title="The name of the gender whose ID and description is searched.">&lt;name&gt;</span>/</td>
+            <td>http://localhost:8885/trlt/gender/name/<span class="hint" title="The name of the gender whose ID and description is searched.">&lt;name&gt;</span>/</td>
           </tr>
           <tr>
             <td>HTTP Method</td>
@@ -320,7 +442,14 @@
           </tr>
           <tr>
             <td>HTTP Error</td>
-            <td></td>
+            <td>
+              <ul class="http_error">
+                <li><span>400</span> If HTTP method is not a <span class="keyword">GET</span></li>
+                <li><span>404</span> If <span class="keyword">gender name</span> does not exist</li>
+                <li><span>406</span> If <span class="keyword">accept</span> header is not <span class="keyword">application/json</span></li>
+                <li><span>500</span> If an internal server error occurs</li>
+              </ul>
+            </td>
           </tr>
           <tr>
             <td>Description</td>
@@ -349,7 +478,13 @@
           </tr>
           <tr>
             <td>HTTP Error</td>
-            <td></td>
+            <td>
+              <ul class="http_error">
+                <li><span>400</span> If HTTP method is not a <span class="keyword">GET</span></li>
+                <li><span>406</span> If <span class="keyword">accept</span> header is not <span class="keyword">application/json</span></li>
+                <li><span>500</span> If an internal server error occurs</li>
+              </ul>
+            </td>
           </tr>
           <tr>
             <td>Description</td>
@@ -375,21 +510,30 @@
           <tr>
             <td>POST Data</td>
             <td><tt>{"phrase": "&lt;phrase origin&gt;", "word_class": "&lt;word class id&gt;", "show_phrase": &lt;bool&gt;, "show_word_class": &lt;bool&gt;,
-    "show_gender": &lt;bool&gt;, "show_numerus": &lt;bool&gt;, "show_abbreviation": bool, "show_comment": &lt;bool&gt;}</tt></td>
+                "show_gender": &lt;bool&gt;, "show_numerus": &lt;bool&gt;, "show_abbreviation": bool, "show_comment": &lt;bool&gt;}</tt></td>
           </tr>
           <tr>
             <td>HTTP Answer</td>
             <td><tt>[{"origin_phrase": "&lt;phrase origin language&gt;", "origin_word_class": "&lt;word class origin language&gt;",
-         "origin_gender": "&lt;gender origin language&gt;", "origin_numerus": "&lt;numerus&gt;": "&lt;numerus origin language&gt;",
-         "origin_comment": "&lt;comment origin language&gt;", "origin_abbreviation": "&lt;abbreviation origin language&gt;",
-         "translations":
-           ["target_phrase": "&lt;phrase target language&gt;", "target_word_class": "&lt;word class target language&gt;",
-            "target_gender": "&lt;gender target language&gt;", "target_numerus": "&lt;numerus&gt;": "&lt;numerus target language&gt;",
-            "target_comment": "&lt;comment target language&gt;", "target_abbreviation": "&lt;abbreviation target language&gt;"]}]</tt></td>
+                "origin_gender": "&lt;gender origin language&gt;", "origin_numerus": "&lt;numerus&gt;": "&lt;numerus origin language&gt;",
+                "origin_comment": "&lt;comment origin language&gt;", "origin_abbreviation": "&lt;abbreviation origin language&gt;",
+                "translations":
+                ["target_phrase": "&lt;phrase target language&gt;", "target_word_class": "&lt;word class target language&gt;",
+                "target_gender": "&lt;gender target language&gt;", "target_numerus": "&lt;numerus&gt;": "&lt;numerus target language&gt;",
+                "target_comment": "&lt;comment target language&gt;", "target_abbreviation": "&lt;abbreviation target language&gt;"]}]</tt></td>
           </tr>
           <tr>
             <td>HTTP Error</td>
-            <td></td>
+            <td>
+              <ul class="http_error">
+                <li><span>400</span> If HTTP method is not a <span class="keyword">POST</span></li>
+                <li><span>400</span> If POST content is malformed</li>
+                <li><span>404</span> If <span class="keyword">language in ID</span>, <span class="keyword">language out ID</span> or <span class="keyword">translation</span> does not exist</li>
+                <li><span>406</span> If <span class="keyword">content-type</span> header of POST data is not <span class="keyword">application/json</span></li>
+                <li><span>406</span> If accept header is not <span class="keyword">application/json</span></li>
+                <li><span>500</span> If an internal server error occurs</li>
+              </ul>
+            </td>
           </tr>
           <tr>
             <td>Description</td>
