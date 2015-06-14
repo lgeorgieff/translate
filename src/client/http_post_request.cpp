@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 06/06/2015
+// Last modified: 06/14/2015
 // Description: Implements a class for an HTTP POST request to the translation service.
 // ====================================================================================================================
 
@@ -25,10 +25,13 @@ namespace client {
 
 using lgeorgieff::translate::utils::HttpException;
 
-HttpPostRequest::HttpPostRequest(const std::string &url, const std::string &post_data)
-    : HttpRequest{url}, post_data_{post_data} {}
+const std::string HttpPostRequest::DEFAULT_CONTENT_TYPE_HEADER{"application/json"};
 
-  std::string HttpPostRequest::operator()() {
+HttpPostRequest::HttpPostRequest(const std::string &url, const std::string &post_data,
+                                 const std::string &accept_header, const std::string &content_type_header)
+    : HttpRequest{url, accept_header}, post_data_{post_data}, content_type_header_{content_type_header} {}
+
+std::string HttpPostRequest::operator()() {
   CURL *curl_handle = curl_easy_init();
   curl_easy_setopt(curl_handle, CURLOPT_URL, this->url_.c_str());
   curl_easy_setopt(curl_handle, CURLOPT_POSTFIELDS, this->post_data_.c_str());
@@ -38,7 +41,9 @@ HttpPostRequest::HttpPostRequest(const std::string &url, const std::string &post
 
   struct curl_slist *headers = nullptr;
   std::string accept_header{"Accept: " + this->accept_header_};
+  std::string content_type_header{"Content-Type: " + this->content_type_header_};
   headers = curl_slist_append(headers, accept_header.c_str());
+  headers = curl_slist_append(headers, content_type_header.c_str());
   curl_easy_setopt(curl_handle, CURLOPT_HTTPHEADER, headers);
 
   CURLcode curl_code{curl_easy_perform(curl_handle)};

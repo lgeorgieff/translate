@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 06/10/2015
+// Last modified: 06/14/2015
 // Description: Defines the RESTful server for the translation service.
 // ====================================================================================================================
 
@@ -219,6 +219,10 @@ int Server::request_handler(mg_connection *connection, enum mg_event event) {
       } else if (!strcmp(connection->request_method, "POST")) {
         if (!check_accept_header(connection)) {
           std::string error_message{"Only the content-type \"application/json\" is supported!"};
+          handle_http_error(connection, 406, error_message);
+        } else if (strcmp(mg_get_header(connection, "content-type"), "application/json")) {
+          std::cout << (mg_get_header(connection, "content-type")) << std::endl;
+          std::string error_message{"Only the content-type \"application/json\" of POST data is supported!"};
           handle_http_error(connection, 406, error_message);
         } else {
           try {
