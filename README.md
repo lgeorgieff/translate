@@ -54,4 +54,4 @@ The trlt client uses a configuration file. Thus you need to copy the file <trans
 This file contains a json string with some default values, such as the service address and some options. You can modify it to set some individual values and change the default behavior of the frontend.
 
 # RESTful API
-The RESTful API is documented in [help.html](https://github.com/lgeorgieff/translate/blob/master/src/server/www/help.html)
+The RESTful API is documented in [help.html](https://github.com/lgeorgieff/translate/blob/master/src/server/www/help.html).
