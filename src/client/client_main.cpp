@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 06/10/2015
+// Last modified: 06/14/2015
 // Description: The entry point for the entire application.
 // ====================================================================================================================
 
@@ -88,14 +88,20 @@ int main(const int argc, const char **argv) {
   }  // try-catch get confguration file path
 
   ConfigurationReader config_reader{config_path};
-  std::string base_url{"localhost:8885/"};
+  std::string base_url{"localhost:8885/trlt/"};
   try {
     cmd_parser(argc, argv);
 
     if (!cmd_parser.help()) {
       try {
         config_reader();
-        base_url = config_reader.service_address() + ":" + std::to_string(config_reader.service_port()) + "/";
+        base_url = config_reader.service_address() + ":" + std::to_string(config_reader.service_port());
+        if (!config_reader.service_url_prefix().empty() && config_reader.service_url_prefix()[0] != '/')
+          base_url += '/';
+        base_url += config_reader.service_url_prefix();
+        if (!config_reader.service_url_prefix().empty() &&
+            config_reader.service_url_prefix()[config_reader.service_url_prefix().size() - 1] != '/')
+          base_url += '/';
       } catch (const JsonException &err) {
         std::cerr << "Could not process configuration file: " << err.what() << std::endl;
       } catch (const Exception &err) {

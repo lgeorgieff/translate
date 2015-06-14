@@ -71,39 +71,41 @@ class Server {
 
   ~Server();
 
-  // Some constants that are used to describe the different URL of the RESTful API
-  static const char *URL_HELP;
-
-  static const char *URL_LANGUAGES;
-  static const char *URL_LANGUAGE_ID_PREFIX;
-  static const char *URL_LANGUAGE_NAME_PREFIX;
-
-  static const char *URL_WORD_CLASSES;
-  static const char *URL_WORD_CLASS_ID_PREFIX;
-  static const char *URL_WORD_CLASS_NAME_PREFIX;
-
-  static const char *URL_GENDERS;
-  static const char *URL_GENDER_ID_PREFIX;
-  static const char *URL_GENDER_NAME_PREFIX;
-
-  static const char *URL_NUMERI;
-
-  static const char *URL_TRANSLATION_PREFIX;
-
   // Some methods that extract information from the passed URL
   static std::string get_origin_language_id_from_url(const char *);
   static std::string get_target_language_id_from_url(const char *);
 
  private:
+  // Some values that are used to describe the different URL of the RESTful API
+  static std::string service_prefix_;
+
+  static std::string url_help_;
+
+  static std::string url_languages_;
+  static std::string url_language_id_prefix_;
+  static std::string url_language_name_prefix_;
+
+  static std::string url_word_classes_;
+  static std::string url_word_class_id_prefix_;
+  static std::string url_word_class_name_prefix_;
+
+  static std::string url_genders_;
+  static std::string url_gender_id_prefix_;
+  static std::string url_gender_name_prefix_;
+
+  static std::string url_numeri_;
+
+  static std::string url_translation_prefix_;
+
   // The handler that is invoked by the server when a new request is received
   static int request_handler(mg_connection *, enum mg_event);
 
   // The connection address of the running server, i.e. address and port
-  std::string connection_address__;
+  std::string connection_address_;
   // The query object that connects this server instance to the data base
-  DbQuery db_query__;
+  DbQuery db_query_;
   // The mongoose server instance
-  mg_server *server__;
+  mg_server *server_;
 };  // Server
 }  // server
 }  // translate

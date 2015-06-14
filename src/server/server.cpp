@@ -63,43 +63,44 @@ using lgeorgieff::translate::utils::get_last_path_from_url;
 using lgeorgieff::translate::utils::get_exe_path;
 using lgeorgieff::translate::utils::Exception;
 
-const char *Server::URL_HELP{"/help/"};
-const char *Server::URL_LANGUAGES{"/languages/"};
-const char *Server::URL_LANGUAGE_ID_PREFIX{"/language/id/"};
-const char *Server::URL_LANGUAGE_NAME_PREFIX{"/language/name/"};
-const char *Server::URL_WORD_CLASSES{"/word_classes/"};
-const char *Server::URL_WORD_CLASS_ID_PREFIX{"/word_class/id/"};
-const char *Server::URL_WORD_CLASS_NAME_PREFIX{"/word_class/name/"};
-const char *Server::URL_GENDERS{"/genders/"};
-const char *Server::URL_GENDER_ID_PREFIX{"/gender/id/"};
-const char *Server::URL_GENDER_NAME_PREFIX{"/gender/name/"};
-const char *Server::URL_NUMERI{"/numeri/"};
-const char *Server::URL_TRANSLATION_PREFIX{"/translation/"};
+std::string Server::service_prefix_{"/trlt/"};
+std::string Server::url_help_{service_prefix_ + "help/"};
+std::string Server::url_languages_{service_prefix_ + "languages/"};
+std::string Server::url_language_id_prefix_{service_prefix_ + "language/id/"};
+std::string Server::url_language_name_prefix_{service_prefix_ + "language/name/"};
+std::string Server::url_word_classes_{service_prefix_ + "word_classes/"};
+std::string Server::url_word_class_id_prefix_{service_prefix_ + "word_class/id/"};
+std::string Server::url_word_class_name_prefix_{service_prefix_ + "word_class/name/"};
+std::string Server::url_genders_{service_prefix_ + "genders/"};
+std::string Server::url_gender_id_prefix_{service_prefix_ + "gender/id/"};
+std::string Server::url_gender_name_prefix_{service_prefix_ + "gender/name/"};
+std::string Server::url_numeri_{service_prefix_ + "numeri/"};
+std::string Server::url_translation_prefix_{service_prefix_ + "translation/"};
 
 Server::Server(const ConnectionString &db_connection_string, const std::string &service_address, size_t service_port)
-    : connection_address__{service_address + ":" + std::to_string(service_port)},
-      db_query__{db_connection_string},
-      server__{mg_create_server(&db_query__, Server::request_handler)} {
-  if (!this->server__) throw ServerException("Server resources could not be allocated!");
-  mg_set_option(this->server__, "listening_port", this->connection_address__.c_str());
+    : connection_address_{service_address + ":" + std::to_string(service_port)},
+      db_query_{db_connection_string},
+      server_{mg_create_server(&db_query_, Server::request_handler)} {
+  if (!this->server_) throw ServerException("Server resources could not be allocated!");
+  mg_set_option(this->server_, "listening_port", this->connection_address_.c_str());
 }
 
 void Server::listen() {
   while (true) {
-    mg_poll_server(this->server__, 1000);  // Infinite loop, Ctrl-C to stop
+    mg_poll_server(this->server_, 1000);  // Infinite loop, Ctrl-C to stop
   }
 }
 
 Server::~Server() {
-  if (this->server__) {
-    mg_destroy_server(&this->server__);
-    this->server__ = nullptr;
+  if (this->server_) {
+    mg_destroy_server(&this->server_);
+    this->server_ = nullptr;
   }
 }
 
 std::string Server::get_origin_language_id_from_url(const char *url) {
   // don't check prefix here, must be ensured outside this function
-  url += strlen(Server::URL_TRANSLATION_PREFIX);
+  url += strlen(url_translation_prefix_.c_str());
   std::string language_id{};
   for (; *url && '/' != *url; ++url) language_id += *url;
   return language_id;
@@ -107,7 +108,7 @@ std::string Server::get_origin_language_id_from_url(const char *url) {
 
 std::string Server::get_target_language_id_from_url(const char *url) {
   // don't check prefix and origin language id here, must be ensured outside this function
-  url += strlen(Server::URL_TRANSLATION_PREFIX);
+  url += strlen(url_translation_prefix_.c_str());
   for (; *url && '/' != *url; ++url)
     ;
   ++url;
@@ -133,12 +134,12 @@ int Server::request_handler(mg_connection *connection, enum mg_event event) {
         strncat(url, "/", 1);
       }
       if (!strcmp(connection->request_method, "GET")) {
-        if (!strcmp(url, URL_HELP)) {
+        if (!strcmp(url, url_help_.c_str())) {
           if (!check_accept_header(connection, "text/html")) {
             std::string error_message{"Only the content-type \"text/html\" is supported!"};
             handle_http_error(connection, 406, error_message);
           } else {
-            try{
+            try {
               std::string html_path{get_exe_path() + "www/help.html"};
               mg_send_file(connection, html_path.c_str(), nullptr);
               return MG_MORE;
@@ -152,11 +153,11 @@ int Server::request_handler(mg_connection *connection, enum mg_event event) {
           handle_http_error(connection, 406, error_message);
         } else {
           try {
-            if (!strcmp(url, URL_LANGUAGES)) {
+            if (!strcmp(url, url_languages_.c_str())) {
               db_query->request_all_languages();
               string json{JSON::all_languages_to_json(*db_query)};
               send_json_data(connection, json);
-            } else if (cstring_starts_with(url, URL_LANGUAGE_ID_PREFIX)) {
+            } else if (cstring_starts_with(url, url_language_id_prefix_.c_str())) {
               db_query->request_language_by_id(get_last_path_from_url(url));
               if (db_query->empty()) {
                 std::string error_message{"Language ID \"" + get_last_path_from_url(url) + "\" not found!"};
@@ -165,7 +166,7 @@ int Server::request_handler(mg_connection *connection, enum mg_event event) {
                 string json{JSON::language_name_to_json(*db_query)};
                 send_json_data(connection, json);
               }
-            } else if (cstring_starts_with(url, URL_LANGUAGE_NAME_PREFIX)) {
+            } else if (cstring_starts_with(url, url_language_name_prefix_.c_str())) {
               db_query->request_language_by_name(get_last_path_from_url(url));
               if (db_query->empty()) {
                 std::string error_message{"Language name \"" + get_last_path_from_url(url) + "\" not found!"};
@@ -174,11 +175,11 @@ int Server::request_handler(mg_connection *connection, enum mg_event event) {
                 string json{JSON::language_id_to_json(*db_query)};
                 send_json_data(connection, json);
               }
-            } else if (!strcmp(url, URL_WORD_CLASSES)) {
+            } else if (!strcmp(url, url_word_classes_.c_str())) {
               db_query->request_all_word_classes();
               string json{JSON::all_word_classes_to_json(*db_query)};
               send_json_data(connection, json);
-            } else if (cstring_starts_with(url, URL_WORD_CLASS_ID_PREFIX)) {
+            } else if (cstring_starts_with(url, url_word_class_id_prefix_.c_str())) {
               db_query->request_word_class_by_id(get_last_path_from_url(url));
               if (db_query->empty()) {
                 std::string error_message{"Word class ID \"" + get_last_path_from_url(url) + "\" not found!"};
@@ -187,7 +188,7 @@ int Server::request_handler(mg_connection *connection, enum mg_event event) {
                 string json{JSON::word_class_name_to_json(*db_query)};
                 send_json_data(connection, json);
               }
-            } else if (cstring_starts_with(url, URL_WORD_CLASS_NAME_PREFIX)) {
+            } else if (cstring_starts_with(url, url_word_class_name_prefix_.c_str())) {
               db_query->request_word_class_by_name(get_last_path_from_url(url));
               if (db_query->empty()) {
                 std::string error_message{"Word class name \"" + get_last_path_from_url(url) + "\" not found!"};
@@ -196,11 +197,11 @@ int Server::request_handler(mg_connection *connection, enum mg_event event) {
                 string json{JSON::word_class_id_to_json(*db_query)};
                 send_json_data(connection, json);
               }
-            } else if (!strcmp(url, URL_GENDERS)) {
+            } else if (!strcmp(url, url_genders_.c_str())) {
               db_query->request_all_genders();
               string json{JSON::all_genders_to_json(*db_query)};
               send_json_data(connection, json);
-            } else if (cstring_starts_with(url, URL_GENDER_ID_PREFIX)) {
+            } else if (cstring_starts_with(url, url_gender_id_prefix_.c_str())) {
               db_query->request_gender_by_id(get_last_path_from_url(url));
               if (db_query->empty()) {
                 std::string error_message{"Gender ID \"" + get_last_path_from_url(url) + "\" not found!"};
@@ -209,7 +210,7 @@ int Server::request_handler(mg_connection *connection, enum mg_event event) {
                 string json{JSON::gender_name_to_json(*db_query)};
                 send_json_data(connection, json);
               }
-            } else if (cstring_starts_with(url, URL_GENDER_NAME_PREFIX)) {
+            } else if (cstring_starts_with(url, url_gender_name_prefix_.c_str())) {
               db_query->request_gender_by_name(get_last_path_from_url(url));
               if (db_query->empty()) {
                 std::string error_message{"Gender name \"" + get_last_path_from_url(url) + "\" not found!"};
@@ -218,7 +219,7 @@ int Server::request_handler(mg_connection *connection, enum mg_event event) {
                 string json{JSON::gender_id_to_json(*db_query)};
                 send_json_data(connection, json);
               }
-            } else if (!strcmp(url, URL_NUMERI)) {
+            } else if (!strcmp(url, url_numeri_.c_str())) {
               db_query->request_all_numeri();
               string json{JSON::all_numeri_to_json(*db_query)};
               send_json_data(connection, json);
@@ -243,7 +244,7 @@ int Server::request_handler(mg_connection *connection, enum mg_event event) {
           handle_http_error(connection, 406, error_message);
         } else {
           try {
-            if (cstring_starts_with(connection->uri, URL_TRANSLATION_PREFIX)) {
+            if (cstring_starts_with(connection->uri, url_translation_prefix_.c_str())) {
               char *post_content = new char[connection->content_len + 1];
               strncpy(post_content, connection->content, connection->content_len);
               post_content[connection->content_len] = '\0';

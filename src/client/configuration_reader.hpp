@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 06/10/2015
+// Last modified: 06/14/2015
 // Description: Declares the interface of the configuration reader for the client. It reads a json string from the
 //              specified file and offers some getters for the parsed data.
 // ====================================================================================================================
@@ -23,6 +23,7 @@
 // {
 //    "service_address" : <STRING>,
 //    "service_port" : <NUMBER>,
+//    "service_url_prefix" : <STRING>,
 //    "show_phrase" : <BOOLEAN>,
 //    "show_word_class" : <BOOLEAN>,
 //    "show_gender" : <BOOLEAN>,
@@ -37,6 +38,7 @@
 // attribute:
 //  *service_address: "localhost"
 //  *service_port: 8885
+//  *service_url_prefix: "trlt"
 //  *show_phrase: true
 //  *show_word_class: false
 //  *show_gender: false
@@ -60,6 +62,7 @@ namespace client {
 class ConfigurationReader {
  public:
   static const std::string SERVICE_ADDRESS_DEFAULT;
+  static const std::string SERVICE_URL_PREFIX_DEFAULT;
   static const std::string LANGUAGE_IN_DEFAULT;
   static const std::string LANGUAGE_OUT_DEFAULT;
   static const size_t SERVICE_PORT_DEFAULT;
@@ -84,6 +87,7 @@ class ConfigurationReader {
   std::string configuration_file_path() const noexcept;
   std::string config_file_path() const noexcept;
   std::string service_address() const noexcept;
+  std::string service_url_prefix() const noexcept;
   std::string language_in() const noexcept;
   std::string language_out() const noexcept;
   size_t service_port() const noexcept;
@@ -101,6 +105,7 @@ class ConfigurationReader {
 
   std::string config_file_path_;
   std::string service_address_;
+  std::string service_url_prefix_;
   std::string language_in_;
   std::string language_out_;
   size_t service_port_;

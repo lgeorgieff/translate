@@ -1,6 +1,7 @@
 {
    "service_address" : "localhost",
    "service_port" : 8885,
+   "service_url_prefix" : "trlt",
    "show_phrase" : true,
    "show_word_class" : false,
    "show_gender" : false,

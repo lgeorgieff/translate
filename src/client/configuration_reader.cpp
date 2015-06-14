@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 06/10/2015
+// Last modified: 06/14/2015
 // Description: Implements the class ConfigurationReader which reads the configuration for the client. It reads a json
 //              string from the specified file and offers some getters for the parsed data.
 // ====================================================================================================================
@@ -61,6 +61,7 @@ using lgeorgieff::translate::utils::JsonException;
 using lgeorgieff::translate::utils::Exception;
 
 const std::string ConfigurationReader::SERVICE_ADDRESS_DEFAULT{"localhost"};
+const std::string ConfigurationReader::SERVICE_URL_PREFIX_DEFAULT{"trlt"};
 const std::string ConfigurationReader::LANGUAGE_IN_DEFAULT{"DE"};
 const std::string ConfigurationReader::LANGUAGE_OUT_DEFAULT{"EN"};
 const size_t ConfigurationReader::SERVICE_PORT_DEFAULT{8885};
@@ -74,6 +75,7 @@ const bool ConfigurationReader::SHOW_COMMENT_DEFAULT{};
 ConfigurationReader::ConfigurationReader(const std::string &configuration_file_path)
     : config_file_path_{configuration_file_path},
       service_address_{SERVICE_ADDRESS_DEFAULT},
+      service_url_prefix_{SERVICE_URL_PREFIX_DEFAULT},
       service_port_{SERVICE_PORT_DEFAULT},
       show_phrase_{SHOW_PHRASE_DEFAULT},
       show_word_class_{SHOW_WORD_CLASS_DEFAULT},
@@ -96,6 +98,7 @@ ConfigurationReader &ConfigurationReader::operator()() {
   process_json_string_value(json, "service_address", this->service_address_);
   process_json_string_value(json, "language_in", this->language_in_);
   process_json_string_value(json, "language_out", this->language_out_);
+  process_json_string_value(json, "service_url_prefix", this->service_url_prefix_);
 
   if (json.isMember("service_port")) {
     if (!json["service_port"].isUInt()) {
@@ -118,6 +121,8 @@ ConfigurationReader &ConfigurationReader::operator()() {
 std::string ConfigurationReader::configuration_file_path() const noexcept { return this->config_file_path_; }
 
 std::string ConfigurationReader::service_address() const noexcept { return this->service_address_; }
+
+std::string ConfigurationReader::service_url_prefix() const noexcept { return this->service_url_prefix_; }
 
 size_t ConfigurationReader::service_port() const noexcept { return this->service_port_; }
 
