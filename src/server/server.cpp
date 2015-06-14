@@ -24,9 +24,9 @@
 
 #include "json/json.h"
 
-#include <unistd.h>
 #include <cstring>
 #include <iostream>
+#include <cstddef>
 
 namespace {
 // A helper function that sets the passed HTTP status code on the passed connection structure and finally writes the
@@ -48,7 +48,8 @@ void send_json_data(mg_connection *connection, const std::string &json_string) {
 
 // A helper function that checks the given connection for the accept header value.
 bool check_accept_header(mg_connection *connection, const std::string &expected = "application/json") {
-  return lgeorgieff::translate::utils::check_accept_header(mg_get_header(connection, "accept"), expected);
+  return mg_get_header(connection, "accept") != nullptr &&
+         lgeorgieff::translate::utils::check_accept_header(mg_get_header(connection, "accept"), expected);
 }
 }  // anonymous namespace
 
@@ -59,8 +60,10 @@ namespace server {
 using lgeorgieff::translate::utils::cstring_starts_with;
 using lgeorgieff::translate::utils::cstring_ends_with;
 using lgeorgieff::translate::utils::get_last_path_from_url;
+using lgeorgieff::translate::utils::get_exe_path;
 using lgeorgieff::translate::utils::Exception;
 
+const char *Server::URL_HELP{"/help/"};
 const char *Server::URL_LANGUAGES{"/languages/"};
 const char *Server::URL_LANGUAGE_ID_PREFIX{"/language/id/"};
 const char *Server::URL_LANGUAGE_NAME_PREFIX{"/language/name/"};
@@ -130,7 +133,21 @@ int Server::request_handler(mg_connection *connection, enum mg_event event) {
         strncat(url, "/", 1);
       }
       if (!strcmp(connection->request_method, "GET")) {
-        if (!check_accept_header(connection)) {
+        if (!strcmp(url, URL_HELP)) {
+          if (!check_accept_header(connection, "text/html")) {
+            std::string error_message{"Only the content-type \"text/html\" is supported!"};
+            handle_http_error(connection, 406, error_message);
+          } else {
+            try{
+              std::string html_path{get_exe_path() + "www/help.html"};
+              mg_send_file(connection, html_path.c_str(), nullptr);
+              return MG_MORE;
+            } catch (const Exception &) {
+              std::string error_message{"Internal server error!"};
+              handle_http_error(connection, 500, error_message);
+            }
+          }
+        } else if (!check_accept_header(connection)) {
           std::string error_message{"Only the content-type \"application/json\" is supported!"};
           handle_http_error(connection, 406, error_message);
         } else {
@@ -220,7 +237,8 @@ int Server::request_handler(mg_connection *connection, enum mg_event event) {
         if (!check_accept_header(connection)) {
           std::string error_message{"Only the content-type \"application/json\" is supported!"};
           handle_http_error(connection, 406, error_message);
-        } else if (strcmp(mg_get_header(connection, "content-type"), "application/json")) {
+        } else if (mg_get_header(connection, "content-type") != nullptr &&
+                   strcmp(mg_get_header(connection, "content-type"), "application/json")) {
           std::string error_message{"Only the content-type \"application/json\" of POST data is supported!"};
           handle_http_error(connection, 406, error_message);
         } else {

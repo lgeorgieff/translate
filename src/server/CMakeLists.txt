@@ -1,6 +1,6 @@
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 06/10/2015
+# Last modified: 06/14/2015
 # Description: Build configuration for the server part of translate.
 #######################################################################################################################
 
@@ -36,3 +36,7 @@ target_link_libraries(trlt.service mongoose)
 target_link_libraries(trlt.service pthread)
 target_link_libraries(trlt.service pqxx)
 target_link_libraries(trlt.service pq)
+
+### copy static html content to executable directory
+file(MAKE_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/www")
+file(COPY "www/help.html" DESTINATION "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/www/")

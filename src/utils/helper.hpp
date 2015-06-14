@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 06/05/2015
+// Last modified: 06/14/2015
 // Description: Declares several helper functions for the entire project.
 // ====================================================================================================================
 
@@ -70,6 +70,10 @@ void parse_accept_header_item(const std::string &, std::string &, std::string &)
 // This function takes also placeholders like "*" into account.
 // see: http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.1
 bool check_accept_header(const std::string &, const std::string & = "application/json");
+
+// Returns the folder which contains the executable file.
+// May throw an instance of Exception if cannot read from /proc/.
+std::string get_exe_path();
 }  // utils
 }  // translate
 }  // lgeorgieff

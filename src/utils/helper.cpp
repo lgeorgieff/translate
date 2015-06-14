@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 06/06/2015
+// Last modified: 06/14/2015
 // Description: Defines several helper functions for the entire project.
 // ====================================================================================================================
 
@@ -17,6 +17,9 @@
 // ====================================================================================================================
 
 #include "helper.hpp"
+#include "exception.hpp"
+
+#include <unistd.h>
 
 #include <cstddef>
 #include <cctype>
@@ -66,7 +69,7 @@ size_t string_to_size_t(const std::string &str) {
   size_t number;
   std::stringstream ss(str);
   ss >> number;
-  if (ss.fail()) throw std::invalid_argument("The value \"" + str + "\" is not a valid number!");
+  if (ss.fail()) throw std::invalid_argument{"The value \"" + str + "\" is not a valid number!"};
   return number;
 }
 
@@ -164,6 +167,16 @@ bool check_accept_header(const std::string &accept_header, const std::string &ex
       return true;
   }
   return false;
+}
+
+// Returns the folder which contains the executable file.
+std::string get_exe_path() {
+  const size_t PATH_MAX{1024};
+  char result[PATH_MAX];
+  if (readlink("/proc/self/exe", result, PATH_MAX) == -1) throw Exception{"Cannot read from /proc/"};
+  std::string str_result{result};
+  size_t last_pos{str_result.find_last_of("/")};
+  return str_result.substr(0, last_pos + 1);
 }
 }  // utils
 }  // translate

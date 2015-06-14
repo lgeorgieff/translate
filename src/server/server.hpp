@@ -1,6 +1,6 @@
 // ====================================================================================================================
 // Copyright (C) 2015  Lukas Georgieff
-// Last modified: 05/04/2015
+// Last modified: 06/14/2015
 // Description: Declares the RESTful server for the translation service.
 // ====================================================================================================================
 
@@ -72,6 +72,8 @@ class Server {
   ~Server();
 
   // Some constants that are used to describe the different URL of the RESTful API
+  static const char *URL_HELP;
+
   static const char *URL_LANGUAGES;
   static const char *URL_LANGUAGE_ID_PREFIX;
   static const char *URL_LANGUAGE_NAME_PREFIX;
