@@ -221,7 +221,6 @@ int Server::request_handler(mg_connection *connection, enum mg_event event) {
           std::string error_message{"Only the content-type \"application/json\" is supported!"};
           handle_http_error(connection, 406, error_message);
         } else if (strcmp(mg_get_header(connection, "content-type"), "application/json")) {
-          std::cout << (mg_get_header(connection, "content-type")) << std::endl;
           std::string error_message{"Only the content-type \"application/json\" of POST data is supported!"};
           handle_http_error(connection, 406, error_message);
         } else {
