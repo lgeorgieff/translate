@@ -18,6 +18,7 @@ For building translate you need:
 * [PostgreSQL](http://www.postgresql.org/)
 * [libcurl](http://curl.haxx.se/libcurl/), in some distrubitions you need the development/dev package of libcurl, e.g. Ubuntu
 * [libpqxx](http://pqxx.org/development/libpqxx/), in some distrubitions you need the development/dev package of libpqxx, e.g. Ubuntu
+* [google test](https://code.google.com/p/googletest/), if compiling with -DWITH_TESTS=ON
  
 To build it run:
  1. `git https://github.com/lgeorgieff/translate.git translate`
