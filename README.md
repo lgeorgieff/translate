@@ -12,7 +12,7 @@ This project is open source under the [GNU GENERAL PUBLIC LICENSE Version 2 (GPL
 
 # Building translate
 For building translate you need:
-* git
+* [git](https://git-scm.com/)
 * [cmake](http://www.cmake.org/) >= 2.8
 * [g++](https://gcc.gnu.org/) or [clang++](http://clang.llvm.org/)
 * [PostgreSQL](http://www.postgresql.org/)
