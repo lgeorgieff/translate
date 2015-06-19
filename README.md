@@ -41,7 +41,22 @@ You will get an empty result for the previous example, since you need to create 
 Unfortunately, it is not allowed to share the languge data from [dict.cc](http://www.dict.cc/) directly within the source code. This is why we need a separate step to download it.
  1. Visit the [dict.cc](http://www1.dict.cc/translation_file_request.php?l=e) web page
  1. Download all language resources you need (you will get an email containing a download link)
- 1. Create the database user translate and the database translate
+ 1. Create the database user translate and the database translate (example for arch linux)
+   1. `pacman -S postgresql` # install postgresql
+   1. `passwd postgres` # set password for postgres user
+   1. `su - postgres` # change user id to postgres
+   1. `initdb --locale en_US.UTF-8 -E UTF8 -D '/var/lib/postgres/data'` # create data base files
+   1. `systemctl enable postgresql.service` # enable postgersql to be started automatically during startup
+   1. `systemctl start postgresql.service` # start postgesql
+   1. `createuser --interactive` # create a new database user
+   1. `> Enter name of role to add: translate`
+   1. `> Shall the new role be a superuser? (y/n) n`
+   1. `> Shall the new role be allowed to create databases? (y/n) n`
+   1. `> Shall the new role be allowed to create more new roles? (y/n) n`
+   1. `createdb translate` # create a new data base
+   1. `psql` # connect to data base
+   1. `postgres=# GRANT ALL PRIVILEGES ON DATABASE translate to translate;` # give the data base user trnaslate access to the data base translate
+   1. `postgres=# \q` # exit
  1. `cd <translate root folder>/src/scripts`
  1. `./process_language_resources.sh -Z <folder path containing downloaded language resources> -d <folder for resulting files>` # This script will unzip and rename all language resources
  1. `./populate_db.sh -d <the folder with the results from the previous step> -t <temporary directory>`
