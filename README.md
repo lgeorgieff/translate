@@ -38,7 +38,7 @@ To build it run:
 You will get an empty result for the previous example, since you need to create and fill the data bsae with languge data before you can use it.
 
 # Get Language Data
-Unfortunately, it is not allowed to share the languge data from [dict.cc](http://www.dict.cc/) directly within the source code. This is why we need a separate step to download it.
+Unfortunately, it is not allowed to share the language data from [dict.cc](http://www.dict.cc/) directly within the source code. This is why we need a separate step to download it.
  1. Visit the [dict.cc](http://www1.dict.cc/translation_file_request.php?l=e) web page
  1. Download all language resources you need (you will get an email containing a download link)
  1. Create the database user translate and the database translate (example for arch linux)
