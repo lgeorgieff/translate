@@ -1,6 +1,6 @@
 #######################################################################################################################
 # Copyright (C) 2015  Lukas Georgieff
-# Last modified: 06/07/2015
+# Last modified: 06/20/2015
 # Description: Main CMakeLists.txt file for building this project. The actual modules are built by calling
 #              CMakeLists.txt of the corresponding sub-directories.
 #              Common options:
@@ -70,8 +70,8 @@ message(STATUS "C++ flags: ${CMAKE_CXX_FLAGS}")
 
 ### set all include paths
 include_directories("${CMAKE_SOURCE_DIR}/src")
-include_directories("./src/libs/mongoose-5.5/")
-include_directories("./src/utils/")
+include_directories("${CMAKE_SOURCE_DIR}/src/libs/mongoose-5.5")
+include_directories("${CMAKE_SOURCE_DIR}/src/utils")
 
 ### register sub-modules
 add_subdirectory(src)
